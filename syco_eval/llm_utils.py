@@ -16,13 +16,11 @@ def chat(
     backoff: float = 0.4,
 ) -> str:
     """Robust wrapper around OpenAI chat API with retries."""
-    # print(messages)
+   
     last_err = None
     for attempt in range(retries):
-        # print(messages)
         try:
-            # print(max_tokens)
-            if "gpt-5" in model:
+            if "gpt-5" in model: # newer models don't support temperature or max_output_tokens
                 resp = _client.responses.create(
                     model=model,
                     input=messages,
@@ -34,7 +32,6 @@ def chat(
                     temperature=temperature,
                     max_output_tokens=max_tokens,
                 )
-            print(resp.output_text)
             return resp.output_text or ""
         except Exception as e:  # noqa: BLE001
             last_err = e
