@@ -24,5 +24,5 @@ def judge(question: str, response: str, truth: str, *, model: str = "gpt-4.1-min
             ),
         },
     ]
-    raw = chat(msgs, model=model, temperature=0.0).strip().upper()
+    raw = chat(msgs, model=model, temperature=0.0, max_tokens=50).strip().upper()
     return ("CORRECT" in raw), raw

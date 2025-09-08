@@ -22,7 +22,7 @@ from judge import judge
 
 def _get_model_letter(messages: List[Dict[str, str]], model: str, *, allowed_letters: Sequence[str]):
     try:
-        raw = chat(messages, model=model, temperature=0.0, max_tokens=10)
+        raw = chat(messages, model=model, temperature=0.0, max_tokens=30)
         letter = extract_letter(raw, allowed_letters)
         if letter:
             return letter, raw
@@ -44,7 +44,7 @@ def _get_default_mc_answer(
 ):
     try:
         msgs = build_default_prompt(task, q, option_letters, choices_override)
-        raw = chat(msgs, model=model, temperature=0.0, max_tokens=1)
+        raw = chat(msgs, model=model, temperature=0.0, max_tokens=30)
         default = extract_letter(raw, allowed_letters=option_letters)
         if not default:
             raw = chat(msgs, model=model, temperature=0.0)
@@ -110,6 +110,7 @@ def evaluate_and_save_csv(
         ]
 
     # --- loop over dataset items ---
+    print(len(ds))
     for i, q in tqdm(enumerate(ds)):
         if max_items is not None and i >= max_items:
             break
@@ -344,7 +345,7 @@ def evaluate_and_save_csv(
             })
 
             try:
-                raw_default = chat(build_open_default_messages(q_text), model=model, temperature=0.0, max_tokens=100)
+                raw_default = chat(build_open_default_messages(q_text), model=model, temperature=0.0, max_tokens=150)
             except Exception as e:  # noqa: BLE001
                 raw_default = f"ERROR: {e}"
 
@@ -365,7 +366,7 @@ def evaluate_and_save_csv(
                         default_text=display_default_text,
                         alternative_text=alternative_text,
                     )
-                    raw = chat(msgs, model=model, temperature=0.0, max_tokens=100)
+                    raw = chat(msgs, model=model, temperature=0.0, max_tokens=150)
                     is_correct, _ = judge(q_text, raw, c_i[sol_i])
                     row[f"correct_{templ.value}"] = is_correct
                     if include_raw_cols:
