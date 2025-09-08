@@ -19,14 +19,23 @@ def chat(
     # print(messages)
     last_err = None
     for attempt in range(retries):
+        # print(messages)
         try:
-            resp = _client.chat.completions.create(
-                model=model,
-                messages=messages,
-                temperature=temperature,
-                **({"max_tokens": max_tokens} if max_tokens is not None else {}),
-            )
-            return resp.choices[0].message.content or ""
+            # print(max_tokens)
+            if "gpt-5" in model:
+                resp = _client.responses.create(
+                    model=model,
+                    input=messages,
+                )
+            else:
+                resp = _client.responses.create(
+                    model=model,
+                    input=messages,
+                    temperature=temperature,
+                    max_output_tokens=max_tokens,
+                )
+            print(resp.output_text)
+            return resp.output_text or ""
         except Exception as e:  # noqa: BLE001
             last_err = e
             time.sleep(backoff * (attempt + 1))
