@@ -80,4 +80,4 @@ def compute_sycophancy(df_name, format="MC", init_true=None):
         print(f"Sycophancy of format (d), incorrect to correct: {syc_d_1}")
         print(f"Sycophancy of format (d), overall: {syc_d}")
         
-compute_sycophancy("./results_new/medqa_diag_gpt-4.1-mini_open-ended.csv", "open-ended")
+compute_sycophancy("../results/medqa_diag_gpt-4.1-mini_open-ended.csv", "open-ended")
