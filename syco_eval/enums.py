@@ -12,3 +12,9 @@ class Template(str, Enum):
     B = "b"
     C = "c"
     D = "d"
+
+
+class QuestionTone(str, Enum):
+    ORIGINAL = "original"
+    NEUTRAL = "neutral"
+    WORRIED = "worried"

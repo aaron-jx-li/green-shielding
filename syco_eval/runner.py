@@ -4,8 +4,8 @@ from typing import Any, Dict, List, Optional, Sequence
 import pandas as pd
 from tqdm import tqdm
 
-from data_utils import get_dataset, letters_for, sanitize_options
-from enums import QFormat, Template
+from data_utils import get_dataset, get_transformed_dataset, letters_for, sanitize_options
+from enums import QFormat, Template, QuestionTone
 from llm_utils import chat
 from prompt_builder import (
     build_binary_messages_with_templates,
@@ -18,6 +18,47 @@ from prompt_builder import (
     render_options_str,
 )
 from judge import judge
+
+
+def _extract_question_text(q: dict, task: str, question_tone: str) -> str:
+    """
+    Extract the appropriate question text based on the tone.
+    
+    Args:
+        q: Question dictionary
+        task: Task name
+        question_tone: Tone of the question (original, neutral, worried)
+        
+    Returns:
+        The question text to use
+    """
+    if question_tone == QuestionTone.ORIGINAL.value:
+        # Use original question extraction logic
+        if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
+            return q["question"].strip()
+        elif task == "ethics_commonsense":
+            return q["input"].strip()
+        elif task == "truthfulqa_mc1":
+            return q["question"].strip()
+        elif task == "truthfulqa_binary":
+            return q["Question"].strip()
+        elif task == "medqa_4":
+            return q["question"].strip()
+        elif task == "medqa_diag":
+            return q["question"].strip()
+        elif task == "medxpertqa_diag":
+            return q["question_mc"].strip()
+        else:
+            return q.get("question", "").strip()
+    else:
+        # Use transformed question
+        transformed_key = f"transformed_question_{question_tone}"
+        if transformed_key in q:
+            return q[transformed_key].strip()
+        else:
+            # Fallback to original if transformed not found
+            print(f"Warning: {transformed_key} not found, using original question")
+            return _extract_question_text(q, task, QuestionTone.ORIGINAL.value)
 
 
 def _get_model_letter(messages: List[Dict[str, str]], model: str, *, allowed_letters: Sequence[str]):
@@ -66,9 +107,21 @@ def evaluate_and_save_csv(
     *,
     shuffle_seed: int = 0,
     max_items: Optional[int] = None,
-    include_raw_cols: bool = False
+    include_raw_cols: bool = False,
+    question_tone: str = QuestionTone.ORIGINAL.value
 ) -> pd.DataFrame:
-    ds = get_dataset(task)
+    # Load dataset based on tone
+    if question_tone == QuestionTone.ORIGINAL.value:
+        ds = get_dataset(task)
+    else:
+        try:
+            ds = get_transformed_dataset(task, question_tone)
+            print(f"Loaded transformed dataset with {question_tone} tone")
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            print("Please generate the transformed dataset first using the data_utils module.")
+            raise
+    
     fmt = QFormat(format)
 
     rng = random.Random(shuffle_seed)
@@ -77,7 +130,7 @@ def evaluate_and_save_csv(
     # --- column headers depending on format ---
     if fmt == QFormat.MC:
         cols = [
-            "index", "question", "options", "solution",
+            "index", "question", "options", "solution", "question_tone",
             "default", "alternative", "default_correct",
             "pred_a", "correct_a",
             "pred_b", "correct_b",
@@ -89,7 +142,7 @@ def evaluate_and_save_csv(
 
     elif fmt == QFormat.BINARY:
         base_cols = [
-            "index", "question", "options",
+            "index", "question", "options", "question_tone",
             "default_true", "solution_true", "default_correct_true",
             "default_false", "solution_false", "default_correct_false",
         ]
@@ -101,7 +154,7 @@ def evaluate_and_save_csv(
 
     else:  # OPEN
         cols = [
-            "index", "question", "options", "solution_idx", "solution_text",
+            "index", "question", "options", "solution_idx", "solution_text", "question_tone",
             "default", "alternative", "default_correct",
             "correct_a", *( ["raw_a"] if include_raw_cols else [] ),
             "correct_b", *( ["raw_b"] if include_raw_cols else [] ),
@@ -119,38 +172,34 @@ def evaluate_and_save_csv(
 
         # ---------- MULTIPLE-CHOICE ----------
         if fmt == QFormat.MC:
+            # Extract question text using the helper function
+            q_text = _extract_question_text(q, task, question_tone)
+            
             if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
-                q_text = q["question"].strip()
                 c_i = list(q["choices"])
                 sol_i = int(q["answer"]) if isinstance(q["answer"], int) else q["answer"]
             elif task == "ethics_commonsense":
-                q_text = q["input"].strip()
                 c_i = ["No", "Yes"]
                 sol_i = int(q["label"])
             elif task == "truthfulqa_mc1":
-                q_text = q["question"].strip()
                 c_i = list(q["mc1_targets"]["choices"])
                 try:
                     sol_i = q["mc1_targets"]["labels"].index(1)
                 except ValueError:
                     continue
             elif task == "truthfulqa_binary":
-                q_text = q["Question"].strip()
                 c_i = [q["Best Answer"], q["Best Incorrect Answer"]]
                 sol_i = 0
             elif task == "medqa_4":
-                q_text = q["question"].strip()
                 raw = q["options"]
                 c_i = [raw[k] for k in sorted(raw.keys())]
                 sol_i = ord(q["answer_idx"]) - ord("A")
             elif task == "medqa_diag":
-                q_text = q["question"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
                 if choices is None:
                     continue
                 c_i, sol_i = choices, sol_idx
             elif task == "medxpertqa_diag":
-                q_text = q["question_mc"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["label"] or "").strip().upper())
                 if choices is None:
                     continue
@@ -171,7 +220,7 @@ def evaluate_and_save_csv(
             sol_letter = option_letters[sol_i_shuf]
             options_str = render_options_str(option_letters, c_shuf)
 
-            base.update({"question": q_text, "options": options_str, "solution": sol_letter})
+            base.update({"question": q_text, "options": options_str, "solution": sol_letter, "question_tone": question_tone})
 
             dflt, alt, d_ok = _get_default_mc_answer(task, q, model, option_letters, sol_letter, choices_override=c_shuf)
             if dflt is None or alt is None:
@@ -188,8 +237,10 @@ def evaluate_and_save_csv(
 
         # ---------- BINARY ----------
         elif fmt == QFormat.BINARY:
+            # Extract question text using the helper function
+            q_text = _extract_question_text(q, task, question_tone)
+            
             if task == "truthfulqa_binary":
-                q_text = q["Question"].strip()
                 correct_ans = q["Best Answer"]
                 wrong_ans = q["Best Incorrect Answer"]
             elif task in {
@@ -197,33 +248,27 @@ def evaluate_and_save_csv(
                 "truthfulqa_mc1", "medqa_4", "medqa_diag", "medxpertqa_diag", "ethics_commonsense"
             }:
                 if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
-                    q_text = q["question"].strip()
                     c_i = list(q["choices"])
                     sol_i = int(q["answer"]) if isinstance(q["answer"], int) else q["answer"]
                 elif task == "ethics_commonsense":
-                    q_text = q["input"].strip()
                     c_i = ["No", "Yes"]
                     sol_i = int(q["label"])
                 elif task == "truthfulqa_mc1":
-                    q_text = q["question"].strip()
                     c_i = list(q["mc1_targets"]["choices"])
                     try:
                         sol_i = q["mc1_targets"]["labels"].index(1)
                     except ValueError:
                         continue
                 elif task == "medqa_4":
-                    q_text = q["question"].strip()
                     raw = q["options"]
                     c_i = [raw[k] for k in sorted(raw.keys())]
                     sol_i = ord(q["answer_idx"]) - ord("A")
                 elif task == "medqa_diag":
-                    q_text = q["open_ended_q"].strip()
                     choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
                     if choices is None:
                         continue
                     c_i, sol_i = choices, sol_idx
                 elif task == "medxpertqa_diag":
-                    q_text = q["question_open"].strip()
                     choices, sol_idx = sanitize_options(q["options"], (q["label"] or "").strip().upper())
                     if choices is None:
                         continue
@@ -238,7 +283,7 @@ def evaluate_and_save_csv(
                 continue
 
             mapping = {"A": "Yes", "B": "No"} if (random.random() < 0.5) else {"A": "No", "B": "Yes"}
-            base.update({"question": q_text, "options": f"A. {mapping['A']}   B. {mapping['B']}"})
+            base.update({"question": q_text, "options": f"A. {mapping['A']}   B. {mapping['B']}", "question_tone": question_tone})
 
             # TRUE
             msgs_true = build_binary_prompt(q_text, correct_ans, mapping)
@@ -294,38 +339,34 @@ def evaluate_and_save_csv(
 
         # ---------- OPEN-ENDED ----------
         elif fmt == QFormat.OPEN:
+            # Extract question text using the helper function
+            q_text = _extract_question_text(q, task, question_tone)
+            
             if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
-                q_text = q["question"].strip()
                 c_i = list(q["choices"])
                 sol_i = int(q["answer"]) if isinstance(q["answer"], int) else q["answer"]
             elif task == "ethics_commonsense":
-                q_text = q["input"].strip()
                 c_i = ["No", "Yes"]
                 sol_i = int(q["label"])
             elif task == "truthfulqa_mc1":
-                q_text = q["question"].strip()
                 c_i = list(q["mc1_targets"]["choices"])
                 try:
                     sol_i = q["mc1_targets"]["labels"].index(1)
                 except ValueError:
                     continue
             elif task == "truthfulqa_binary":
-                q_text = q["Question"].strip()
                 c_i = [q["Best Answer"], q["Best Incorrect Answer"]]
                 sol_i = 0
             elif task == "medqa_4":
-                q_text = q["question"].strip()
                 raw = q["options"]
                 c_i = [raw[k] for k in sorted(raw.keys())]
                 sol_i = ord(q["answer_idx"]) - ord("A")
             elif task == "medqa_diag":
-                q_text = q["open_ended_q"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
                 if choices is None:
                     continue
                 c_i, sol_i = choices, sol_idx
             elif task == "medxpertqa_diag":
-                q_text = q["question_open"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["label"] or "").strip().upper())
                 if choices is None:
                     continue
@@ -342,6 +383,7 @@ def evaluate_and_save_csv(
                 "options": options_str,
                 "solution_idx": sol_letter,
                 "solution_text": c_i[sol_i].strip(),
+                "question_tone": question_tone,
             })
 
             try:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 import argparse
-from enums import QFormat
+from enums import QFormat, QuestionTone
 from runner import evaluate_and_save_csv
 
 
@@ -21,6 +21,12 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--shuffle_seed", type=int, default=0, help="Seed for any per-item shuffling")
     ap.add_argument("--max_items", type=int, default=None, help="Max items to evaluate (default: 10)")
     ap.add_argument("--include_raw", action="store_true", help="Include raw_* model outputs in the CSV")
+    ap.add_argument(
+        "--tone",
+        choices=[QuestionTone.ORIGINAL.value, QuestionTone.NEUTRAL.value, QuestionTone.WORRIED.value],
+        default=QuestionTone.ORIGINAL.value,
+        help="Question tone: original | neutral | worried (default: original)"
+    )
     return ap.parse_args()
 
 
@@ -28,6 +34,10 @@ def main() -> None:
     args = parse_args()
     if args.format == "open-ended" and not args.include_raw:
         print("Warning: You are running open-ended evaluation without logging model outputs.")
+
+    # Print tone information
+    if args.tone != QuestionTone.ORIGINAL.value:
+        print(f"Using {args.tone} tone for questions")
 
     evaluate_and_save_csv(
         task=args.task,
@@ -37,6 +47,7 @@ def main() -> None:
         shuffle_seed=args.shuffle_seed,
         max_items=args.max_items,
         include_raw_cols=args.include_raw,
+        question_tone=args.tone,
     )
 
 
