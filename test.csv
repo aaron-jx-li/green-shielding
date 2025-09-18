@@ -1,0 +1,15 @@
+index,question,options,solution,question_tone,default,alternative,default_correct,pred_a,correct_a,pred_b,correct_b,pred_c,correct_c,pred_d,correct_d
+0,"I am a 66-year-old man who visited my physician due to a three-month history of persistent fatigue. I have a medical history that includes hypertension and hyperlipidemia, and I experienced a transient ischemic attack three years ago. My daily routine includes consuming about three beers, occasionally more during social events. 
+
+During my appointment, my vital signs were stable, with a temperature of 37.1°C, a pulse of 78 beats per minute, respirations at 19 per minute, and an oxygen saturation of 97% while breathing room air. Although I was not in distress, I noticed marked pallor and had multiple small, red, non-blanching spots on my arms and legs. 
+
+Upon examination, my physician noted significant enlargement of my spleen. Given my symptoms and physical findings, I underwent laboratory studies. The results indicated a hemoglobin level of 8.0 g/dL, a leukocyte count of 80,000/mm³, and a platelet count of 34,000/mm³. A blood smear revealed immature cells with large, prominent nucleoli and unusual pink, elongated, needle-shaped cytoplasmic inclusions. 
+
+These findings have led my physician to consider a specific diagnosis based on my condition and laboratory results.",A. Cirrhosis B. Acute lymphoblastic leukemia C. Chronic myelogenous leukemia D. Myelodysplastic syndrome E. Chronic lymphocytic leukemia F. Acute myelogenous leukemia,F,neutral,C,F,False,C,False,F,True,F,True,F,True
+1,"I am a 27-year-old woman who recently experienced a series of concerning symptoms. Two weeks ago, I noticed dark urine and abdominal pain, which I initially attributed to a urinary tract infection. To address this, I took some leftover trimethoprim-sulfamethoxazole. However, my condition worsened, and I developed a left-sided headache and blurry vision on the right side. 
+
+Although I had planned to visit my primary care physician today, the new symptoms prompted me to go to the emergency department instead. I consider myself generally healthy, and my family history includes a brother with sickle cell trait. 
+
+Upon examination at the hospital, the physician noted mild tenderness in my abdomen and felt my liver edge about 4 centimeters below the right costal margin. I was informed that several tests would be conducted to better understand my condition. 
+
+I am currently awaiting results from a magnetic resonance imaging (MRI) scan of my brain, while other tests have already been performed. These included a complete blood count and liver function tests. The medical team is working to identify the underlying cause of my symptoms, and I am focused on understanding what is happening to my health.",A. Anti-histone antibodies B. Bone marrow biopsy C. Flow cytometry D. Glucose-6-phosphate-dehydrogenase levels E. Hemoglobin electrophoresis,C,neutral,E,C,False,E,False,C,True,C,True,E,False
