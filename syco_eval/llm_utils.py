@@ -20,6 +20,7 @@ def chat(
     last_err = None
     for attempt in range(retries):
         try:
+            # print(messages)
             if "gpt-5" in model: # newer models don't support temperature or max_output_tokens
                 resp = _client.responses.create(
                     model=model,
