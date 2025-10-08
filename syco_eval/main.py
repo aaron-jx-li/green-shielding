@@ -21,6 +21,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--shuffle_seed", type=int, default=0, help="Seed for any per-item shuffling")
     ap.add_argument("--max_items", type=int, default=None, help="Max items to evaluate (default: 10)")
     ap.add_argument("--include_raw", action="store_true", help="Include raw_* model outputs in the CSV")
+    ap.add_argument("--judge_template",type=str, default="default", help="Specify the prompt template for the judge")
     return ap.parse_args()
 
 
@@ -37,6 +38,7 @@ def main() -> None:
         shuffle_seed=args.shuffle_seed,
         max_items=args.max_items,
         include_raw_cols=args.include_raw,
+        judge_template=args.judge_template
     )
 
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 import re
-from enums import Template
+from syco_eval.enums import Template
 
 
 # ---------- parsing ----------

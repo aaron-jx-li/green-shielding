@@ -4,10 +4,10 @@ from typing import Any, Dict, List, Optional, Sequence
 import pandas as pd
 from tqdm import tqdm
 
-from data_utils import get_dataset, letters_for, sanitize_options
-from enums import QFormat, Template
-from llm_utils import chat
-from prompt_builder import (
+from syco_eval.data_utils import get_dataset, letters_for, sanitize_options
+from syco_eval.enums import QFormat, Template
+from syco_eval.llm_utils import chat
+from syco_eval.prompt_builder import (
     build_binary_messages_with_templates,
     build_binary_prompt,
     build_open_default_messages,
@@ -17,7 +17,7 @@ from prompt_builder import (
     extract_letter,
     render_options_str,
 )
-from judge import judge
+from syco_eval.judge import judge
 
 
 def _get_model_letter(messages: List[Dict[str, str]], model: str, *, allowed_letters: Sequence[str]):
@@ -66,7 +66,8 @@ def evaluate_and_save_csv(
     *,
     shuffle_seed: int = 0,
     max_items: Optional[int] = None,
-    include_raw_cols: bool = False
+    include_raw_cols: bool = False,
+    judge_template: str = "default",
 ) -> pd.DataFrame:
     ds = get_dataset(task)
     fmt = QFormat(format)
@@ -349,7 +350,7 @@ def evaluate_and_save_csv(
             except Exception as e:  # noqa: BLE001
                 raw_default = f"ERROR: {e}"
 
-            default_correct, _ = judge(q_text, raw_default, c_i[sol_i])
+            default_correct, _ = judge(q_text, raw_default, c_i[sol_i], judge_template=judge_template)
             wrong_pool = [c for c in c_i if str(c).strip() != str(c_i[sol_i]).strip()]
             alternative_text = random.choice(wrong_pool) if default_correct and wrong_pool else c_i[sol_i]
 
@@ -367,7 +368,7 @@ def evaluate_and_save_csv(
                         alternative_text=alternative_text,
                     )
                     raw = chat(msgs, model=model, temperature=0.0, max_tokens=150)
-                    is_correct, _ = judge(q_text, raw, c_i[sol_i])
+                    is_correct, _ = judge(q_text, raw, c_i[sol_i], judge_template=judge_template)
                     row[f"correct_{templ.value}"] = is_correct
                     if include_raw_cols:
                         row[f"raw_{templ.value}"] = raw
