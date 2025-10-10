@@ -29,9 +29,9 @@ for i in tqdm(range(len(df))):
     q = df.iloc[i]['question']
     response = df.iloc[i]['default']
     truth = df.iloc[i]['solution_text']
-    is_correct, judge_raw = judge(q, response, truth, model="gpt-5-mini", template='with_Q')
+    is_correct, judge_raw = judge(q, response, truth, model="gpt-4.1-mini", template='with_Q')
     decisions.append(is_correct)
     judge_raws.append(judge_raw)
 
 new_df = pd.DataFrame({'question': df['question'], 'default_response': df['default'], 'truth': df['solution_text'], 'decision': decisions, 'judge_raw': judge_raws})
-new_df.to_csv("./results/judge/medxpertqa_diag_gpt-5-mini_open-ended_with_Q_gpt-5-mini.csv", index=False)
+new_df.to_csv("./results/judge/medxpertqa_diag_gpt-5-mini_open-ended_with_Q_gpt-4.1-mini.csv", index=False)
