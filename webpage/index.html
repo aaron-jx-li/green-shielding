@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Response Annotation Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Model Response Annotation Tool</h1>
+            <p class="subtitle">Medical AI Model Evaluation Interface</p>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+            <span class="progress-text" id="progressText">0 / 0</span>
+        </div>
+
+        <div class="annotation-card" id="annotationCard">
+            <div class="card-header">
+                <h2>Case <span id="caseNumber">1</span></h2>
+            </div>
+
+            <div class="content-section">
+                <h3>Question</h3>
+                <div class="content-box question-box" id="questionText">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Model Response</h3>
+                <div class="content-box model-response-box" id="modelResponse">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Ground Truth</h3>
+                <div class="content-box ground-truth-box" id="groundTruth">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="annotation-section">
+                <h3>Annotation</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="match" id="matchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Model matches ground truth</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="no-match" id="noMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Model does not match ground truth</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
+                <button class="btn btn-primary" id="nextBtn">Next</button>
+                <button class="btn btn-success" id="saveBtn" disabled>Save Annotations</button>
+            </div>
+        </div>
+
+        <div class="summary-section" id="summarySection" style="display: none;">
+            <h2>Annotation Summary</h2>
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total Cases:</span>
+                    <span class="stat-value" id="totalCases">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Annotated:</span>
+                    <span class="stat-value" id="annotatedCases">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Matches:</span>
+                    <span class="stat-value" id="matchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">No Matches:</span>
+                    <span class="stat-value" id="noMatchCount">0</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="exportBtn">Export Results</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
