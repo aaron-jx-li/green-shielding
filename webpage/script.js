@@ -1,11 +1,6 @@
 // Data will be loaded from JSON file
 let data = [];
 
-const API_BASE = window.location.hostname.includes("onrender.com")
-  ? window.location.origin // same domain as Render deployment
-  : "http://localhost:8000"; // local dev fallback
-
-
 class AnnotationApp {
     constructor() {
         this.data = data;
@@ -165,7 +160,7 @@ class AnnotationApp {
 
     async saveToServer(results) {
         try {
-            const response = await fetch(`${API_BASE}/save_annotations`, {
+            const response = await fetch('/save_annotations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
