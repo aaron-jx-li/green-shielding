@@ -1,9 +1,7 @@
 // Data will be loaded from JSON file
 let data = [];
 
-const API_BASE = window.location.hostname.includes("onrender.com")
-  ? window.location.origin // same domain as Render deployment
-  : "http://localhost:8000"; // local dev fallback
+const API_BASE = "https://green-shielding.onrender.com"
 
 
 class AnnotationApp {
