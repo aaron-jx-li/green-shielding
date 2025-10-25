@@ -90,47 +90,68 @@ def serve_static(filename):
 
 @app.route('/save_annotations', methods=['POST'])
 def save_annotations():
-    """Save annotation data locally and upload to Google Drive."""
     try:
-        data = request.get_json()
-        if not data:
+        annotation_data = request.get_json()
+        if not annotation_data:
             return jsonify({'error': 'No data received'}), 400
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        json_path = os.path.join(DATA_DIR, f"annotations_{timestamp}.json")
-        csv_path = os.path.join(DATA_DIR, f"annotations_{timestamp}.csv")
+        json_filename = f"{DATA_DIR}/annotations_{timestamp}.json"
+        csv_filename = f"{DATA_DIR}/annotations_{timestamp}.csv"
 
-        # Save local files
-        with open(json_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
-        pd.DataFrame(data).to_csv(csv_path, index=False, encoding="utf-8")
+        # Save locally
+        with open(json_filename, 'w', encoding='utf-8') as f:
+            json.dump(annotation_data, f, indent=2, ensure_ascii=False)
+        df = pd.DataFrame(annotation_data)
+        df.to_csv(csv_filename, index=False, encoding='utf-8')
+
+        # Save latest
+        latest_json = f"{DATA_DIR}/latest_annotations.json"
+        latest_csv = f"{DATA_DIR}/latest_annotations.csv"
+        with open(latest_json, 'w', encoding='utf-8') as f:
+            json.dump(annotation_data, f, indent=2, ensure_ascii=False)
+        df.to_csv(latest_csv, index=False, encoding='utf-8')
+
+        print(f"✅ Saved annotations to local files.")
 
         # Upload to Drive
         service = get_drive_service()
-        uploaded = []
+        FOLDER_ID = "1uSsq_UbH_BYu_SB_7Xh1dJaaxesgb9O4"
+        uploaded_files = []
 
-        for file_path in [json_path, csv_path]:
-            file_metadata = {"name": os.path.basename(file_path)}
-            if FOLDER_ID:
-                file_metadata["parents"] = [FOLDER_ID]
-
+        for file_path in [json_filename, csv_filename, latest_json, latest_csv]:
+            file_metadata = {
+                'name': os.path.basename(file_path),
+                'parents': [FOLDER_ID]
+            }
             media = MediaFileUpload(file_path, resumable=True)
-            file = (
-                service.files()
-                .create(body=file_metadata, media_body=media, fields="id, name, webViewLink")
-                .execute()
-            )
-            uploaded.append(file)
+            file = service.files().create(
+                body=file_metadata,
+                media_body=media,
+                fields='id, name, webViewLink'
+            ).execute()
+            uploaded_files.append({
+                'name': file['name'],
+                'id': file['id'],
+                'link': file['webViewLink']
+            })
+
+        print("✅ Uploaded files to Google Drive folder:")
+        for f in uploaded_files:
+            print(f"   - {f['name']} → {f['link']}")
 
         return jsonify({
-            "success": True,
-            "files_uploaded": uploaded,
-            "timestamp": timestamp
+            'success': True,
+            'message': 'Annotations saved and uploaded to Drive!',
+            'files_created': [json_filename, csv_filename, latest_json, latest_csv],
+            'drive_uploads': uploaded_files,
+            'timestamp': timestamp
         })
 
     except Exception as e:
         print(f"❌ Error saving annotations: {e}")
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/get_annotations', methods=['GET'])
 def get_annotations():
