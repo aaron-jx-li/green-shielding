@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Flask annotation server with Google Drive upload.
-Runs safely on Render using environment variables for credentials.
+Flask server for handling annotation saves.
+This server receives annotation data from the web interface and saves it to local files.
 """
 
 from flask import Flask, request, jsonify, send_from_directory
@@ -17,7 +17,6 @@ from googleapiclient.http import MediaFileUpload
 app = Flask(__name__)
 CORS(app)
 
-# === Environment Configuration ===
 CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
 TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")  # stored token (optional)
 SCOPES = os.getenv("SCOPES", "https://www.googleapis.com/auth/drive.file").split()
@@ -25,19 +24,6 @@ REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8000/oauth2callback")
 FOLDER_ID = os.getenv("FOLDER_ID")
 DATA_DIR = os.getenv("DATA_DIR", "annotations")
 os.makedirs(DATA_DIR, exist_ok=True)
-
-
-# === Google Auth ===
-def get_drive_service():
-    """Build Drive service using env-stored token."""
-    creds = None
-    if TOKEN_JSON:
-        creds = Credentials.from_authorized_user_info(json.loads(TOKEN_JSON), SCOPES)
-
-    if not creds or not creds.valid:
-        raise Exception("❌ Not authenticated. Visit /authorize first.")
-    return build('drive', 'v3', credentials=creds)
-
 
 @app.route('/authorize')
 def authorize():
@@ -76,7 +62,32 @@ def oauth2callback():
     )
 
 
-# === Annotation saving ===
+def get_drive_service():
+    """Build Drive service using env-stored token."""
+    creds = None
+    if TOKEN_JSON:
+        creds = Credentials.from_authorized_user_info(json.loads(TOKEN_JSON), SCOPES)
+
+    if not creds or not creds.valid:
+        raise Exception("❌ Not authenticated. Visit /authorize first.")
+    return build('drive', 'v3', credentials=creds)
+
+
+# Create data directory if it doesn't exist
+DATA_DIR = 'annotations'
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
+
+@app.route('/')
+def serve_index():
+    """Serve the main HTML file."""
+    return send_from_directory('.', 'index.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    """Serve static files (CSS, JS, JSON)."""
+    return send_from_directory('.', filename)
+
 @app.route('/save_annotations', methods=['POST'])
 def save_annotations():
     """Save annotation data locally and upload to Google Drive."""
@@ -121,13 +132,51 @@ def save_annotations():
         print(f"❌ Error saving annotations: {e}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/get_annotations', methods=['GET'])
+def get_annotations():
+    """Get the latest annotation data."""
+    try:
+        latest_file = f"{DATA_DIR}/latest_annotations.json"
+        if os.path.exists(latest_file):
+            with open(latest_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return jsonify({'success': True, 'data': data})
+        else:
+            return jsonify({'success': False, 'message': 'No annotations found'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
-@app.route('/health')
-def health():
-    return jsonify({'status': 'ok'})
+@app.route('/list_annotation_files', methods=['GET'])
+def list_annotation_files():
+    """List all annotation files."""
+    try:
+        files = []
+        if os.path.exists(DATA_DIR):
+            for filename in os.listdir(DATA_DIR):
+                if filename.endswith(('.json', '.csv')):
+                    filepath = os.path.join(DATA_DIR, filename)
+                    stat = os.stat(filepath)
+                    files.append({
+                        'filename': filename,
+                        'size': stat.st_size,
+                        'modified': datetime.fromtimestamp(stat.st_mtime).isoformat()
+                    })
+        
+        return jsonify({'success': True, 'files': files})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint."""
+    return jsonify({'status': 'healthy', 'message': 'Annotation server is running'})
 
 if __name__ == '__main__':
-    port = int(os.getenv("PORT", 8000))
-    print("🚀 Annotation server running on port", port)
-    app.run(host='0.0.0.0', port=port, debug=False)
+    print("🚀 Starting Annotation Server...")
+    print(f"📁 Annotations will be saved to: {os.path.abspath(DATA_DIR)}")
+    print("🌐 Server will be available at: http://localhost:8000")
+    print("📊 Health check: http://localhost:8000/health")
+    print("📋 List files: http://localhost:8000/list_annotation_files")
+    print("\n" + "="*50)
+    
+    app.run(debug=True, host='0.0.0.0', port=8000)
