@@ -172,11 +172,12 @@ def health_check():
     return jsonify({'status': 'healthy', 'message': 'Annotation server is running'})
 
 if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))
     print("🚀 Starting Annotation Server...")
     print(f"📁 Annotations will be saved to: {os.path.abspath(DATA_DIR)}")
-    print("🌐 Server will be available at: http://localhost:8000")
-    print("📊 Health check: http://localhost:8000/health")
-    print("📋 List files: http://localhost:8000/list_annotation_files")
+    print(f"🌐 Server will be available at: 0.0.0.0:{port}")
+    print("📊 Health check: /health")
+    print("📋 List files: /list_annotation_files")
     print("\n" + "="*50)
-    
-    app.run(debug=True, host='0.0.0.0', port=8000)
+
+    app.run(host='0.0.0.0', port=port, debug=False)
