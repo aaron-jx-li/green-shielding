@@ -2,8 +2,8 @@
 let data = [];
 
 const API_BASE = window.location.hostname.includes("onrender.com")
-  ? window.location.origin
-  : "http://localhost:10000";
+  ? window.location.origin // same domain as Render deployment
+  : "http://localhost:8000"; // local dev fallback
 
 
 class AnnotationApp {
