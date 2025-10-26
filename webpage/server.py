@@ -19,13 +19,14 @@ import traceback
 app = Flask(__name__)
 CORS(app)
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+
 CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
 TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
 SCOPES = os.getenv("SCOPES", "https://www.googleapis.com/auth/drive.file").split()
-REDIRECT_URI = os.getenv(
-    "REDIRECT_URI",
-    "http://localhost:8000/oauth2callback"
-)
+REDIRECT_URI = os.getenv("REDIRECT_URI")
 FOLDER_ID = os.getenv("FOLDER_ID")
 DATA_DIR = os.getenv("DATA_DIR", "annotations")
 os.makedirs(DATA_DIR, exist_ok=True)
