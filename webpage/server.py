@@ -13,6 +13,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from google.auth.transport.requests import Request
 import traceback
 
 
@@ -71,13 +72,17 @@ def oauth2callback():
 
 
 def get_drive_service():
-    """Build Drive service using env-stored token."""
-    creds = None
-    if TOKEN_JSON:
-        creds = Credentials.from_authorized_user_info(json.loads(TOKEN_JSON), SCOPES)
+    """Build Drive service using env-stored token and refresh if needed."""
+    if not TOKEN_JSON:
+        raise Exception("❌ No token found. Run /authorize first.")
 
-    if not creds or not creds.valid:
-        raise Exception("❌ Not authenticated. Visit /authorize first.")
+    creds = Credentials.from_authorized_user_info(json.loads(TOKEN_JSON), SCOPES)
+
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
+        print("🔄 Access token refreshed successfully.", flush=True)
+
     return build('drive', 'v3', credentials=creds)
 
 
