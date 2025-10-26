@@ -13,12 +13,14 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+import traceback
+
 
 app = Flask(__name__)
 CORS(app)
 
 CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
-TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")  # stored token (optional)
+TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
 SCOPES = os.getenv("SCOPES", "https://www.googleapis.com/auth/drive.file").split()
 REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8000/oauth2callback")
 FOLDER_ID = os.getenv("FOLDER_ID")
@@ -150,6 +152,7 @@ def save_annotations():
 
     except Exception as e:
         print(f"❌ Error saving annotations: {e}")
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 
