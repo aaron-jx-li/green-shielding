@@ -61,8 +61,9 @@ def oauth2callback():
     flow.fetch_token(authorization_response=request.url)
     creds = flow.credentials
 
-    print("✅ OAuth complete! Copy this token and add it to Render as GOOGLE_TOKEN_JSON:\n")
-    print(creds.to_json())
+    print("✅ OAuth complete! Copy this token and add it to Render as GOOGLE_TOKEN_JSON:\n", flush=True)
+    print(creds.to_json(), flush=True)
+
 
     return (
         "✅ Authentication successful! Check your Render logs and copy the token JSON into your Render environment as GOOGLE_TOKEN_JSON."
