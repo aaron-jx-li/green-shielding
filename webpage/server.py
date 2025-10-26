@@ -4,7 +4,7 @@ Flask server for handling annotation saves.
 This server receives annotation data from the web interface and saves it to local files.
 """
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 import os, io, json
 import pandas as pd
@@ -22,7 +22,10 @@ CORS(app)
 CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
 TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
 SCOPES = os.getenv("SCOPES", "https://www.googleapis.com/auth/drive.file").split()
-REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8000/oauth2callback")
+REDIRECT_URI = os.getenv(
+    "REDIRECT_URI",
+    "http://localhost:8000/oauth2callback"
+)
 FOLDER_ID = os.getenv("FOLDER_ID")
 DATA_DIR = os.getenv("DATA_DIR", "annotations")
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -39,7 +42,8 @@ def authorize():
         redirect_uri=REDIRECT_URI
     )
     auth_url, _ = flow.authorization_url(prompt='consent')
-    return jsonify({'auth_url': auth_url})
+    return redirect(auth_url)
+
 
 
 @app.route('/oauth2callback')
