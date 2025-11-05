@@ -10,5 +10,5 @@ __pycache__/
 *.err
 *.out
 *.log
-./data/HCM_filtered-100.json
-./data/HealthCareMagic-100k.json
+data/HCM_filtered-100.json
+data/HealthCareMagic-100k.json
