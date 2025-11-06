@@ -22,14 +22,6 @@ class AnnotationApp {
 
         // Question collapse/expand toggle
         document.getElementById('questionText').addEventListener('click', () => this.toggleQuestion());
-
-        // Toggle mode button
-        const toggleBtn = document.getElementById('toggleModeBtn');
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => {
-                window.location.href = '/norm';
-            });
-        }
     }
 
     toggleQuestion() {
