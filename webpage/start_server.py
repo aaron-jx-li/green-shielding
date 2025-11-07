@@ -11,9 +11,9 @@ import os
 # ========== CONFIGURATION ==========
 # Set your CSV data file path here
 DATA_CONFIG = {
-    'all_questions_metadata_csv_path': './annotation_manager/ak_review_round0/all_questions_metadata.csv',
-    'all_questions_json_path': './annotation_manager/ak_review_round0/all_questions.json',
-    'slrt_bounds_csv_path': './annotation_manager/ak_review_round0/slrt_test_low_upper_bound.csv',
+    'all_questions_metadata_csv_path': '/accounts/projects/binyu/hao_huang/green-shielding/webpage/annotation_manager/ak_review_round0/all_questions_metadata.csv',
+    'all_questions_json_path': '/accounts/projects/binyu/hao_huang/green-shielding/webpage/annotation_manager/ak_review_round0/all_questions.json',
+    'slrt_bounds_csv_path': '/accounts/projects/binyu/hao_huang/green-shielding/webpage/annotation_manager/ak_review_round0/slrt_test_low_upper_bound.csv',
     'expert_dec_column': 'expert_dec',
     'unannotated_value': -1,
     'match_value': 3,
@@ -21,6 +21,7 @@ DATA_CONFIG = {
     'vague_match_value': 1,
     'no_match_value': 0
 }
+
 # ===================================
 
 def install_requirements():
