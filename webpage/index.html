@@ -20,7 +20,8 @@
 
         <div class="annotation-card" id="annotationCard">
             <div class="card-header">
-                <h2>Case <span id="caseNumber">1</span></h2>
+                <h2>Current Question</h2>
+                <p class="subtitle-small">Select an annotation and click Next to save and continue</p>
             </div>
 
             <div class="content-section">
@@ -45,30 +46,40 @@
             </div>
 
             <div class="annotation-section">
-                <h3>Annotation</h3>
+                <h3>Your Annotation</h3>
                 <div class="radio-group">
                     <label class="radio-option">
                         <input type="radio" name="annotation" value="match" id="matchRadio">
                         <span class="radio-custom"></span>
-                        <span class="radio-label">Model matches ground truth</span>
+                        <span class="radio-label">Accurately matches the ground truth (Press 1)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="close-match" id="closeMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Closely captures similar concepts, potentially satisfactory (Press 2)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="vague-match" id="vagueMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Vaguely relates to the correct answer, not satisfactory (Press 3)</span>
                     </label>
                     <label class="radio-option">
                         <input type="radio" name="annotation" value="no-match" id="noMatchRadio">
                         <span class="radio-custom"></span>
-                        <span class="radio-label">Model does not match ground truth</span>
+                        <span class="radio-label">Does not match the ground truth at all (Press 4)</span>
                     </label>
                 </div>
             </div>
 
             <div class="button-group">
-                <button class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
-                <button class="btn btn-primary" id="nextBtn">Next</button>
-                <button class="btn btn-success" id="saveBtn" disabled>Save Annotations</button>
+                <button class="btn btn-primary" id="nextBtn" disabled>Next</button>
             </div>
+            <p class="help-text">Keyboard shortcuts: 1 = Accurate Match, 2 = Close Match, 3 = Vague Match, 4 = No Match, Enter/→ = Next</p>
         </div>
 
         <div class="summary-section" id="summarySection" style="display: none;">
-            <h2>Annotation Summary</h2>
+            <h2>🎉 Annotation Complete!</h2>
+            <p class="completion-message">All questions have been annotated. Results have been saved to the CSV file in real-time.</p>
             <div class="summary-stats">
                 <div class="stat-item">
                     <span class="stat-label">Total Cases:</span>
@@ -79,15 +90,23 @@
                     <span class="stat-value" id="annotatedCases">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Matches:</span>
+                    <span class="stat-label">Accurate Matches:</span>
                     <span class="stat-value" id="matchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Close Matches:</span>
+                    <span class="stat-value" id="closeMatchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Vague Matches:</span>
+                    <span class="stat-value" id="vagueMatchCount">0</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-label">No Matches:</span>
                     <span class="stat-value" id="noMatchCount">0</span>
                 </div>
             </div>
-            <button class="btn btn-primary" id="exportBtn">Export Results</button>
+            <p class="csv-note">✅ All annotations have been saved to the CSV file.</p>
         </div>
     </div>
 

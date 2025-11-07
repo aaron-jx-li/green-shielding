@@ -20,10 +20,14 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--berkeley-light-gray);
-    color: var(--berkeley-blue);
+    color: #2c2c2c;
     line-height: 1.6;
 }
 
@@ -52,6 +56,13 @@ body {
 .subtitle {
     font-size: 1.2rem;
     opacity: 0.9;
+}
+
+.subtitle-small {
+    font-size: 0.95rem;
+    color: #666666;
+    margin-top: 5px;
+    font-weight: 400;
 }
 
 .progress-bar {
@@ -103,7 +114,7 @@ body {
 }
 
 .content-section {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .content-section h3 {
@@ -126,40 +137,60 @@ body {
 
 .content-box {
     background: var(--berkeley-light-gray);
-    border: 2px solid #e0e0e0;
+    border: 1px solid #d0d0d0;
     border-radius: 10px;
-    padding: 20px;
-    font-size: 1rem;
-    line-height: 1.7;
-    max-height: 300px;
+    padding: 24px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-height: 400px;
     overflow-y: auto;
     transition: border-color 0.3s ease;
+    color: #2c2c2c;
 }
 
 .content-box:hover {
     border-color: var(--berkeley-light-blue);
 }
 
+/* Custom scrollbar for content boxes */
+.content-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.content-box::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 10px;
+}
+
+.content-box::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
 .question-box {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-left: 5px solid var(--berkeley-blue);
+    background: #F8F9FA;
+    border-left: 4px solid var(--berkeley-blue);
 }
 
 .model-response-box {
-    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-    border-left: 5px solid var(--berkeley-orange);
+    background: #FFF9F0;
+    border-left: 4px solid var(--berkeley-orange);
 }
 
 .ground-truth-box {
-    background: linear-gradient(135deg, #d1ecf1, #bee5eb);
-    border-left: 5px solid var(--berkeley-light-blue);
+    background: #F0F8F7;
+    border-left: 4px solid var(--berkeley-light-blue);
 }
 
 .annotation-section {
     background: var(--berkeley-light-gray);
-    padding: 25px;
+    padding: 28px;
     border-radius: 10px;
-    margin: 25px 0;
+    margin: 30px 0;
 }
 
 .annotation-section h3 {
@@ -170,16 +201,16 @@ body {
 .radio-group {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
 }
 
 .radio-option {
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 15px;
+    padding: 18px;
     background: var(--white);
-    border: 2px solid #e0e0e0;
+    border: 1px solid #d0d0d0;
     border-radius: 10px;
     transition: all 0.3s ease;
 }
@@ -187,6 +218,12 @@ body {
 .radio-option:hover {
     border-color: var(--berkeley-light-blue);
     background: #f8f9fa;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+    border-color: var(--berkeley-blue);
+    background: #f0f7ff;
+    box-shadow: 0 0 0 3px rgba(0, 50, 98, 0.1);
 }
 
 .radio-option input[type="radio"] {
@@ -221,24 +258,33 @@ body {
 }
 
 .radio-label {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 500;
-    color: var(--berkeley-blue);
+    color: #2c2c2c;
+    line-height: 1.6;
 }
 
 .button-group {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     margin-top: 30px;
     gap: 15px;
 }
 
+.help-text {
+    text-align: center;
+    margin-top: 15px;
+    color: #666666;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
 .btn {
-    padding: 12px 24px;
+    padding: 14px 32px;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -327,6 +373,26 @@ body {
     color: var(--berkeley-blue);
 }
 
+.completion-message {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--berkeley-gray);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.csv-note {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--success-green);
+    font-weight: 600;
+    margin-top: 20px;
+    padding: 15px;
+    background: #d4edda;
+    border-radius: 8px;
+    border: 2px solid var(--success-green);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -361,11 +427,16 @@ body {
     }
     
     .content-box {
-        padding: 15px;
-        font-size: 0.9rem;
+        padding: 18px;
+        font-size: 1rem;
+        line-height: 1.7;
     }
     
     .radio-option {
-        padding: 12px;
+        padding: 14px;
+    }
+    
+    .radio-label {
+        font-size: 1rem;
     }
 }

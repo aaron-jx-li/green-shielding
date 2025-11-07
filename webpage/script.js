@@ -1,45 +1,19 @@
-// Data will be loaded from JSON file
-let data = [];
-
+// Dynamic annotation app with server-side question selection
 class AnnotationApp {
     constructor() {
-        this.data = data;
-        this.currentIndex = 0;
-        this.annotations = {};
-        this.loadData();
+        this.currentQuestion = null;
+        this.stats = null;
+        this.isCompleted = false;
+        this.initializeApp();
     }
 
-    async loadData() {
-        try {
-            const response = await fetch('data.json');
-            this.data = await response.json();
-            this.initializeApp();
-        } catch (error) {
-            console.error('Error loading data:', error);
-            // Fallback to sample data if loading fails
-            this.data = [
-                {
-                    question: "Sample question for testing",
-                    default_response: "Sample model response",
-                    truth: "Sample ground truth",
-                    judge_wq5_dec: "True"
-                }
-            ];
-            this.initializeApp();
-        }
-    }
-
-    initializeApp() {
+    async initializeApp() {
         this.bindEvents();
-        this.updateDisplay();
-        this.updateProgress();
+        await this.loadNextQuestion();
     }
 
     bindEvents() {
-        document.getElementById('prevBtn').addEventListener('click', () => this.previousCase());
-        document.getElementById('nextBtn').addEventListener('click', () => this.nextCase());
-        document.getElementById('saveBtn').addEventListener('click', () => this.saveAnnotations());
-        document.getElementById('exportBtn').addEventListener('click', () => this.exportResults());
+        document.getElementById('nextBtn').addEventListener('click', () => this.saveAndNext());
         
         // Radio button change events
         document.querySelectorAll('input[name="annotation"]').forEach(radio => {
@@ -47,158 +21,192 @@ class AnnotationApp {
         });
     }
 
-    updateDisplay() {
-        const currentCase = this.data[this.currentIndex];
-        if (!currentCase) return;
+    async loadNextQuestion() {
+        try {
+            const response = await fetch('/get_next_question');
+            const data = await response.json();
+            
+            if (!data.success) {
+                this.showError('Failed to load question: ' + (data.error || 'Unknown error'));
+                return;
+            }
+            
+            if (data.completed) {
+                this.showCompletion(data.stats);
+                return;
+            }
+            
+            this.currentQuestion = data.question;
+            this.stats = data.stats;
+            this.updateDisplay();
+            this.updateProgress();
+            
+        } catch (error) {
+            console.error('Error loading question:', error);
+            this.showError('❌ Server not available! Please start the Python server first.\nRun: python3 start_server.py');
+        }
+    }
 
-        // Update case number
-        document.getElementById('caseNumber').textContent = this.currentIndex + 1;
+    updateDisplay() {
+        if (!this.currentQuestion) return;
 
         // Update content
-        document.getElementById('questionText').textContent = currentCase.question;
-        document.getElementById('modelResponse').textContent = currentCase.default_response;
-        document.getElementById('groundTruth').textContent = currentCase.truth;
+        document.getElementById('questionText').textContent = this.currentQuestion.question;
+        document.getElementById('modelResponse').textContent = this.currentQuestion.default_response;
+        document.getElementById('groundTruth').textContent = this.currentQuestion.truth;
 
-        // Update radio buttons based on existing annotation
-        const annotation = this.annotations[this.currentIndex];
-        if (annotation) {
-            document.getElementById(annotation === 'match' ? 'matchRadio' : 'noMatchRadio').checked = true;
-        } else {
-            document.querySelectorAll('input[name="annotation"]').forEach(radio => radio.checked = false);
-        }
+        // Clear radio buttons for new question
+        document.querySelectorAll('input[name="annotation"]').forEach(radio => radio.checked = false);
 
         // Update button states
         this.updateButtonStates();
     }
 
     updateButtonStates() {
-        const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const saveBtn = document.getElementById('saveBtn');
-
-        prevBtn.disabled = this.currentIndex === 0;
-        nextBtn.disabled = this.currentIndex === this.data.length - 1;
+        const selectedRadio = document.querySelector('input[name="annotation"]:checked');
         
-        const hasAnnotation = this.annotations[this.currentIndex];
-        saveBtn.disabled = !hasAnnotation;
+        // Enable next button only if annotation is selected
+        nextBtn.disabled = !selectedRadio;
+        
+        // Update button text
+        if (this.stats && this.stats.remaining === 1 && selectedRadio) {
+            nextBtn.textContent = 'Finish';
+        } else {
+            nextBtn.textContent = 'Next';
+        }
     }
 
     updateProgress() {
-        const totalCases = this.data.length;
-        const annotatedCases = Object.keys(this.annotations).length;
-        const progressPercentage = (annotatedCases / totalCases) * 100;
-
+        if (!this.stats) return;
+        
+        const progressPercentage = (this.stats.annotated / this.stats.total) * 100;
+        
         document.getElementById('progressFill').style.width = `${progressPercentage}%`;
-        document.getElementById('progressText').textContent = `${annotatedCases} / ${totalCases}`;
-
-        // Update summary if all cases are annotated
-        if (annotatedCases === totalCases) {
-            this.showSummary();
-        }
+        document.getElementById('progressText').textContent = `${this.stats.annotated} / ${this.stats.total}`;
     }
 
     handleAnnotationChange() {
+        this.updateButtonStates();
+    }
+
+    async saveAndNext() {
         const selectedRadio = document.querySelector('input[name="annotation"]:checked');
-        if (selectedRadio) {
-            this.annotations[this.currentIndex] = selectedRadio.value;
-            this.updateButtonStates();
-            this.updateProgress();
+        
+        if (!selectedRadio) {
+            alert('Please select an annotation before proceeding.');
+            return;
         }
-    }
-
-    previousCase() {
-        if (this.currentIndex > 0) {
-            this.currentIndex--;
-            this.updateDisplay();
-            this.updateProgress();
+        
+        if (!this.currentQuestion) {
+            alert('No question loaded.');
+            return;
         }
-    }
-
-    nextCase() {
-        if (this.currentIndex < this.data.length - 1) {
-            this.currentIndex++;
-            this.updateDisplay();
-            this.updateProgress();
-        }
-    }
-
-    saveAnnotations() {
-        // Save annotations to server only
-        console.log('Annotations to be saved:', this.annotations);
-        alert('Click "Export Results" to save annotations to the server files.');
-    }
-
-    showSummary() {
-        const summarySection = document.getElementById('summarySection');
-        const totalCases = this.data.length;
-        const annotatedCases = Object.keys(this.annotations).length;
-        const matchCount = Object.values(this.annotations).filter(ann => ann === 'match').length;
-        const noMatchCount = Object.values(this.annotations).filter(ann => ann === 'no-match').length;
-
-        document.getElementById('totalCases').textContent = totalCases;
-        document.getElementById('annotatedCases').textContent = annotatedCases;
-        document.getElementById('matchCount').textContent = matchCount;
-        document.getElementById('noMatchCount').textContent = noMatchCount;
-
-        summarySection.style.display = 'block';
-        summarySection.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    exportResults() {
-        const results = this.data.map((caseData, index) => ({
-            case_number: index + 1,
-            question: caseData.question,
-            model_response: caseData.default_response,
-            ground_truth: caseData.truth,
-            annotation: this.annotations[index] || 'not_annotated',
-            original_judge_decision: caseData.judge_wq5_dec
-        }));
-
-        // Save to server only (no browser download)
-        this.saveToServer(results);
-    }
-
-    async saveToServer(results) {
+        
+        const annotation = selectedRadio.value;
+        const csvIndex = this.currentQuestion.csv_index;
+        
         try {
-            const response = await fetch('/save_annotations', {
+            // Disable button while saving
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = true;
+            nextBtn.textContent = 'Saving...';
+            
+            const response = await fetch('/save_and_next', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(results)
+                body: JSON.stringify({
+                    annotation: annotation,
+                    csv_index: csvIndex
+                })
             });
             
-            if (response.ok) {
-                const result = await response.json();
-                console.log('✅ Annotations saved to server:', result);
-                alert(`✅ Annotations saved to server!\nFiles created: ${result.files_created.length}\nTimestamp: ${result.timestamp}\nLocation: ./annotations/`);
-            } else {
-                console.error('Server save failed:', response.statusText);
-                alert('❌ Server save failed! Make sure the Python server is running.');
+            const data = await response.json();
+            
+            if (!data.success) {
+                this.showError('Failed to save: ' + (data.error || 'Unknown error'));
+                nextBtn.disabled = false;
+                nextBtn.textContent = 'Next';
+                return;
             }
+            
+            if (data.completed) {
+                this.showCompletion(data.stats);
+                return;
+            }
+            
+            // Load next question
+            this.currentQuestion = data.question;
+            this.stats = data.stats;
+            this.updateDisplay();
+            this.updateProgress();
+            
         } catch (error) {
-            console.log('❌ Server not available');
-            alert('❌ Server not available! Please start the Python server first.\nRun: python3 server.py');
+            console.error('Error saving annotation:', error);
+            this.showError('❌ Error saving annotation. Server may be unavailable.');
+            
+            // Re-enable button
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = false;
+            nextBtn.textContent = 'Next';
         }
     }
 
-    // CSV conversion and download functions removed - using server-only saves
+    showCompletion(stats) {
+        this.isCompleted = true;
+        
+        // Hide annotation card
+        document.getElementById('annotationCard').style.display = 'none';
+        
+        // Show summary
+        const summarySection = document.getElementById('summarySection');
+        document.getElementById('totalCases').textContent = stats.total;
+        document.getElementById('annotatedCases').textContent = stats.annotated;
+        document.getElementById('matchCount').textContent = stats.matches || 0;
+        document.getElementById('closeMatchCount').textContent = stats.close_matches || 0;
+        document.getElementById('vagueMatchCount').textContent = stats.vague_matches || 0;
+        document.getElementById('noMatchCount').textContent = stats.no_matches || 0;
+        
+        summarySection.style.display = 'block';
+        summarySection.scrollIntoView({ behavior: 'smooth' });
+        
+        // Update progress to 100%
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressText').textContent = `${stats.total} / ${stats.total}`;
+    }
+
+    showError(message) {
+        alert(message);
+    }
 }
+
+// Store app instance globally for keyboard shortcuts
+window.annotationApp = null;
 
 // Initialize the app when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    new AnnotationApp();
+    window.annotationApp = new AnnotationApp();
 });
 
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        document.getElementById('prevBtn').click();
-    } else if (e.key === 'ArrowRight') {
-        document.getElementById('nextBtn').click();
+    const app = window.annotationApp;
+    if (!app) return;
+    
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+        const nextBtn = document.getElementById('nextBtn');
+        if (!nextBtn.disabled) {
+            nextBtn.click();
+        }
     } else if (e.key === '1') {
         document.getElementById('matchRadio').click();
     } else if (e.key === '2') {
+        document.getElementById('closeMatchRadio').click();
+    } else if (e.key === '3') {
+        document.getElementById('vagueMatchRadio').click();
+    } else if (e.key === '4') {
         document.getElementById('noMatchRadio').click();
     }
 });
