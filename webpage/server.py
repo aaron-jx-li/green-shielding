@@ -4,7 +4,7 @@ Flask server for dynamic annotation with server-side question selection.
 This server manages question selection, tracks annotations, and updates the CSV file in real-time.
 """
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 import json
 import os
