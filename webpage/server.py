@@ -185,42 +185,62 @@ def get_stats():
         return None
 
 def save_annotation_to_csv(csv_index, annotation_value):
-    """Save annotation to the CSV file and upload to Google Drive."""
+    """Save annotation to the CSV file and upload/update it on Google Drive."""
     try:
-        print("Saving annotation for index: ", csv_index, " with value: ", annotation_value)
+        print("Saving annotation for index:", csv_index, "with value:", annotation_value)
         df = pd.read_csv(CONFIG['all_questions_metadata_csv_path'], quoting=csv.QUOTE_ALL)
-        
+
         if sum(df['Index'] == int(csv_index)) != 1:
             print(f"❌ Error saving annotation: {df.shape[0]} rows found for index {csv_index}")
         else:
-            print(f"✅ properly found annotation for CSV row {csv_index}: {annotation_value}")
-        
+            print(f"✅ Found annotation row for CSV index {csv_index}: {annotation_value}")
+
+        # Update annotation and mark as seen
         df.loc[df['Index'] == int(csv_index), CONFIG['expert_dec_column']] = annotation_value
         df.loc[df['Index'] == int(csv_index), "to_be_seen"] = False
-        
+
+        # Save updated CSV locally
         df.to_csv(CONFIG['all_questions_metadata_csv_path'], index=False, quoting=csv.QUOTE_ALL)
-        print(f"✅ Saved annotation for CSV row {csv_index}: {annotation_value}")
-        
+        print(f"✅ Saved annotation locally for CSV row {csv_index}: {annotation_value}")
+
+        # Try uploading to Google Drive
         try:
             service = get_drive_service()
-            file_metadata = {
-                'name': os.path.basename(CONFIG['all_questions_metadata_csv_path']),
-                'parents': [FOLDER_ID]
-            }
+            file_name = os.path.basename(CONFIG['all_questions_metadata_csv_path'])
+            query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
+
+            # Check if the file already exists in the Drive folder
+            existing_files = service.files().list(q=query, fields="files(id, name)").execute().get('files', [])
             media = MediaFileUpload(CONFIG['all_questions_metadata_csv_path'], resumable=True)
-            file = service.files().create(
-                body=file_metadata,
-                media_body=media,
-                fields='id, name, webViewLink'
-            ).execute()
-            print(f"✅ Uploaded updated CSV to Drive: {file['webViewLink']}")
+
+            if existing_files:
+                # Update existing file
+                file_id = existing_files[0]['id']
+                updated_file = service.files().update(
+                    fileId=file_id,
+                    media_body=media,
+                    fields='id, name, webViewLink'
+                ).execute()
+                print(f"🔄 Updated existing Drive file: {updated_file['webViewLink']}")
+            else:
+                # Create a new file
+                file_metadata = {'name': file_name, 'parents': [FOLDER_ID]}
+                new_file = service.files().create(
+                    body=file_metadata,
+                    media_body=media,
+                    fields='id, name, webViewLink'
+                ).execute()
+                print(f"✅ Uploaded new Drive file: {new_file['webViewLink']}")
+
         except Exception as e:
-            print(f"⚠️ Drive upload skipped due to error: {e}")
+            print(f"⚠️ Google Drive upload skipped due to error: {e}")
 
         return True
+
     except Exception as e:
         print(f"❌ Error saving annotation: {e}")
         return False
+
 
 
 @app.route('/')
