@@ -19,7 +19,10 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.auth.transport.requests import Request
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 CORS(app)  # Enable CORS for all routes
 
 CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
