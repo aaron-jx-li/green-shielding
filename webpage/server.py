@@ -121,6 +121,10 @@ def get_slrt_random_unannotated_question():
         max_samples = slrt_bounds_df.n.max()
         if cat_num_seen < min_samples or cat_num_seen > max_samples:
             continue
+
+        print("csv_index:", csv_index, "len(questions_json):", len(questions_json))
+        print("cat_num_seen:", cat_num_seen, "n values:", slrt_bounds_df['n'].tolist())
+
         cat_low_bound = slrt_bounds_df[slrt_bounds_df['n'] == cat_num_seen]['lower'].values[0]
         cat_high_bound = slrt_bounds_df[slrt_bounds_df['n'] == cat_num_seen]['upper'].values[0]
         num_incorrect = cat_questions_df[cat_questions_df['expert_dec'].isin([0, 1])].shape[0]
@@ -140,6 +144,9 @@ def get_slrt_random_unannotated_question():
 
     row = sampled_question_df.iloc[0]
     csv_index = row['Index']
+
+    print("csv_index:", csv_index, "len(questions_json):", len(questions_json))
+    print("cat_num_seen:", cat_num_seen, "n values:", slrt_bounds_df['n'].tolist())
 
     questions_json_row = questions_json[csv_index]
     assert questions_json_row['Index'] == csv_index, "CSV index and questions JSON index do not match"
