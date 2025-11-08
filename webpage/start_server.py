@@ -12,7 +12,7 @@ import os
 # Set your CSV data file path here
 DATA_CONFIG = {
     'all_questions_metadata_csv_path': 'annotation_manager/ak_review_round0/all_questions_metadata.csv',
-    'all_questions_json_path': 'annotation_manager/ak_review_round0/all_questions_test.json',
+    'all_questions_json_path': 'annotation_manager/ak_review_round0/all_questions.json',
     'slrt_bounds_csv_path': 'annotation_manager/ak_review_round0/slrt_test_low_upper_bound.csv',
     'expert_dec_column': 'expert_dec',
     'unannotated_value': -1,
