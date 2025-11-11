@@ -58,6 +58,9 @@ class AnnotationApp {
         // Clear radio buttons for new question
         document.querySelectorAll('input[name="annotation"]').forEach(radio => radio.checked = false);
 
+        // Clear comment box for new question
+        document.getElementById('commentBox').value = '';
+
         // Update button states
         this.updateButtonStates();
     }
@@ -105,6 +108,7 @@ class AnnotationApp {
         
         const annotation = selectedRadio.value;
         const csvIndex = this.currentQuestion.csv_index;
+        const comment = document.getElementById('commentBox').value.trim();
         
         try {
             // Disable button while saving
@@ -119,7 +123,8 @@ class AnnotationApp {
                 },
                 body: JSON.stringify({
                     annotation: annotation,
-                    csv_index: csvIndex
+                    csv_index: csvIndex,
+                    comment: comment
                 })
             });
             

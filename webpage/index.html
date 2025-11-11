@@ -51,24 +51,34 @@
                     <label class="radio-option">
                         <input type="radio" name="annotation" value="match" id="matchRadio">
                         <span class="radio-custom"></span>
-                        <span class="radio-label">Accurately matches the ground truth (Press 1)</span>
+                        <span class="radio-label"> Model Response matches Ground Truth (Press 1)</span>
                     </label>
                     <label class="radio-option">
                         <input type="radio" name="annotation" value="close-match" id="closeMatchRadio">
                         <span class="radio-custom"></span>
-                        <span class="radio-label">Closely captures similar concepts, potentially satisfactory (Press 2)</span>
+                        <span class="radio-label">Model Response does not match Ground Truth exactly but is closely related (Press 2)</span>
                     </label>
                     <label class="radio-option">
                         <input type="radio" name="annotation" value="vague-match" id="vagueMatchRadio">
                         <span class="radio-custom"></span>
-                        <span class="radio-label">Vaguely relates to the correct answer, not satisfactory (Press 3)</span>
+                        <span class="radio-label">Model Response only vaguely relates to the Ground Truth (Press 3)</span>
                     </label>
                     <label class="radio-option">
                         <input type="radio" name="annotation" value="no-match" id="noMatchRadio">
                         <span class="radio-custom"></span>
-                        <span class="radio-label">Does not match the ground truth at all (Press 4)</span>
+                        <span class="radio-label">Model Response does not match Ground Truth at all (Press 4)</span>
                     </label>
                 </div>
+            </div>
+
+            <div class="comment-section">
+                <h3>Additional Comments (Optional)</h3>
+                <textarea 
+                    id="commentBox" 
+                    class="comment-textarea" 
+                    placeholder="Enter any additional notes or observations about this annotation..."
+                    rows="3"
+                ></textarea>
             </div>
 
             <div class="button-group">

@@ -187,10 +187,12 @@ def get_stats():
         print(f"❌ Error getting stats: {e}")
         return None
 
-def save_annotation_to_csv(csv_index, annotation_value):
+def save_annotation_to_csv(csv_index, annotation_value, comment=""):
     """Save annotation to the CSV file and upload/update it on Google Drive."""
     try:
         print("Saving annotation for index:", csv_index, "with value:", annotation_value)
+        if comment:
+            print("Saving comment: ", comment)
         df = pd.read_csv(CONFIG['all_questions_metadata_csv_path'], quoting=csv.QUOTE_ALL)
 
         if sum(df['Index'] == int(csv_index)) != 1:
@@ -201,10 +203,13 @@ def save_annotation_to_csv(csv_index, annotation_value):
         # Update annotation and mark as seen
         df.loc[df['Index'] == int(csv_index), CONFIG['expert_dec_column']] = annotation_value
         df.loc[df['Index'] == int(csv_index), "to_be_seen"] = False
+        df.loc[df['Index'] == int(csv_index), "comments"] = comment
 
         # Save updated CSV locally
         df.to_csv(CONFIG['all_questions_metadata_csv_path'], index=False, quoting=csv.QUOTE_ALL)
         print(f"✅ Saved annotation locally for CSV row {csv_index}: {annotation_value}")
+        if comment:
+            print(f"✅ Saved comment for CSV row {csv_index}: {comment}")
 
         # Try uploading to Google Drive
         try:
@@ -302,6 +307,7 @@ def save_and_next():
         
         annotation = data['annotation']
         csv_index = int(float(data.get('csv_index')))
+        comment = data.get('comment', '')
         
         if csv_index is None:
             return jsonify({'error': 'No CSV index provided'}), 400
@@ -319,7 +325,7 @@ def save_and_next():
             return jsonify({'error': 'Invalid annotation value'}), 400
         
         # Save annotation
-        if not save_annotation_to_csv(csv_index, annotation_value):
+        if not save_annotation_to_csv(csv_index, annotation_value, comment):
             return jsonify({'error': 'Failed to save annotation'}), 500
         
         # Get next question
