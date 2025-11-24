@@ -1,0 +1,98 @@
+{
+  "summary": {
+    "num_total_judged": 11,
+    "num_correct": 8,
+    "accuracy": 0.7272727272727273,
+    "judge_model": "gpt-4.1-mini"
+  },
+  "per_sample": [
+    {
+      "index": 0,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "I woke up this morning feeling the whole room is spinning when i was sitting down. I went to the bathroom walking unsteadily, as i tried to focus i feel nauseous. I try to vomit but it wont come out.. After taking panadol and sleep for few hours, i still feel the same.. By the way, if i lay down or sit down, my head do not spin, only when i want to move around then i feel the whole world is spinning.. And it is normal stomach discomfort at the same time? Earlier after i relieved myself, the spinning lessen so i am not sure whether its connected or coincidences.. Thank you doc!",
+      "model_response": "Your symptoms of room-spinning dizziness (vertigo), unsteady walking, nausea without vomiting, and worsening with movement suggest a vestibular issue, such as benign paroxysmal positional vertigo (BPPV) or vestibular neuritis. The fact that lying down or sitting still reduces the spinning supports this. The stomach discomfort may be related to nausea or a separate issue.\n\nImportant points:\n- Vertigo triggered or worsened by movement is common in inner ear problems.\n- Nausea without vomiting is typical with vertigo.\n- Improvement after urination is likely coincidental.\n\nRecommendations:\n- Avoid sudden head movements and get up slowly.\n- Stay hydrated and rest.\n- If symptoms worsen, you develop hearing loss, severe headache, weakness, double vision, or difficulty speaking, seek emergency care.\n- If symptoms persist beyond a few days, see a healthcare provider for evaluation and possible vestibular testing or treatment maneuvers.\n\nIf you have a history of heart disease, stroke, or other neurological conditions, or if this is your first episode, prompt medical evaluation is advised.",
+      "reference_diagnosis": "benign paroxysmal positional vertigo (BPPV)"
+    },
+    {
+      "index": 1,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "My baby has been pooing 5-6 times a day for a week. In the last few days it has increased to 7 and they are very watery with green stringy bits in them. He does not seem unwell i.e no temperature and still eating. He now has a very bad nappy rash from the pooing ...help!",
+      "model_response": "Your baby’s increased frequency of watery, green, stringy stools and the resulting severe nappy rash suggest irritation likely due to diarrhea. Since your baby is still feeding well, has no fever, and seems otherwise well, this may be a mild viral or dietary-related upset. \n\nHere are some steps you can take:\n- Keep your baby well hydrated; continue regular feeds.\n- Change nappies frequently to keep the area clean and dry.\n- Use a barrier cream (like zinc oxide) to protect the skin from irritation.\n- Avoid wipes with alcohol or fragrance; use plain water and a soft cloth if possible.\n- Monitor for any signs of dehydration (dry mouth, fewer wet nappies, lethargy) or if the diarrhea worsens or lasts more than 7-10 days.\n\nIf your baby develops fever, vomiting, appears unwell, or the rash worsens with blisters or oozing, seek medical advice promptly. If you are concerned or unsure, contacting your pediatrician for an evaluation is recommended.",
+      "reference_diagnosis": "viral diarrhea"
+    },
+    {
+      "index": 2,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "I have a 5 month old baby who is very congested with a terrible cough. Its rattly/raspy and croupy sounding cough. She started choking on her coughs and the mucous that has come up. She also has a fever and runny nose. Should i take her to urgent care?",
+      "model_response": "A 5-month-old baby with a rattly, croupy cough, congestion, fever, runny nose, and episodes of choking on mucus needs prompt medical evaluation. These symptoms could indicate a respiratory infection such as bronchiolitis, croup, or another serious condition.\n\nYou should take your baby to urgent care or the emergency room immediately if you notice any of the following:\n- Difficulty breathing (fast or labored breathing, chest retractions)\n- Persistent choking or gagging\n- Blue or pale lips or face\n- High fever (especially if over 100.4°F/38°C in an infant under 3 months, or persistent fever in older infants)\n- Lethargy or difficulty waking\n- Poor feeding or dehydration\n\nEven if these severe signs are not present, given the age and symptoms, it is safest to have your baby evaluated promptly by a healthcare professional to ensure appropriate treatment and monitoring. If you are unsure, err on the side of caution and seek urgent care.",
+      "reference_diagnosis": "bronchiolitis"
+    },
+    {
+      "index": 3,
+      "judge_label": "WRONG",
+      "is_correct": false,
+      "question": "I am F 38 in good shape work out (do triathlons) regular but have had back pain from different reasons throughout my life now I every so often wake up with severe lower back, hip pain for no reason. today the pain is almost taking my breathe away when i move. It is a dull pain when i am just lying down but the moment I make any sort of movement I have sharp and sometimes shooting pain down my legs.",
+      "model_response": "Your symptoms of severe lower back and hip pain, especially with sharp, shooting pain down the legs, suggest possible nerve involvement such as sciatica or a herniated disc. Given the severity and the fact that the pain is almost taking your breath away with movement, it is important to seek urgent medical evaluation.\n\nKey concerns include:\n- Possible nerve compression (e.g., herniated disc, spinal stenosis)\n- Muscle strain or ligament injury\n- Less commonly, serious conditions like infection or fracture\n\nWhat to do now:\n- Avoid movements that worsen the pain\n- Use ice or heat for comfort\n- Take over-the-counter pain relief if appropriate\n- Seek urgent medical care (ER or urgent care) especially if you have any numbness, weakness, bowel/bladder changes, or inability to move\n\nA healthcare provider will likely perform a physical exam and may order imaging (MRI) to determine the cause and guide treatment. Early evaluation is important to prevent worsening or complications.",
+      "reference_diagnosis": "degenerative changes in lumbar spine with possible nerve impingement; consider osteomalacia or osteoporosis"
+    },
+    {
+      "index": 4,
+      "judge_label": "WRONG",
+      "is_correct": false,
+      "question": "sir, MY uncle has ILD-Interstitial Lung disease.from my research over google i found that the cause is important to be known. the cause wat i feel is due to breakage of acid bottle in bathroom which caused lot of smoke and that time he wasnot able to be normal for 15-20 minutes. then he was normal .may be that would have been the reason for this ILD. Please suggest wat we should do",
+      "model_response": "Exposure to toxic fumes, such as from a broken acid bottle, can cause lung injury and potentially lead to or worsen Interstitial Lung Disease (ILD). However, ILD has many causes, including autoimmune diseases, infections, environmental exposures, and idiopathic (unknown) origins.\n\nGiven your uncle's history of exposure to acid fumes and subsequent lung symptoms, it is possible that this event contributed to lung damage. It is very important that he:\n\n1. Sees a pulmonologist (lung specialist) for a thorough evaluation.\n2. Undergoes diagnostic tests such as high-resolution CT scan of the chest, pulmonary function tests, and possibly blood tests to identify the cause and extent of ILD.\n3. Avoids further exposure to lung irritants or toxic fumes.\n4. Follows the treatment plan prescribed by the doctor, which may include medications like corticosteroids or antifibrotic agents depending on the type and cause of ILD.\n\nPlease seek medical attention promptly to get an accurate diagnosis and appropriate management. Early intervention can help slow disease progression and improve quality of life.",
+      "reference_diagnosis": "interstitial lung disease (ILD), likely idiopathic or age-related"
+    },
+    {
+      "index": 5,
+      "judge_label": "WRONG",
+      "is_correct": false,
+      "question": "my husband was working on a project in the house and all of a sudden a bump about the size of a half dollar appeard on his left leg inside below the knee. He is 69 years old and had triple by pass surgery 7 years ago. It stung when it first happened. Doesn t hurt now. He is seated with his leg ellevated. Is this an emergency?",
+      "model_response": "A sudden bump appearing on the lower leg that initially stung but now does not hurt could be due to several causes, such as a localized skin injury, insect bite, or a small hematoma. Given your husband's age and history of triple bypass surgery, it is important to be cautious.\n\n**Key concerns:**\n- Sudden swelling could indicate a vascular issue (e.g., blood clot).\n- History of heart surgery may increase risk for circulatory problems.\n- Lack of pain now is reassuring but does not rule out serious issues.\n\n**When to seek emergency care immediately:**\n- If the leg becomes increasingly swollen, red, warm, or painful.\n- If he develops shortness of breath, chest pain, or sudden weakness.\n- If the bump grows rapidly or changes color significantly.\n\n**What to do now:**\n- Keep the leg elevated as you are doing.\n- Monitor for changes in size, color, pain, or other symptoms.\n- Avoid putting pressure on the leg.\n\n**Recommendation:**\nBecause of his cardiac history and the sudden appearance of the bump, it is best to have him evaluated promptly by a healthcare professional to rule out serious causes such as deep vein thrombosis or vascular injury. If any concerning symptoms develop, go to the emergency room immediately. Otherwise, arrange for a medical evaluation within the next day.",
+      "reference_diagnosis": "minor hematoma or superficial vein rupture"
+    },
+    {
+      "index": 6,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "Hi my name is Wendy I ve been having an issue for the last couple of months or so I been having severe pain in my lower back around the front into the groin area and its radiating down my thigh and so on I am currently a cancer patient nobody seems to be able to tell me what it could be the pain is so bad that it brings tears to my eyes would you possibly know what it could be or might be",
+      "model_response": "Hi Wendy, I'm sorry to hear about your pain. Given your history as a cancer patient and the severe pain radiating from your lower back to the groin and down the thigh, this could be due to several possibilities, including:\n\n1. **Nerve compression or involvement**: Cancer or related treatments can cause nerve compression (such as sciatica or femoral nerve involvement), leading to radiating pain.\n2. **Metastasis to the spine or pelvic bones**: Cancer spreading to bones in the lower back or pelvis can cause severe localized and radiating pain.\n3. **Musculoskeletal causes**: Muscle strain or inflammation, but given the severity and your history, this is less likely to be the sole cause.\n4. **Other causes**: Such as infection or vascular issues, but these are less common.\n\nIt is very important that you inform your oncologist or healthcare provider immediately about this pain. They may need to perform imaging studies (like MRI or CT scans) and possibly adjust your pain management plan. Severe pain that affects quality of life in cancer patients often requires prompt evaluation and treatment.\n\nIf the pain is unbearable, please seek urgent medical attention.",
+      "reference_diagnosis": "Possible metastatic cancer to spine or lymph nodes"
+    },
+    {
+      "index": 7,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "hye, My aunt is having shortness of breath and she is on vent now. Her breast showed some kind of infection that apparently turned out to have black blisters. I could she those spreading. When we went for lungs x-ray doctor said she has accumulation of water in her lungs",
+      "model_response": "I'm sorry to hear about your aunt's condition. The presence of black blisters on the breast with spreading infection, combined with shortness of breath and fluid accumulation in the lungs (likely pleural effusion), is concerning and may indicate a severe infection such as necrotizing fasciitis or a severe soft tissue infection possibly spreading to the chest cavity.\n\nKey points:\n- Black blisters suggest tissue necrosis or severe infection.\n- Fluid in the lungs can impair breathing and may be due to infection spreading or heart/lung complications.\n- Being on a ventilator indicates respiratory failure or severe respiratory distress.\n\nImmediate actions:\n- Ensure she is under close monitoring in an ICU setting.\n- Broad-spectrum intravenous antibiotics are typically required.\n- Surgical evaluation for possible debridement of infected tissue may be necessary.\n- Further imaging (CT scan) might be needed to assess the extent of infection.\n\nPlease ensure her medical team is aware of the progression and symptoms. This is a medical emergency requiring prompt and aggressive treatment.",
+      "reference_diagnosis": "Staphylococcal infection with pleural effusion and skin involvement"
+    },
+    {
+      "index": 8,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "I sprained my foot on Friday. I stepped on what I thought was lawn. Instead I was a bit on the lawn, but the outside of my foot snapped down into a trough. My foot has been swollen since Friday. Today is Thursday. Kept ice on it for 24 hours. Bruising started after that, Now bruising is spreading. It is really dark on my toes. Pain is on outside of my foot, not on my ankle.",
+      "model_response": "Your symptoms—swelling since Friday, spreading and dark bruising, and pain on the outside of the foot—suggest a significant foot injury, possibly a moderate to severe sprain or even a fracture. Dark bruising on the toes and persistent swelling are concerning signs.\n\nYou should seek medical evaluation promptly to rule out fractures or other serious injuries. An X-ray or other imaging may be needed. Meanwhile, keep the foot elevated, avoid putting weight on it, and continue icing. If you experience increasing pain, numbness, or inability to move toes, seek emergency care immediately.",
+      "reference_diagnosis": "foot sprain or minor fracture"
+    },
+    {
+      "index": 9,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "hi, i have been recently diagnosed with H pylori.. i have been give the triple treatment of calithramycin, amoxxicilin and omeprazole.. is dis something very serious and does this have some long term implications etc.can u plz give some detailed information about Hpylori. thnx",
+      "model_response": "Hello! Helicobacter pylori (H. pylori) is a common bacterial infection that affects the stomach lining. Here's some detailed information to help you understand your diagnosis and treatment:\n\n### What is H. pylori?\n- H. pylori is a type of bacteria that can live in the acidic environment of the stomach.\n- It is a common cause of gastritis (inflammation of the stomach lining), peptic ulcers (sores in the stomach or duodenum), and can increase the risk of stomach cancer if untreated over many years.\n\n### How serious is H. pylori infection?\n- Many people with H. pylori have no symptoms and may never develop complications.\n- However, if left untreated, it can cause chronic gastritis, ulcers, and in rare cases, increase the risk of stomach cancer.\n- Early diagnosis and treatment usually prevent these complications.\n\n### Your treatment: Triple therapy\n- The triple therapy you mentioned (clarithromycin, amoxicillin, and omeprazole) is a standard and effective treatment.\n- **Clarithromycin** and **amoxicillin** are antibiotics that kill the bacteria.\n- **Omeprazole** is a proton pump inhibitor (PPI) that reduces stomach acid, helping the antibiotics work better and allowing the stomach lining to heal.\n- Treatment usually lasts 10-14 days.\n\n### Long-term implications\n- If the treatment successfully eradicates H. pylori, most people recover fully without long-term problems.\n- You may need a follow-up test (usually a breath or stool test) after treatment to confirm the infection is gone.\n- If untreated or if treatment fails, chronic infection can lead to ulcers or increase cancer risk.\n\n### Lifestyle and prevention tips\n- Avoid NSAIDs (like ibuprofen) which can worsen stomach lining damage.\n- Limit alcohol and smoking, as they can impair healing.\n- Maintain good hygiene to reduce reinfection risk (hand washing, safe food and water).\n\n### Summary\n- H. pylori infection is common and treatable.\n- Your prescribed triple therapy is effective in most cases.\n- Early treatment prevents serious complications.\n- Follow your doctor's advice and complete the full course of medication.\n- Get follow-up testing to ensure eradication.\n\nIf you have any symptoms like severe stomach pain, vomiting blood, or black stools, seek medical attention promptly.\n\nLet me know if you want more information or have other questions!",
+      "reference_diagnosis": "H. pylori infection (peptic ulcer disease)"
+    },
+    {
+      "index": 10,
+      "judge_label": "CORRECT",
+      "is_correct": true,
+      "question": "i had surgery done 5 months ago for scar tissue and adhesion removal. my gynecologist just found a cyst on my right ovary. im still having problems, when my husband and i have sex i get severe cervical pain and afterward i get abdominal cramps severe enough i get light headed, also i get abdominal pain and rectal pain before and during a bowel movement, i also get abdominal pain during urination. im 26 years old. what could it be?",
+      "model_response": "Your symptoms of severe cervical pain during intercourse, abdominal cramps, rectal pain with bowel movements, and pain during urination, combined with a history of surgery for scar tissue and adhesions and a newly found ovarian cyst, suggest that you may be experiencing pelvic adhesions or pelvic inflammatory issues. The cyst could also be contributing to pain, but the widespread nature of your symptoms—affecting intercourse, bowel movements, and urination—raises concern for conditions such as:\n\n- Pelvic adhesions causing organ tethering and pain\n- Endometriosis, which can cause pain in multiple pelvic organs\n- Pelvic inflammatory disease or ongoing inflammation\n- Ovarian cyst complications (e.g., rupture or torsion)\n- Interstitial cystitis or bladder irritation\n\nGiven the severity and variety of your symptoms, it is important to follow up promptly with your gynecologist or a pelvic pain specialist. They may recommend imaging (ultrasound, MRI), pelvic exam under anesthesia, or diagnostic laparoscopy to better evaluate adhesions, endometriosis, or other causes. Pain management and targeted treatment will depend on the underlying diagnosis.\n\nIf you experience worsening pain, fever, heavy bleeding, or other urgent symptoms, seek emergency care.",
+      "reference_diagnosis": "Pelvic Inflammatory Disease (PID), possible recurrent adhesions, cystitis, proctocolitis, ovarian cyst"
+    }
+  ]
+}
