@@ -100,8 +100,11 @@ def main():
 
     # iterate through samples
     for idx, sample in enumerate(tqdm(data, desc="Judging")):
-        reference = sample.get("reference", {})
-        truth = reference.get("reference_diagnosis", None)
+        if "results/" in args.input_path:
+            truth = sample.get("reference_diagnosis", None)
+        else:
+            reference = sample.get("reference", {})
+            truth = reference.get("reference_diagnosis", None)
         model_answer = sample.get("model_response", None)
         question = sample.get("input", "")
 
@@ -127,7 +130,6 @@ def main():
                 "reference_diagnosis": truth,
             }
         )
-
 
     accuracy = num_correct / num_total if num_total > 0 else None
 

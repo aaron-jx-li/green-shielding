@@ -97,7 +97,7 @@ def main():
         # print(f"Processing sample {idx}...")
 
         # instruction = sample.get("instruction", "")
-        input_text = sample.get("input", "")
+        input_text = sample.get("normalized_prompt", "")
 
         try:
             model_resp = query_model(client, input_text, args.model)
