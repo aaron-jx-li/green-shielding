@@ -1,0 +1,1575 @@
+<html><head><meta charset='UTF-8'>
+<title>Prompt Examples: Correct → Wrong</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 2rem; }
+h2 { color: #3B82F6; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+th { background: #f6f6ff; }
+.qog { background: #F0F9FF; }
+.conv { background: #FEF2F8; }
+.respog { background: #ECFDF5; }
+.respconv { background: #FEF9C3; }
+.refog { background: #FDE68A; }
+.refconv { background: #FECACA; }
+</style>
+</head><body>
+<h1>Examples Where Judge Label Changes from <span style='color:#3B82F6'>Correct</span> to <span style='color:#EC4899'>Wrong</span></h1>
+<table>
+<tr><th>#</th><th>Original Question</th><th>Converted Prompt</th><th>Original Model Response</th><th>Converted Model Response</th><th>Original Reference Diagnosis</th><th>Converted Reference Diagnosis</th></tr>
+<tr><td>7</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hye, My aunt is having shortness of breath and she is on vent now. Her breast showed some kind of infection that apparently turned out to have black blisters. I could she those spreading. When we went for lungs x-ray doctor said she has accumulation of water in her lungs</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>An adult female patient is currently on mechanical ventilation due to shortness of breath. She has a breast infection characterized by the presence of spreading black blisters. A chest X-ray revealed pleural effusion. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear about your aunt's condition. The presence of black blisters on the breast with spreading infection, combined with shortness of breath and fluid accumulation in the lungs (likely pleural effusion), is concerning and may indicate a severe infection such as necrotizing fasciitis or a severe soft tissue infection possibly spreading to the chest cavity.
+
+Key points:
+- Black blisters suggest tissue necrosis or severe infection.
+- Fluid in the lungs can impair breathing and may be due to infection spreading or heart/lung complications.
+- Being on a ventilator indicates respiratory failure or severe respiratory distress.
+
+Immediate actions:
+- Ensure she is under close monitoring in an ICU setting.
+- Broad-spectrum intravenous antibiotics are typically required.
+- Surgical evaluation for possible debridement of infected tissue may be necessary.
+- Further imaging (CT scan) might be needed to assess the extent of infection.
+
+Please ensure her medical team is aware of the progression and symptoms. This is a medical emergency requiring prompt and aggressive treatment.</div></td><td class='respconv'><div>The presentation of a breast infection with spreading black blisters suggests necrotizing fasciitis or a severe necrotizing soft tissue infection. The presence of pleural effusion on chest X-ray indicates possible extension of infection or associated complications such as empyema or severe systemic infection.
+
+Most likely diagnosis: **Necrotizing fasciitis of the breast with secondary pleural effusion**.
+
+This is a rapidly progressive, life-threatening soft tissue infection requiring urgent surgical debridement and broad-spectrum antibiotics. The pleural effusion may represent reactive inflammation or secondary infection (empyema).</div></td><td class='refog'><div>Staphylococcal infection with pleural effusion and skin involvement</div></td><td class='refconv'><div>Staphylococcal infection with pleural effusion and skin involvement</div></td></tr>
+<tr><td>10</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>i had surgery done 5 months ago for scar tissue and adhesion removal. my gynecologist just found a cyst on my right ovary. im still having problems, when my husband and i have sex i get severe cervical pain and afterward i get abdominal cramps severe enough i get light headed, also i get abdominal pain and rectal pain before and during a bowel movement, i also get abdominal pain during urination. im 26 years old. what could it be?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 26-year-old female who underwent surgery five months ago for scar tissue and adhesion removal now presents with a newly identified cyst on the right ovary. She reports severe cervical pain during intercourse, followed by severe abdominal cramps causing light-headedness. Additionally, she experiences abdominal pain and rectal pain before and during bowel movements, as well as abdominal pain during urination. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms of severe cervical pain during intercourse, abdominal cramps, rectal pain with bowel movements, and pain during urination, combined with a history of surgery for scar tissue and adhesions and a newly found ovarian cyst, suggest that you may be experiencing pelvic adhesions or pelvic inflammatory issues. The cyst could also be contributing to pain, but the widespread nature of your symptoms—affecting intercourse, bowel movements, and urination—raises concern for conditions such as:
+
+- Pelvic adhesions causing organ tethering and pain
+- Endometriosis, which can cause pain in multiple pelvic organs
+- Pelvic inflammatory disease or ongoing inflammation
+- Ovarian cyst complications (e.g., rupture or torsion)
+- Interstitial cystitis or bladder irritation
+
+Given the severity and variety of your symptoms, it is important to follow up promptly with your gynecologist or a pelvic pain specialist. They may recommend imaging (ultrasound, MRI), pelvic exam under anesthesia, or diagnostic laparoscopy to better evaluate adhesions, endometriosis, or other causes. Pain management and targeted treatment will depend on the underlying diagnosis.
+
+If you experience worsening pain, fever, heavy bleeding, or other urgent symptoms, seek emergency care.</div></td><td class='respconv'><div>The patient's history of prior surgery for scar tissue and adhesions, combined with her current symptoms—severe cervical pain during intercourse (dyspareunia), severe abdominal cramps with light-headedness, abdominal and rectal pain related to bowel movements, and pain during urination—strongly suggests **endometriosis**.
+
+Key points supporting this diagnosis:
+- Endometriosis commonly causes pelvic pain, dysmenorrhea, dyspareunia, and pain with bowel movements and urination.
+- The presence of a newly identified ovarian cyst is likely an **endometrioma** (a "chocolate cyst"), which is a common manifestation of ovarian endometriosis.
+- Prior surgery for adhesions and scar tissue is consistent with previous endometriosis treatment or complications.
+
+**Most likely diagnosis:** Endometriosis with ovarian endometrioma.
+
+Further evaluation with pelvic ultrasound and possibly MRI, along with referral to a gynecologist, is recommended for confirmation and management.</div></td><td class='refog'><div>Pelvic Inflammatory Disease (PID), possible recurrent adhesions, cystitis, proctocolitis, ovarian cyst</div></td><td class='refconv'><div>Pelvic Inflammatory Disease (PID), possible recurrent adhesions, cystitis, proctocolitis, ovarian cyst</div></td></tr>
+<tr><td>12</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I have a hole its about the size of a dime at the beggining of my butt crack (gross I know) but Im just wondering how to get rid of it at home I put anti bacterial on it with a q - tip it sizzles but nothing comes out or changes . What do I do ? (At home )</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient has a hole approximately the size of a dime at the beginning of the gluteal cleft. They have applied an antibacterial solution with a cotton swab, which causes a sizzling sensation, but there is no discharge or change in the lesion. What is the most likely diagnosis?</div></td><td class='respog'><div>A hole at the beginning of the buttock crease could be a pilonidal cyst or sinus, which is a small infection or abscess that can form there. Since you mention no discharge but some irritation (sizzling with antibacterial), it might be inflamed.
+
+At home, you can try the following:
+
+1. Keep the area clean and dry. Gently wash with warm water and mild soap daily.
+2. Avoid tight clothing to reduce friction.
+3. Apply warm compresses for 10-15 minutes several times a day to help reduce inflammation.
+4. Use over-the-counter pain relievers if there is discomfort.
+5. Avoid inserting anything into the hole or squeezing it.
+
+However, pilonidal cysts often require medical evaluation. If you develop increased pain, swelling, redness, fever, or if the hole starts draining pus, you should see a healthcare provider. They may need to drain it or prescribe antibiotics.
+
+If the hole has been present for a long time or recurs, medical treatment is important.
+
+If you are unsure or symptoms worsen, please seek medical care.</div></td><td class='respconv'><div>The description of a hole about the size of a dime at the start of the gluteal cleft, with no discharge or change after applying an antibacterial solution (which causes a sizzling sensation), is most consistent with a **pilondial sinus or pilonidal cyst opening**.
+
+Key points supporting this diagnosis:
+- Location: Beginning of the gluteal cleft (sacrococcygeal area) is the classic site.
+- Appearance: A small hole or pit is typical of a pilonidal sinus.
+- No discharge currently: Pilonidal sinuses can be asymptomatic or intermittently drain.
+- Sizzling sensation with antibacterial solution: Likely due to the solution contacting exposed tissue or hair follicles in the sinus tract.
+
+Other diagnoses like an abscess or infected cyst usually present with pain, swelling, and discharge. An anal fistula typically has an internal opening near the anus and external opening elsewhere, often with discharge.
+
+**Most likely diagnosis:** Pilonidal sinus (early or non-infected stage).
+
+Recommendation: Evaluation by a healthcare provider for possible imaging and management, which may include hygiene measures, hair removal, or surgical intervention if symptomatic.</div></td><td class='refog'><div>Possible pilonidal dimple or sinus, pressure sore, or old infected boil</div></td><td class='refconv'><div>Possible pilonidal dimple or sinus, pressure sore, or old infected boil</div></td></tr>
+<tr><td>16</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Dear doctor, i am 33 male recently i have undergone pre employment medical check up and it was found that i have sgpt- 194 except this all test are absolutely normal test includes 1) CBC2. ESR and liver test 3. Urine Routine 4. Blood Group & Rh Factor 5. X-ray (Chest)6. General Physical Examination7. Fasting Blood Sugar &Post Prandial Blood Sugar8. Total Cholesterol9. ECG10. Serum Creatininenow they have advised me to got my ultrasound done full abdomen. i have got it done today and every thing is normal and they found mild fatty liver. Another thing i want to share that i was suffering from loose motions and was on Ofloxacin-200mg with ornidazole500mg B.D dosage (oflox OZ )medication for 2days and continued ofloxacin-200 B.D dosage (oflox) for another 3days as was suffering cold and cough also.now i need to go to gastro doctor to get the ultrasound reports checked. Just want to know what could be the reason for this elevated SGPT and will i get the clearance for joining new company.what should i do to lower my SGPT levels?? and what diet i should follow i am not a heavy drinker just take drinks occasionally and i am not fond of junk food as well.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 33-year-old male underwent a pre-employment medical examination revealing an elevated serum glutamic-pyruvic transaminase (SGPT) level of 194 IU/L, with all other tests including CBC, ESR, liver function tests, urine routine, blood group and Rh factor, chest X-ray, general physical examination, fasting and postprandial blood sugar, total cholesterol, ECG, and serum creatinine within normal limits. A recent abdominal ultrasound showed mild fatty liver but was otherwise normal. The patient reports recent episodes of loose stools treated with ofloxacin and ornidazole for two days, followed by ofloxacin alone for three days, and has also experienced cold and cough. The patient denies heavy alcohol use and junk food consumption. The patient seeks to understand the possible causes of the elevated SGPT and whether this will affect clearance for employment. What is the most likely diagnosis?</div></td><td class='respog'><div>Your elevated SGPT (ALT) level of 194 is significantly above the normal range (usually up to 40 IU/L), indicating liver cell injury or inflammation. Possible reasons for this elevation include:
+
+1. **Fatty Liver:** Your ultrasound shows mild fatty liver, which can cause elevated liver enzymes.
+2. **Medications:** Ofloxacin and ornidazole can sometimes cause liver enzyme elevation.
+3. **Infections:** Recent illness with loose motions, cold, and cough may have stressed your liver.
+4. **Other causes:** Viral hepatitis, autoimmune liver disease, or other liver conditions (less likely if ultrasound is normal).
+
+**Recommendations:**
+
+- **Follow-up with Gastroenterologist:** They may order viral hepatitis tests, repeat liver enzymes, and possibly other investigations.
+- **Avoid Alcohol and Hepatotoxic Drugs:** Even occasional alcohol can worsen liver inflammation.
+- **Diet:** Follow a liver-friendly diet:
+  - Eat plenty of fruits, vegetables, whole grains.
+  - Avoid fried, fatty, and processed foods.
+  - Limit sugar and salt intake.
+  - Stay hydrated.
+- **Lifestyle:** Maintain a healthy weight, exercise regularly.
+- **Medications:** Avoid self-medicating; take only prescribed drugs.
+
+**Regarding job clearance:** Many companies require liver enzymes to be within normal limits. Your doctor may advise repeating the test after 4-6 weeks of lifestyle modification and treatment. If levels normalize and no serious liver disease is found, you should be able to get clearance.
+
+In summary, elevated SGPT is likely due to mild fatty liver and recent medication/illness. With proper care, it can improve. Consult your gastroenterologist for detailed evaluation and management.</div></td><td class='respconv'><div>The key points in this case are:
+
+- Elevated SGPT (ALT) at 194 IU/L (normal usually up to ~40 IU/L), indicating hepatocellular injury.
+- Other liver function tests normal.
+- Mild fatty liver on ultrasound.
+- Recent episodes of loose stools treated with antibiotics (ofloxacin and ornidazole).
+- Recent cold and cough.
+- No heavy alcohol use or junk food consumption.
+- Other labs and investigations normal.
+
+**Most likely diagnosis:**
+
+1. **Drug-induced liver injury (DILI):**  
+   The recent use of antibiotics (ofloxacin and ornidazole) can cause transient elevation of liver enzymes. Ofloxacin is a fluoroquinolone and can rarely cause hepatotoxicity. Ornidazole, a nitroimidazole, can also cause liver enzyme elevation. The timing fits with recent medication use.
+
+2. **Mild non-alcoholic fatty liver disease (NAFLD):**  
+   Mild fatty liver on ultrasound may contribute to mild enzyme elevation but usually does not cause such a high SGPT alone.
+
+3. **Viral hepatitis or other infections:**  
+   The patient had recent loose stools and respiratory symptoms, but no mention of viral hepatitis screening. However, the absence of other abnormal liver function tests and normal ultrasound makes acute viral hepatitis less likely.
+
+4. **Other causes (less likely):**  
+   Autoimmune hepatitis, metabolic liver diseases, or other hepatotoxic exposures are less likely given the history and normal other tests.
+
+**Summary:**  
+The most likely cause of elevated SGPT is transient drug-induced liver injury from recent antibiotic use, possibly superimposed on mild fatty liver.
+
+**Regarding employment clearance:**  
+- Mild to moderate transient elevation of SGPT due to recent medication or mild fatty liver usually does not preclude employment.
+- Repeat liver function tests after 4-6 weeks to confirm normalization are recommended.
+- If SGPT normalizes, no further action is needed.
+- If persistent elevation occurs, further evaluation is warranted.
+
+**Advice:**  
+- Avoid hepatotoxic drugs and alcohol.
+- Follow up with repeat liver enzymes.
+- Maintain a healthy lifestyle.
+
+---
+
+**In brief:**  
+**Most likely diagnosis:** Transient drug-induced liver injury (antibiotic-related) with mild fatty liver.  
+**Employment impact:** Usually no permanent contraindication; repeat testing recommended.</div></td><td class='refog'><div>mild fatty liver (hepatic steatosis) causing elevated SGPT</div></td><td class='refconv'><div>mild fatty liver (hepatic steatosis) causing elevated SGPT</div></td></tr>
+<tr><td>34</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hello, I recently developed a very itchy penis which when I itch, leads to red patchs which sometimes become red and glossy. It is very irritable and causes pain when i have intercourse. I also have developed itchy thighs.. It started just at the top and has now developed over most of my thighs. The itching comes and goes and shows in small patches , not lumps but itchy red spots. i am worried that it is an std as i have had a lot of unprotected sex recently (lesson learnt) but the symptoms don t relate to any std so i m puzzled!? i also have what i thought was joggers nipple? very itchy nipple and also my face sometimes has dry patches on the eyelids and near the hair receding line? It has been going on for the last 3 months and as i m still in China and not a native speaker, i can t really find any treatment or diagnosis. please help?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A male patient presents with a three-month history of pruritus localized to the penis, resulting in red patches that become glossy with scratching. The itching causes pain during intercourse. The patient also reports pruritic red patches on the upper thighs, which have progressively spread to most of the thighs. These patches are intermittent and present as small, itchy red areas without nodules. Additionally, the patient has itching of the nipple with lesions resembling 'jogger's nipple' and dry patches on the face, including the eyelids and near the hairline. The patient has a history of recent unprotected sexual encounters but is uncertain if symptoms correlate with a sexually transmitted infection. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms—itchy, red, sometimes glossy patches on the penis and thighs, itchy nipples, and dry patches on the face—suggest a possible chronic skin condition rather than a typical sexually transmitted infection (STI). Common STIs usually present with ulcers, discharge, or more acute symptoms, whereas your description fits more with a dermatological issue such as:
+
+1. **Eczema (Atopic Dermatitis)** or **Contact Dermatitis**: These cause itchy, red, inflamed patches and can affect multiple areas including genital skin, thighs, nipples, and face. The intermittent nature and dry patches on eyelids support this.
+
+2. **Fungal Infection (Tinea cruris or candidiasis)**: Fungal infections can cause itchy red patches in the groin and thighs, sometimes extending to the genital area.
+
+3. **Psoriasis**: Can cause red, scaly, itchy patches on various body parts including genitalia and face.
+
+4. **Lichen sclerosus or lichen planus**: Chronic inflammatory conditions affecting genital skin, causing shiny, red patches and itching.
+
+Given the chronicity (3 months), multiple sites involved, and your sexual history, it is important to:
+
+- Get a thorough clinical examination by a healthcare professional, ideally a dermatologist or urologist.
+- Consider skin scrapings or swabs to rule out fungal or bacterial infections.
+- Possibly get tested for common STIs to be sure, as some can have atypical presentations.
+
+In the meantime, avoid irritants such as harsh soaps, tight clothing, and scratching. Use gentle, fragrance-free moisturizers. Over-the-counter antifungal creams may help if a fungal infection is suspected, but avoid steroids without medical advice as they can worsen some infections.
+
+If you can, seek medical care locally with a translator or telemedicine service to get an accurate diagnosis and appropriate treatment. If symptoms worsen, develop ulcers, discharge, or systemic symptoms (fever), seek urgent care.
+
+Summary: Your symptoms are more consistent with a chronic skin condition like eczema or fungal infection rather than a classic STI, but professional evaluation and testing are essential for accurate diagnosis and treatment.</div></td><td class='respconv'><div>The patient's presentation includes:
+
+- Chronic pruritus localized to the penis with red, glossy patches worsened by scratching.
+- Pruritic red patches on the upper thighs spreading over time.
+- Itching and lesions on the nipple resembling "jogger's nipple."
+- Dry patches on the face, including eyelids and near the hairline.
+- History of recent unprotected sexual encounters but symptoms are not clearly linked to an STI.
+
+**Key clinical features:**
+- Chronic, pruritic, erythematous patches on genitalia and other body sites.
+- Lesions are shiny/glossy on the penis.
+- Involvement of multiple sites including genitalia, thighs, nipples, and face.
+- No nodules or ulcerations.
+- Symptoms are intermittent but persistent over months.
+
+**Differential diagnosis considerations:**
+
+1. **Eczema (Atopic or Contact Dermatitis):**  
+   - Can cause pruritic, erythematous, dry patches on face, genitalia, and other areas.
+   - Usually not shiny/glossy and less likely to cause well-demarcated red patches on the penis.
+   - Nipple involvement possible but less common.
+
+2. **Psoriasis:**  
+   - Can affect genitalia and cause red, well-demarcated plaques.
+   - Usually not intensely pruritic and less likely to cause glossy patches.
+   - Nail or scalp involvement often present.
+
+3. **Lichen Sclerosus:**  
+   - Common in males on the glans penis.
+   - Causes white, atrophic, shiny plaques, often with scarring.
+   - Pruritus and pain during intercourse are common.
+   - Usually localized to genitalia, not widespread.
+
+4. **Lichen Planus:**  
+   - Can affect genitalia and cause pruritic, violaceous, flat-topped papules.
+   - May involve mucous membranes.
+   - Less common on nipples and face.
+
+5. **Cutaneous T-cell lymphoma (e.g., Mycosis Fungoides):**  
+   - Can present with chronic, pruritic, erythematous patches on trunk and limbs.
+   - May involve genitalia and other sites.
+   - Lesions can be scaly, red, and persistent.
+   - Usually occurs in older adults.
+
+6. **Dermatophytosis (Tinea cruris and corporis):**  
+   - Pruritic, red, scaly patches with central clearing.
+   - Can affect genitalia and thighs.
+   - Usually not glossy or shiny.
+   - Nipple involvement uncommon.
+
+7. **Paget's disease of the nipple:**  
+   - Presents with eczematous, itchy, red patches on nipple.
+   - Usually unilateral and persistent.
+   - Associated with underlying breast carcinoma.
+
+---
+
+**Most likely diagnosis:**
+
+**Lichen sclerosus et atrophicus (LSA)**
+
+- The classic presentation of LSA in males is pruritic, shiny, white or red patches on the glans penis.
+- It causes pain during intercourse due to fissuring or scarring.
+- The involvement of other areas such as the upper thighs and nipples (which can resemble "jogger's nipple") supports a diagnosis of a chronic inflammatory dermatosis.
+- The dry patches on the face and eyelids may represent associated atopic or lichenoid changes.
+- The chronicity and distribution are less typical for an STI.
+- LSA can be multifocal and cause significant pruritus and discomfort.
+
+---
+
+**Recommendation:**
+
+- Clinical examination and biopsy of a lesion on the penis or nipple to confirm diagnosis.
+- Treatment typically involves potent topical corticosteroids.
+- Avoid irritants and maintain good hygiene.
+- Referral to dermatology or urology for further management.
+
+---
+
+**Summary:**  
+The most likely diagnosis is **lichen sclerosus et atrophicus**, a chronic inflammatory dermatosis causing pruritic, shiny, red patches on the penis, thighs, nipples, and face.</div></td><td class='refog'><div>allergic rash (dermatitis)</div></td><td class='refconv'><div>allergic rash (dermatitis)</div></td></tr>
+<tr><td>35</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, I was just at the dentist and they discovered a black area on the left lower jaw area below my teeth and they called me back and said I should go get a CT scan. I am 23 years old and otherwise healthy, is cancer the only thing this could be? I had a root canal re done last year on that same side but this black area isnt underneath that tooth it is along the other ones next to it.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 23-year-old otherwise healthy patient was found to have a black area on the left lower jaw below the teeth during a dental examination. The area is adjacent to, but not beneath, a tooth that underwent a root canal re-treatment the previous year. The dentist recommended a CT scan for further evaluation. What is the most likely diagnosis?</div></td><td class='respog'><div>A black area seen on dental X-rays or during examination in the jaw can have several causes, and cancer is just one of many possibilities. Given your history and location, some common causes include:
+
+1. **Periapical or periodontal infection/cyst:** Sometimes infections or cysts can appear as dark areas on imaging.
+2. **Bone loss due to periodontal disease:** This can cause radiolucent (dark) areas on X-rays.
+3. **Benign cysts or tumors:** Such as odontogenic cysts or benign bone lesions.
+4. **Healing or scar tissue:** From previous dental work or trauma.
+5. **Other benign conditions:** Such as bone marrow changes or anatomical variations.
+
+A CT scan is recommended because it provides a detailed 3D view of the bone and surrounding tissues, helping to better characterize the lesion.
+
+While cancer is a possibility, it is less common in young, otherwise healthy individuals and usually presents with other symptoms. Your dentist and possibly an oral surgeon or specialist will interpret the CT scan results to determine the exact cause.
+
+If you have any pain, swelling, numbness, or other symptoms, be sure to mention these to your doctor. Follow up promptly with the recommended imaging and specialist consultation for accurate diagnosis and appropriate treatment.</div></td><td class='respconv'><div>A black area on the jaw adjacent to a previously root canal-treated tooth, especially if it is not beneath the tooth but in the bone or soft tissue, raises suspicion for **osteonecrosis of the jaw (ONJ)** or a related pathology.
+
+However, in a young, otherwise healthy patient without a history of bisphosphonate or antiresorptive therapy, the most likely diagnosis is:
+
+**Idiopathic osteomyelitis or chronic osteitis related to previous endodontic treatment.**
+
+Key points supporting this diagnosis:
+- The lesion is adjacent to a tooth with prior root canal re-treatment, suggesting a chronic inflammatory or infectious process.
+- The black area likely represents bone necrosis or sequestrum formation.
+- CT scan is appropriate to evaluate the extent of bone involvement.
+
+Other differential diagnoses include:
+- Residual or recurrent periapical cyst/granuloma.
+- Foreign body reaction.
+- Less likely: malignancy or metastatic lesion (rare in this age and presentation).
+
+**Summary:**  
+Most likely diagnosis is **chronic osteomyelitis or osteonecrosis secondary to previous root canal treatment**. The CT scan will help confirm the extent and guide management.</div></td><td class='refog'><div>benign mass, abscess, tooth tissue, neuroma, calcification (malignancy less likely but must be ruled out)</div></td><td class='refconv'><div>benign mass, abscess, tooth tissue, neuroma, calcification (malignancy less likely but must be ruled out)</div></td></tr>
+<tr><td>36</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Good Morning,When i was cleaning toilet,I have mixed Harpic and Bleach almost 250 Ml,It created  a  fume and i exposed in it,almost 3 hrs i was sneezing and coughing and felt dizziness,Now its almost one moth over,But still i am sneezing ang coughing in the morning and night time with heavily clogged nose and extreme amouunt of puss/cougChatDoctores from nose as well.Is it a disease caused by the exposure.Kindly let me know.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient was exposed to fumes after mixing approximately 250 mL of Harpic and bleach while cleaning a toilet. Following the exposure, the patient experienced sneezing, coughing, and dizziness for about three hours. One month later, the patient continues to have morning and nighttime sneezing, coughing, a heavily congested nose, and copious purulent nasal discharge. The patient wonders if these symptoms represent a disease caused by the chemical exposure. What is the most likely diagnosis?</div></td><td class='respog'><div>Good morning. Mixing Harpic (which contains acids) and bleach produces toxic chlorine gas, which can cause chemical irritation to your respiratory tract. Your symptoms—sneezing, coughing, dizziness, nasal congestion, and pus-like nasal discharge lasting for a month—suggest ongoing inflammation or possible infection caused by chemical injury to your nasal and respiratory mucosa.
+
+This prolonged reaction is not typical for simple irritation and may indicate:
+
+- Chemical-induced rhinitis or sinusitis  
+- Secondary bacterial sinus infection  
+- Possible damage to nasal mucosa
+
+**What you should do:**
+
+1. See a healthcare provider or an ENT specialist promptly for a thorough examination.  
+2. They may recommend nasal endoscopy, imaging (like a sinus CT), and possibly nasal cultures.  
+3. Treatment may include nasal sprays (steroids, saline), antibiotics if infection is present, and supportive care.  
+4. Avoid further exposure to irritants.
+
+Do not ignore these symptoms, as untreated sinus infections or chemical injuries can worsen. If you develop worsening shortness of breath, chest pain, or severe dizziness, seek emergency care immediately.
+
+In summary, your symptoms are likely due to chemical injury from chlorine gas exposure and may have led to secondary sinus infection. Medical evaluation is important for proper diagnosis and treatment.</div></td><td class='respconv'><div>The patient was exposed to toxic chlorine gas formed by mixing Harpic (an acid-based cleaner) and bleach (a sodium hypochlorite solution). Acute exposure caused respiratory irritation (sneezing, coughing, dizziness). Persistent symptoms one month later—chronic sneezing, coughing, nasal congestion, and purulent nasal discharge—suggest ongoing inflammation or secondary infection.
+
+**Most likely diagnosis:**  
+**Chronic rhinosinusitis (CRS) secondary to chemical-induced mucosal injury and inflammation.**
+
+Explanation:  
+- Chlorine gas exposure damages the respiratory mucosa, leading to inflammation and impaired mucociliary clearance.  
+- This can cause persistent sinonasal symptoms and secondary bacterial sinus infection, resulting in purulent nasal discharge.  
+- Symptoms lasting more than 12 weeks fit chronic rhinosinusitis criteria.
+
+The patient should be evaluated by an ENT specialist for nasal endoscopy and possibly imaging (CT sinuses) to confirm diagnosis and guide treatment. Management may include nasal corticosteroids, saline irrigation, and antibiotics if bacterial infection is confirmed.</div></td><td class='refog'><div>allergic airway and nasal reaction with secondary infection following chemical fume exposure</div></td><td class='refconv'><div>allergic airway and nasal reaction with secondary infection following chemical fume exposure</div></td></tr>
+<tr><td>39</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Isn t it true that sharp pain in one s right shoulder could indicate parasites in the small and/or large intestines (i.e. amoebic dysentery) which could be seen by the host (amoebic cysts and trophozoites...all stages of development) in one s stool, cause bloating, gas, stomach distention, terrible abdominal pain, diarrhea, constipation and progressively get worse if not treated with the appropriate antibiotics and eventually cause the death of the host? Fact or Fiction: Amoebic dysentery has been eradicated in North America. Amoeba and trophozoites cannot be seen by the naked eye. Amoeba generally float on top of the toilet water, easily visible. Standard O&P lab tests cannot detect amoebas and trophozoites. The infected stool must be submitted to a lab that has the special equipment and appropriately trained personnel in order to detect amoebic dysentery disease. Two or more antibiotics will be necessary to eliminate such parasites; long term if the host has been infected over a long period of time. Thank you, Edward DeBusman</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient presents with sharp pain in the right shoulder along with symptoms including bloating, gas, abdominal distention, severe abdominal pain, diarrhea, and constipation. The patient wonders if these symptoms could be caused by amoebic dysentery due to parasites in the small and/or large intestines, which are sometimes detected by identifying amoebic cysts and trophozoites in stool samples. The patient also inquires about the visibility of amoebas, the reliability of standard O&P lab tests, and the typical treatment involving multiple antibiotics for prolonged infections. What is the most likely diagnosis?</div></td><td class='respog'><div>Hello Edward,
+
+Let's address your points one by one for clarity:
+
+1. **Sharp pain in the right shoulder and amoebic dysentery:**  
+   Sharp right shoulder pain is not a typical symptom of amoebic dysentery. However, amoebic liver abscess (a complication of Entamoeba histolytica infection) can cause referred pain to the right shoulder due to irritation of the diaphragm. Amoebic dysentery primarily causes abdominal symptoms such as diarrhea (often bloody), abdominal pain, bloating, and cramping.
+
+2. **Symptoms of amoebic dysentery:**  
+   Yes, it can cause bloating, gas, abdominal distention, severe abdominal pain, diarrhea, and sometimes constipation. If untreated, it can worsen and lead to serious complications, including death.
+
+3. **Fact or Fiction: Amoebic dysentery has been eradicated in North America:**  
+   **Fiction.** Amoebic dysentery is rare in North America but not eradicated. Cases still occur, especially in travelers or immigrants from endemic areas.
+
+4. **Amoeba and trophozoites visibility:**  
+   **Fiction.** Amoebae and trophozoites are microscopic and cannot be seen by the naked eye. They require microscopic examination of stool samples.
+
+5. **Amoeba floating on top of toilet water and being easily visible:**  
+   **Fiction.** Amoebae do not float visibly on toilet water.
+
+6. **Standard O&P (Ova and Parasite) tests and detection of amoebas:**  
+   Standard O&P tests can detect Entamoeba histolytica cysts and trophozoites if performed properly. However, specialized staining and trained personnel improve accuracy. Some labs may not differentiate pathogenic Entamoeba histolytica from non-pathogenic species without special tests.
+
+7. **Treatment with two or more antibiotics and long-term therapy:**  
+   Treatment usually involves a combination of drugs: a tissue-active agent (e.g., metronidazole) to kill trophozoites and a luminal agent (e.g., paromomycin) to eradicate cysts in the intestines. Long-term treatment is generally not required unless there are complications or chronic infection.
+
+**Summary:**  
+- Right shoulder pain is not a direct symptom of intestinal amoebiasis but may indicate liver involvement.  
+- Amoebic dysentery is not eradicated in North America.  
+- Amoebae are microscopic and require lab examination.  
+- Standard O&P tests can detect amoebae but may need specialized techniques for confirmation.  
+- Treatment typically involves two drugs but not necessarily long-term unless complicated.
+
+If you suspect amoebic dysentery, stool testing by a qualified lab and medical evaluation are essential.
+
+Let me know if you need more detailed information!</div></td><td class='respconv'><div>The patient's symptoms—sharp right shoulder pain, bloating, gas, abdominal distention, severe abdominal pain, diarrhea, and constipation—along with the concern about amoebic dysentery, suggest a possible parasitic intestinal infection.
+
+**Most likely diagnosis:**  
+**Amoebic dysentery (Entamoeba histolytica infection)**
+
+**Rationale:**  
+- Amoebic dysentery typically causes severe abdominal pain, diarrhea (often bloody), and can lead to complications such as liver abscesses, which may cause referred pain to the right shoulder (due to diaphragmatic irritation).  
+- The presence of bloating, gas, and alternating diarrhea and constipation can be consistent with intestinal parasitic infection.  
+- Amoebic cysts and trophozoites can be detected in stool samples, confirming the diagnosis.  
+
+**Regarding the patient's questions:**  
+- **Visibility of amoebas:** Amoebas (trophozoites and cysts) can be seen under a microscope in stool samples using special staining techniques.  
+- **Reliability of O&P tests:** Standard ova and parasite (O&P) stool exams can detect amoebic cysts and trophozoites but may require multiple samples for increased sensitivity. Molecular tests (PCR) are more sensitive and specific.  
+- **Treatment:** Amoebic dysentery is treated with specific anti-amoebic agents such as metronidazole or tinidazole, often followed by a luminal agent (e.g., paromomycin) to eradicate cysts. Prolonged or multiple antibiotics are not typically required unless there are complications or mixed infections.
+
+**Summary:**  
+The clinical picture and symptoms strongly suggest amoebic dysentery. Confirmatory stool tests and appropriate anti-amoebic treatment are indicated. If right shoulder pain is due to a liver abscess, imaging and possible drainage may be necessary.</div></td><td class='refog'><div>shoulder pain likely musculoskeletal or joint-related, not due to intestinal infection</div></td><td class='refconv'><div>shoulder pain likely musculoskeletal or joint-related, not due to intestinal infection</div></td></tr>
+<tr><td>41</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>yes pleaseiv had broken / abcess teeth since fourteen early fifteen now im twenty three and tooth decay has spread progressively facial swelling and jaw pains have have also been an issue  and I always dealt with it my self impoverished family nother story nother time as I say but all ways self medicated scalpels or suringes grew up on farm animal supplies and had a small knowledge of veterinarian procedures dealing with abcess and lesions and felt I could deal with it but in the last few years most molars or wisdom teeth have gone aswell even with more than average brushing the entire time have about three exposed pulp cores and the lumps below ear have always rehealed once opened and or squeezed out by hand some times with great strain on my hands "poped like pimple" but scar tissue gets ever harder and larger about the size of half dollar easily noticed just below ear right next to upper jaw bone could these things berelatedif so should an er dr be able to see this?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 23-year-old individual has had broken and abscessed teeth since age 14-15, with progressive tooth decay, facial swelling, and jaw pain. Despite good oral hygiene, most molars and wisdom teeth have been lost over the years. The patient has three exposed pulp cores and recurrent lumps below the ear, near the upper jaw bone. These lumps repeatedly reheal after being opened or manually drained and form hard, enlarging scar tissue approximately the size of a half dollar. The patient wonders if these lumps and dental issues are related and whether an emergency room physician could evaluate them. What is the most likely diagnosis?</div></td><td class='respog'><div>Your history of chronic dental abscesses, tooth decay, facial swelling, jaw pain, and persistent lumps below your ear strongly suggests ongoing infection and possibly complications such as chronic abscesses or lymph node involvement. The lumps that repeatedly reappear and harden could be infected lymph nodes, cysts, or scar tissue from repeated infections.
+
+Yes, these issues are likely related to your dental infections and abscesses. Untreated dental infections can spread to surrounding tissues, causing swelling, pain, and persistent lumps.
+
+You should seek urgent evaluation by a healthcare professional. An emergency room (ER) doctor can assess the swelling and lumps, but ideally, you need a dentist or an oral and maxillofacial specialist for proper diagnosis and treatment. They may require imaging (like X-rays or CT scans) and possibly drainage or antibiotics. Delaying care risks worsening infection, spread to deeper tissues, or systemic illness.
+
+Please seek medical attention promptly to prevent serious complications. If you experience fever, difficulty breathing or swallowing, or severe pain, go to the ER immediately.</div></td><td class='respconv'><div>The clinical picture described—early onset of severe tooth decay and abscesses despite good oral hygiene, progressive loss of molars and wisdom teeth, recurrent draining lumps (likely cutaneous sinus tracts) near the jaw that repeatedly heal with scarring—strongly suggests a chronic underlying condition affecting the jaw bones and teeth.
+
+**Most likely diagnosis:**  
+**Osteomyelitis of the jaw with chronic draining sinus tracts, possibly secondary to a rare condition such as chronic suppurative osteomyelitis or a genetic disorder like hypophosphatasia or a form of dentinogenesis imperfecta with secondary infection.**
+
+Key points supporting this diagnosis:  
+- Early onset and progressive tooth loss despite good hygiene suggest an intrinsic bone or dental defect rather than simple caries.  
+- Recurrent abscesses and draining sinuses near the jaw indicate chronic bone infection (osteomyelitis) with sinus tract formation.  
+- The hard, enlarging scar tissue corresponds to chronic inflammation and fibrosis from repeated infections.  
+- The location of lumps near the upper jaw and below the ear aligns with typical sites of mandibular or maxillary osteomyelitis.
+
+**Are the lumps and dental issues related?**  
+Yes. The lumps are almost certainly draining sinus tracts from chronic jaw bone infection related to the underlying dental pathology.
+
+**Can an emergency room physician evaluate them?**  
+An ER physician can perform an initial assessment, manage acute pain or infection, and provide antibiotics if needed. However, definitive diagnosis and management require:  
+- Dental and maxillofacial evaluation  
+- Imaging studies (panoramic X-ray, CT scan) to assess bone involvement  
+- Possible biopsy or culture of sinus tract discharge  
+- Referral to oral surgery, infectious disease, or a specialist in metabolic bone/dental disorders
+
+**Summary:**  
+The patient likely has chronic osteomyelitis of the jaw with draining sinus tracts secondary to an underlying dental/bone disorder. Prompt specialist evaluation is essential for diagnosis and treatment. Emergency care can address acute symptoms but is not sufficient for definitive management.</div></td><td class='refog'><div>dental abscess with possible chronic infection and facial cellulitis</div></td><td class='refconv'><div>dental abscess with possible chronic infection and facial cellulitis</div></td></tr>
+<tr><td>42</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, may I answer your health queries right now ?  Please type your query here I am 65 years old and for the past 12 months I have had a persistant cough that is quite forceful. It makes my ees water and I am quite short of breathe for a period of time after.  The secretions I clear and thick with bubbles in it.  I am also very tired.  Please can you give me some insight?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 65-year-old patient presents with a persistent, forceful cough lasting 12 months. The cough produces thick, bubbly secretions. The patient experiences tearing of the eyes during coughing and subsequent episodes of shortness of breath. Fatigue is also reported. What is the most likely diagnosis?</div></td><td class='respog'><div>Thank you for sharing your symptoms. A persistent, forceful cough lasting 12 months with thick, bubbly secretions, shortness of breath, and fatigue is concerning and warrants medical evaluation. Possible causes include chronic bronchitis, chronic obstructive pulmonary disease (COPD), bronchiectasis, or even lung infections or malignancy.
+
+I strongly recommend you see a healthcare professional promptly for a thorough examination, chest imaging (like a chest X-ray or CT scan), and possibly sputum analysis and lung function tests. Early diagnosis and treatment are important to manage your symptoms and underlying cause effectively. If you experience worsening breathlessness, chest pain, or coughing up blood, seek emergency care immediately.</div></td><td class='respconv'><div>The most likely diagnosis is **bronchiectasis**.
+
+Key points supporting this diagnosis:
+- Persistent, forceful cough lasting over 12 months.
+- Production of thick, bubbly (often described as purulent or mucopurulent) secretions.
+- Tearing of the eyes during coughing (due to increased intrathoracic pressure).
+- Episodes of shortness of breath.
+- Fatigue, which is common in chronic respiratory conditions.
+
+Bronchiectasis is characterized by permanent dilation of bronchi, leading to impaired clearance of secretions, chronic cough, and recurrent infections. The chronic productive cough with thick secretions is classic.
+
+Further evaluation with chest CT scan would confirm bronchial dilation and help guide management.</div></td><td class='refog'><div>bronchitis (chronic bronchitis suspected)</div></td><td class='refconv'><div>bronchitis (chronic bronchitis suspected)</div></td></tr>
+<tr><td>45</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hi i m 18 and female and i had sex the 25th and 26th of December..i got kind of scared at first thinking i could have gotten pregnant but once my period came on the 3rd of January my worries disappeared. I thought it was a little strange that it was only about 3-4 days long..normally mine are around 5-6 with spotting afterwards and leakage with tampons no matter the strength..this time however there was no spotting or leaking whatsoever..but i didn t think much of it now about the 17th i noticed a dull cramp in my lower stomach that would come and go and it did this til the 20th, on the 20th the cramp has stayed and increased, i did noticed that i ve been eating alot even when i m not hungry for the past week and my stomach looks bloated and my breasts are tender and i ve been urinating ALOT and usually i only go about 2-3 a day now i don t even have to drink anything and ill go 7 times a day easily if not more..pregnant? or not? PLEASE HELP IMMEDIATELY.....</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>An 18-year-old female had sexual intercourse on December 25th and 26th. She experienced her menstrual period on January 3rd, which lasted 3-4 days, shorter than her usual 5-6 days with spotting and leakage. Around January 17th, she developed intermittent dull lower abdominal cramps that increased and persisted by January 20th. She also reports increased appetite, abdominal bloating, breast tenderness, and frequent urination (about 7 times per day without increased fluid intake), compared to her usual 2-3 times daily. What is the most likely diagnosis?</div></td><td class='respog'><div>Based on your history and symptoms:
+
+- You had your period on January 3rd, which usually means you were not pregnant from the December 25-26 intercourse.
+- Your period was shorter and lighter than usual, which can happen for various reasons (stress, hormonal changes, etc.).
+- The symptoms you describe now—lower abdominal cramps, increased appetite, bloating, breast tenderness, and frequent urination—can be caused by many things, including hormonal fluctuations, early pregnancy, or other conditions like urinary tract infection or digestive issues.
+
+Since your last period was on January 3rd, if your cycle is regular (around 28 days), your next period would be expected around the end of January. If you miss your next period or it is significantly delayed, taking a home pregnancy test would be a good step to clarify.
+
+If the cramps worsen, you have severe pain, fever, heavy bleeding, or other concerning symptoms, seek medical attention promptly.
+
+For now:
+- Consider taking a pregnancy test if your next period is late.
+- Monitor your symptoms.
+- If frequent urination is painful or accompanied by burning, see a doctor to rule out infection.
+
+If you want, I can guide you on how to take a pregnancy test or suggest when to see a healthcare provider.</div></td><td class='respconv'><div>The key points in this case are:
+
+- Sexual intercourse on Dec 25-26
+- Menstrual period on Jan 3, shorter and lighter than usual with spotting/leakage
+- Starting around Jan 17, intermittent dull lower abdominal cramps increasing by Jan 20
+- Symptoms: increased appetite, abdominal bloating, breast tenderness, frequent urination (7 times/day without increased fluid intake)
+
+**Interpretation:**
+
+1. The menstrual period on Jan 3 was shorter and lighter than usual, which could suggest implantation bleeding or an early pregnancy-related change rather than a normal period.
+2. The timing of symptoms (about 3 weeks after intercourse) fits the early pregnancy period.
+3. Symptoms such as breast tenderness, abdominal bloating, increased appetite, and frequent urination are classic early pregnancy signs.
+4. Lower abdominal cramps can be implantation cramps or early pregnancy-related uterine changes.
+
+**Most likely diagnosis:** Early pregnancy (possibly implantation phase or early gestation).
+
+**Next step:** Confirm pregnancy with a urine or serum hCG test.
+
+If pregnancy is confirmed, the symptoms are consistent with normal early pregnancy. If negative, consider other causes of symptoms, but early pregnancy is most likely here.
+
+---
+
+**Summary:**  
+The most likely diagnosis is **early pregnancy**.</div></td><td class='refog'><div>possible urinary tract infection (UTI); pregnancy unlikely but not excluded</div></td><td class='refconv'><div>possible urinary tract infection (UTI); pregnancy unlikely but not excluded</div></td></tr>
+<tr><td>49</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi! I just changed into my pajamas and noticed that I have many (somewhere around 15) small bruises on the insides and backs of my thighs. In the past few days, I have done nothing that might cause these. It s happened a few times in the past, but not often. A few days ago, I started having a sore throat and I was wondering if there could be any corrolation. I cannot remember if the last time this happened was during a time at which I had a sore throat. So far, no unexplained bruising has occured on my stomach, back, chest , etc and very rarely on my arms (though I assume that it s only unexplained because I don t remember hitting something). However, the bruises which have just appeared are not in any place I would bump into. I m a 21 year old otherwise healthy female. The only concering aspect of my medical history is that my mother, my half-sister, and my grandfather on my father s side have all died from cancer . Two cases of melanoma and one of colon cancer. Could the bruising be a result of my sore throat? Or should I be seeing a doctor?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 21-year-old otherwise healthy female presents with approximately 15 small bruises on the inner and posterior aspects of her thighs. She reports no recent trauma and notes similar episodes have occurred infrequently in the past. She recently developed a sore throat a few days ago and wonders if there is a correlation. No unexplained bruising is noted on the abdomen, back, chest, or commonly on the arms. Family history is significant for cancer, including melanoma in her mother and half-sister, and colon cancer in her paternal grandfather. What is the most likely diagnosis?</div></td><td class='respog'><div>The appearance of multiple unexplained bruises on your thighs, especially without any clear trauma, warrants careful consideration. While a sore throat itself typically does not cause bruising, some infections or underlying conditions that cause sore throat (like certain viral infections or blood disorders) can sometimes be associated with bruising.
+
+Given that you have multiple bruises in areas not prone to injury, and a recent sore throat, it is important to rule out causes such as:
+
+- Platelet or clotting disorders (which can cause easy bruising)
+- Viral infections affecting blood cells or clotting
+- Other underlying medical conditions affecting blood vessels or coagulation
+
+Your family history of cancer is important but less likely to be directly related to sudden bruising unless there is an underlying blood cancer (like leukemia), which can present with bruising and sore throat symptoms.
+
+**Recommendation:**  
+You should see a healthcare provider promptly for a thorough evaluation. They may order blood tests including a complete blood count (CBC), coagulation studies, and possibly other tests to determine the cause of your bruising and sore throat. Early evaluation is important to rule out any serious conditions.
+
+If you develop additional symptoms such as bleeding gums, nosebleeds, excessive fatigue, fever, or if the bruising worsens rapidly, seek urgent medical attention.</div></td><td class='respconv'><div>The presentation of multiple small bruises localized to the inner and posterior thighs without trauma, in a young healthy female, with a recent sore throat, and no bruising elsewhere, suggests a benign cause rather than a systemic bleeding disorder or malignancy.
+
+Key points:
+- Bruises localized to thighs, no trauma.
+- Similar episodes in the past (infrequent).
+- Recent sore throat (likely viral).
+- No bruising on other common sites.
+- Family history of cancer is unlikely related to bruising.
+
+Most likely diagnosis: **Benign Thigh Purpura (also known as "dermatitis artefacta" or "idiopathic thrombocytopenic purpura" is less likely here due to lack of systemic signs and normal bruising distribution).**
+
+However, given the history of recent sore throat, a mild viral illness can cause transient platelet dysfunction or mild vasculitis leading to localized bruising.
+
+Alternatively, **exercise-induced or pressure-induced bruising** on the thighs is common in young women.
+
+Less likely:
+- Platelet disorder (would have more widespread bruising).
+- Coagulation disorder (would have other bleeding signs).
+- Abuse (no history or other signs).
+- Malignancy (no systemic symptoms).
+
+**Summary:** The most likely diagnosis is **benign localized bruising related to minor trauma or viral illness-associated mild platelet dysfunction.**
+
+If bruising persists or worsens, or if systemic symptoms develop, further workup including CBC, coagulation studies, and platelet function tests would be warranted.</div></td><td class='refog'><div>Possible thrombocytopenia or bleeding disorder, possibly secondary to viral infection</div></td><td class='refconv'><div>Possible thrombocytopenia or bleeding disorder, possibly secondary to viral infection</div></td></tr>
+<tr><td>57</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, one of the bumps right at the back of my tongue (lingual tonsil area) is a yellowy  colour, not pink like the rest.i was looking because i have a bug at the moment and a congested throat/nose...now i am manically googling tumors! Any idea what it could be?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient presents with a yellow-colored bump at the back of the tongue in the lingual tonsil area. The patient currently has an upper respiratory infection with throat and nasal congestion. What is the most likely diagnosis?</div></td><td class='respog'><div>A yellowish bump at the back of the tongue near the lingual tonsil area, especially when you have a current infection or congestion, is most likely related to inflammation or infection. Common causes include:
+
+- **Tonsillitis or lingual tonsil inflammation:** Infection can cause swelling and pus or exudate, which may appear yellow.
+- **Blocked or inflamed salivary gland duct:** Can cause a small yellowish bump.
+- **Canker sore or minor ulcer:** Sometimes these can have a yellowish center.
+- **Post-nasal drip irritation:** Mucus can cause localized irritation and discoloration.
+
+Tumors in this area are much less common and usually do not appear suddenly with infection symptoms.
+
+If the bump persists beyond 1-2 weeks, grows, becomes painful, or you develop other symptoms like difficulty swallowing or weight loss, you should see a healthcare professional for evaluation. For now, focus on managing your infection and maintaining good oral hygiene. If you have fever or worsening symptoms, seek medical care promptly.</div></td><td class='respconv'><div>The yellow-colored bump at the back of the tongue in the lingual tonsil area, in the context of an upper respiratory infection with throat and nasal congestion, is most likely a **lingual tonsil hypertrophy or inflammation with possible tonsillolith (tonsil stone)** formation.
+
+Key points supporting this diagnosis:
+- Lingual tonsils can become inflamed and enlarged during upper respiratory infections.
+- Yellow bumps often represent tonsilloliths, which are calcified debris trapped in tonsillar crypts.
+- The presence of infection and congestion supports inflammation and debris accumulation.
+
+If the bump is tender or associated with pain, it may also represent localized infection or abscess, but this is less common.
+
+**Summary:** Most likely diagnosis is **inflamed lingual tonsil with tonsillolith formation** secondary to upper respiratory infection.</div></td><td class='refog'><div>enlarged taste bud or papillae due to infection, medication, or allergy; possible ulcer</div></td><td class='refconv'><div>enlarged taste bud or papillae due to infection, medication, or allergy; possible ulcer</div></td></tr>
+<tr><td>63</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>dear sir/mam, i had my last period on 28th dec 2010, till now i didnt get periods, i undergone pregnancy test its negative, so my dr referred me take meprate 10 mg now i m takiing , last two days i m getting guiltiness and i felt may be am i pregnancy?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A female patient reports that her last menstrual period was on December 28, 2010, and she has not had any menstrual bleeding since then. She underwent a pregnancy test which was negative. Her doctor prescribed meprate 10 mg, which she is currently taking. Over the last two days, she has experienced nausea and is concerned about the possibility of pregnancy. What is the most likely diagnosis?</div></td><td class='respog'><div>If your last period was on 28th December 2010 and you have not had any periods since, but your pregnancy test is negative, there could be other reasons for your missed periods such as hormonal imbalances, stress, or other medical conditions.
+
+Meprate (megestrol acetate) is often prescribed to help induce periods. Feeling "guiltiness" might be a typo or misunderstanding—if you mean "giddiness" or dizziness, it can sometimes occur as a side effect of medication or other causes.
+
+Since you are concerned about pregnancy despite a negative test, consider the following:
+
+1. **Repeat the pregnancy test:** Sometimes early pregnancy tests can be falsely negative. Test again after a few days.
+2. **Consult your doctor:** Inform your doctor about your symptoms and concerns.
+3. **Further evaluation:** Your doctor may order blood tests or ultrasound to check for pregnancy or other causes of missed periods.
+
+If you experience severe symptoms like heavy bleeding, severe pain, or fainting, seek immediate medical attention.
+
+In summary, continue your medication as prescribed, repeat the pregnancy test if needed, and keep your doctor informed about your symptoms.</div></td><td class='respconv'><div>Given the patient's last menstrual period was on December 28, 2010, and she has had no menstrual bleeding since then, this suggests amenorrhea for an extended period. A negative pregnancy test rules out current pregnancy. The prescription of meprate (medroxyprogesterone acetate) 10 mg, a progestin, is often used to induce withdrawal bleeding in cases of secondary amenorrhea or to evaluate estrogen status.
+
+Nausea over the last two days could be due to various causes, including side effects of medication, hormonal changes, or other unrelated conditions.
+
+**Most likely diagnosis:**  
+- **Secondary amenorrhea** (absence of menstruation for several months) likely due to hormonal imbalance or other underlying causes.  
+- The negative pregnancy test excludes pregnancy.  
+- Nausea is unlikely to be due to pregnancy but could be a side effect of meprate or another cause.
+
+Further evaluation is needed to determine the cause of amenorrhea (e.g., hormonal assays, ultrasound). The current management with meprate aims to induce withdrawal bleeding to assess endometrial response.</div></td><td class='refog'><div>irregular periods, not pregnant</div></td><td class='refconv'><div>irregular periods, not pregnant</div></td></tr>
+<tr><td>65</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I FEEL SURE MY HUSBAND HAS HAD AND IS STILL HAVING MINI STROKES. WE HAVE HAD EVERY TEST DONE THAT THE DOCTOR ASK, THE LAST THING SUGGESTED WAS ANOTHER MRI OF HIS BRAIN BUT IT HAS NOT BEEN SCHEDULED YET. WHAT SHOULD I DO AND HOW SOON IS IT NECESSARY. HE CANNOT WALK HIS LEFT LEG IS NUMB AND HE IS HAVING TROUBLE KNOWING WHEN HE IS USING THE BATHROOM, BOTH URINATING AND BOWEL MOVEMENTS. HE STAYS CONFUSED ALL THE TIME .</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient presents with persistent numbness in the left leg, difficulty walking, ongoing confusion, and urinary and fecal incontinence. The patient has undergone multiple diagnostic tests as recommended by the physician, with a brain MRI suggested but not yet scheduled. What is the most likely diagnosis?</div></td><td class='respog'><div>Your husband's symptoms—left leg numbness and inability to walk, confusion, and loss of control over urination and bowel movements—are serious and suggest ongoing neurological damage, possibly from strokes or other brain issues. This is a medical emergency.
+
+**What you should do immediately:**
+- Call emergency services or take him to the nearest emergency room right now.
+- Do not wait for the MRI to be scheduled; urgent evaluation and treatment are needed to prevent further damage.
+
+Delays in care can lead to permanent disability or life-threatening complications. Please seek emergency medical attention immediately.</div></td><td class='respconv'><div>The combination of persistent numbness in the left leg, difficulty walking, ongoing confusion, and urinary and fecal incontinence suggests a neurological disorder affecting both motor and cognitive functions, as well as autonomic control.
+
+Key points:
+- Numbness and difficulty walking indicate possible motor and sensory pathway involvement.
+- Confusion suggests cortical or subcortical brain dysfunction.
+- Urinary and fecal incontinence point to involvement of the spinal cord or brain areas controlling bladder and bowel function.
+
+Most likely diagnosis:
+**Normal Pressure Hydrocephalus (NPH)**
+
+Rationale:
+- NPH classically presents with the triad of gait disturbance, cognitive impairment (confusion), and urinary incontinence.
+- The numbness could be due to associated nerve involvement or coexisting pathology.
+- Brain MRI is essential to confirm ventricular enlargement without significant cortical atrophy.
+
+Other differential diagnoses to consider:
+- Multiple sclerosis (if demyelinating lesions are found)
+- Spinal cord compression (if localized spinal symptoms predominate)
+- Neurodegenerative disorders (less likely with incontinence and numbness)
+
+Next step:
+- Schedule brain MRI to evaluate for ventricular enlargement and rule out other intracranial pathology.
+- Neurological consultation for further assessment and management.
+
+In summary, the most likely diagnosis is **Normal Pressure Hydrocephalus (NPH)** pending MRI confirmation.</div></td><td class='refog'><div>possible normal pressure hydrocephalus or stroke</div></td><td class='refconv'><div>possible normal pressure hydrocephalus or stroke</div></td></tr>
+<tr><td>66</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hello, i am a female, 52 years of age. recently i have bump my arm against a door nob and a large bump appeared on my forearm. a few days later, i happen to hit my hand and yet a bigger bump appeared where i had banged myself. both of these on my same left hand/arm. i am not sure how to make it go away and its not brused, black & blue nor does it hurt... please give me some advise. thank you</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 52-year-old female sustained trauma to her left forearm after bumping it against a doorknob. Subsequently, a large bump appeared on the forearm. A few days later, after hitting the same hand, a larger bump developed at the site of the injury. There is no bruising, discoloration, or pain associated with these bumps. What is the most likely diagnosis?</div></td><td class='respog'><div>Hello! Based on your description, it sounds like you have developed localized swelling or a lump (likely a hematoma or a soft tissue swelling) at the sites of trauma on your arm and hand. Since the bumps are not bruised, painful, or changing color, this is reassuring and suggests no severe injury like a fracture or deep tissue damage.
+
+Here is some advice:
+
+1. **Rest and Protect:** Avoid further trauma to the area.
+2. **Cold Compress:** Apply ice packs wrapped in a cloth for 15-20 minutes several times a day during the first 48 hours to reduce swelling.
+3. **Elevation:** Keep your arm elevated to help reduce swelling.
+4. **Monitor:** Watch for any changes such as increasing size, pain, redness, warmth, or if the bump becomes hard or very tender.
+5. **Pain:** If you develop pain, over-the-counter pain relievers like acetaminophen or ibuprofen can help.
+
+If the bump does not start to reduce in size over 1-2 weeks, or if you notice worsening symptoms (pain, redness, warmth, fever, numbness, or limited movement), please see a healthcare provider for further evaluation. They may need to check for other causes like a cyst, lipoma, or other soft tissue issues.
+
+If you have any other symptoms or concerns, feel free to ask!</div></td><td class='respconv'><div>The most likely diagnosis is a **traumatic or acquired ganglion cyst** (also known as a post-traumatic ganglion).
+
+Key points supporting this diagnosis:
+- History of trauma to the forearm.
+- Development of a painless, enlarging bump at the site of injury.
+- Absence of bruising, discoloration, or pain.
+- Ganglion cysts often arise after minor trauma and can enlarge with repeated injury.
+
+Other possibilities like hematoma or soft tissue tumors are less likely due to the absence of pain, discoloration, or systemic symptoms.
+
+If needed, ultrasound or MRI can confirm the cystic nature of the lesion. Treatment is usually conservative unless symptomatic or cosmetically concerning.</div></td><td class='refog'><div>subcutaneous hematoma</div></td><td class='refconv'><div>subcutaneous hematoma</div></td></tr>
+<tr><td>67</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi! I injured my knee at a football game 2 days ago, mechanism of injury=I kept falling on my knees,high impact. No instant swelling that I noted (adrenalin) but did feel pain, I admit I kept playing so did weightbear after falls..first fall of significance in first half. Knee started to stiffen up and get more painful towards end of match, knee noticeably swelling and real discomfort on car home and painful to sleep, ache walking and stairs or kneeling painful...used price technique straight away..iced it straight away, tubrigrip compression and elevated..knee now feels better..widespread bruising tender on palpation of joint line/bruises, knee not as stiff but still an ache at end range flexion swelling has reduced. I think when the bruising goes the dull ache in my knee should go too, I feel I dont need physio or medical intervention as its only been 3 days since injury and to let healing process take its course? Am I foolish or should I check if ligaments/cartilage isnt Injured even though the symptoms/mechanism don t match? Thanks</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient injured their knee during a football game two days ago after repeated falls on the knee with high impact. There was no immediate swelling, but pain was present. The patient continued to bear weight and play. By the end of the match, the knee had become stiff, painful, and noticeably swollen. There was discomfort during transport home and difficulty sleeping due to pain. Activities such as walking, climbing stairs, and kneeling caused aching and pain. Immediate treatment with rest, ice, compression, and elevation was applied. Currently, the knee feels better with reduced swelling, decreased stiffness, but persistent bruising and tenderness along the joint line. The patient wonders if ligament or cartilage injury should be suspected despite the mechanism and symptoms not clearly matching such injuries. What is the most likely diagnosis?</div></td><td class='respog'><div>Based on your description, you have a knee injury with:
+
+- Mechanism: repeated falls with high impact
+- Symptoms: initial pain, delayed swelling, stiffness, bruising, tenderness along joint line, pain on end-range flexion, ache with weight-bearing and stairs
+- Improvement with PRICE and time over 3 days
+
+**Considerations:**
+
+1. **Possible injuries:**  
+   - Contusion/soft tissue bruise (likely given bruising and tenderness)  
+   - Meniscal injury (joint line tenderness, pain on flexion)  
+   - Ligament sprain (less likely without instability or immediate swelling)  
+   - Bone bruise or minor fracture (less likely without severe pain or inability to weight bear)
+
+2. **Your current management:**  
+   - PRICE is appropriate initially  
+   - Gradual return to activity as pain allows  
+   - Monitor swelling, pain, and function
+
+3. **When to seek medical evaluation:**  
+   - Persistent or worsening pain/swelling beyond 1-2 weeks  
+   - Inability to fully weight bear or walk without significant pain  
+   - Instability or giving way of the knee  
+   - Locking or catching sensation in the knee  
+   - Significant limitation in range of motion
+
+**Summary:**  
+It is reasonable to continue conservative management for now since you are improving and symptoms are mild to moderate. However, if symptoms persist beyond 1-2 weeks or worsen, or if you develop instability or mechanical symptoms, you should see a healthcare professional for clinical assessment and possibly imaging (MRI) to rule out ligament or cartilage injury.
+
+**Advice:**  
+- Continue rest, ice, compression, elevation  
+- Avoid activities that cause significant pain  
+- Gradually increase range of motion and weight bearing as tolerated  
+- Consider physiotherapy if stiffness or pain persists
+
+If in doubt or symptoms worsen, do not hesitate to get a medical evaluation. Early diagnosis of ligament or meniscal injuries can improve outcomes.</div></td><td class='respconv'><div>The patient's history of repeated high-impact falls on the knee, followed by delayed swelling, stiffness, pain with weight-bearing activities, and tenderness along the joint line, suggests an intra-articular knee injury.
+
+Key points:
+- No immediate swelling but pain present initially.
+- Swelling and stiffness developed by the end of the match.
+- Persistent joint line tenderness and bruising.
+- Symptoms improved with RICE but some residual tenderness and bruising remain.
+
+Most likely diagnosis:
+**Knee contusion with possible bone bruise and/or meniscal injury.**
+
+Explanation:
+- The mechanism (repeated falls with impact) and delayed swelling are consistent with a bone bruise or soft tissue injury.
+- Joint line tenderness raises suspicion for meniscal injury, which can occur with twisting or compressive forces.
+- Ligament injury is less likely if there was no instability or giving way reported.
+- Cartilage injury (chondral lesion) is possible but less common acutely without a clear twisting injury.
+
+Recommendation:
+- Clinical follow-up with orthopedic evaluation.
+- MRI may be warranted to assess for meniscal tear or bone bruise if symptoms persist.
+- Continue conservative management with activity modification, physical therapy, and analgesia.
+
+In summary, the most likely diagnosis is a knee contusion with possible meniscal involvement rather than a primary ligament injury.</div></td><td class='refog'><div>possible meniscus injury, possible collateral ligament injury, soft tissue injury</div></td><td class='refconv'><div>possible meniscus injury, possible collateral ligament injury, soft tissue injury</div></td></tr>
+<tr><td>69</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>my friend has been suffering from fever for 15 days...tests for typhoid n malaria negative...fever occurs at night with shivering...almost normal during daytime...blood tests show 19500 leukocyte count and neutrophil count at 88...what should be done...doctors at a loss</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient has been experiencing fever for 15 days. The fever occurs at night with shivering and is almost normal during the daytime. Tests for typhoid and malaria are negative. Blood tests show a leukocyte count of 19,500 and a neutrophil count of 88%. What is the most likely diagnosis?</div></td><td class='respog'><div>A prolonged fever with night-time spikes, shivering, high leukocyte count (19,500), and neutrophilia (88%) suggests a serious infection or inflammatory process. Since typhoid and malaria are ruled out, consider:
+
+1. **Further Infectious Workup:**  
+   - Blood cultures to identify bacterial infections.  
+   - Tests for tuberculosis (e.g., chest X-ray, sputum AFB, Quantiferon-TB Gold).  
+   - Screening for other infections like brucellosis, endocarditis, or abscesses.
+
+2. **Imaging:**  
+   - Chest X-ray or CT scan to look for hidden infections or malignancies.  
+   - Ultrasound or CT abdomen if abdominal source suspected.
+
+3. **Other Causes:**  
+   - Autoimmune or inflammatory diseases (e.g., vasculitis, connective tissue disorders).  
+   - Hematologic malignancies.
+
+**Immediate advice:** Your friend should be evaluated urgently by an infectious disease specialist or admitted for thorough workup and monitoring. Empiric antibiotics should not be started without diagnosis, as it may mask symptoms.
+
+If symptoms worsen (breathlessness, confusion, severe weakness), seek emergency care immediately.</div></td><td class='respconv'><div>Key clinical points:
+- Fever for 15 days, occurring at night with shivering (suggestive of intermittent fever).
+- Normal or near-normal temperature during the day.
+- Negative tests for typhoid and malaria.
+- Leukocytosis (WBC 19,500) with neutrophilia (88%).
+
+Interpretation:
+- Prolonged fever with night-time spikes and chills suggests an infectious or inflammatory process.
+- Negative typhoid and malaria tests rule out common tropical infections.
+- Leukocytosis with neutrophilia points toward a bacterial infection or abscess rather than viral or parasitic causes.
+- The pattern of fever (night-time spikes with chills) is classic for infections like tuberculosis or abscesses.
+- However, tuberculosis usually shows lymphocytosis rather than neutrophilia.
+- The high neutrophil count and leukocytosis suggest a bacterial abscess or deep-seated infection.
+- Another possibility is infective endocarditis, which can cause prolonged fever and neutrophilia.
+- However, infective endocarditis often has other signs (murmur, embolic phenomena).
+- Considering the clinical picture, a deep-seated bacterial abscess (e.g., liver abscess) is a strong possibility.
+
+Most likely diagnosis: **Bacterial abscess (e.g., liver abscess)** causing prolonged intermittent fever with neutrophilic leukocytosis.
+
+Further steps:
+- Imaging (ultrasound/CT) to identify abscess.
+- Blood cultures.
+- Empirical antibiotic therapy targeting common abscess pathogens.
+
+If additional clinical details (e.g., travel history, exposure) are available, they may refine diagnosis.</div></td><td class='refog'><div>infection (unspecified) vs. chronic myeloid leukemia (CML) vs. leukemoid reaction</div></td><td class='refconv'><div>infection (unspecified) vs. chronic myeloid leukemia (CML) vs. leukemoid reaction</div></td></tr>
+<tr><td>70</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>i have a rash on the inside of my bicep and it just so happens it is over the area where i had my implanon implanted. i had it implanted 8 months ago and am just now getting the rash and it looks a lot like the pupps rash i had on my stomach when i was pregnant. i don t know if it is related but i figured i would add that in.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient presents with a rash on the inside of the bicep over the site where an Implanon implant was placed 8 months ago. The rash resembles a previous pruritic urticarial papules and plaques of pregnancy (PUPPS) rash experienced on the stomach during pregnancy. The patient wonders if the current rash is related to the implant or their prior PUPPS rash. What is the most likely diagnosis?</div></td><td class='respog'><div>A rash developing at the site of your Implanon implant 8 months after insertion could be due to several causes, including a localized allergic reaction, irritation, or less commonly, an infection. Since you mention it resembles PUPPS (Pruritic Urticarial Papules and Plaques of Pregnancy), which is a pregnancy-related rash, it is unlikely to be directly related to PUPPS now, as that condition is specific to pregnancy.
+
+However, delayed hypersensitivity or contact dermatitis to the implant material is possible. It is important to have this rash evaluated by a healthcare provider to rule out infection, confirm the cause, and determine if the implant needs to be removed or if other treatment is needed.
+
+If you experience worsening redness, swelling, pain, fever, or systemic symptoms, seek medical attention promptly. Otherwise, schedule an appointment with your healthcare provider for an accurate diagnosis and appropriate management.</div></td><td class='respconv'><div>The most likely diagnosis is a localized allergic or irritant contact dermatitis related to the Implanon implant. 
+
+Key points supporting this:
+- The rash is localized to the implant site.
+- Occurs 8 months after implant placement, which can be consistent with a delayed hypersensitivity reaction.
+- PUPPS is a pregnancy-specific condition that typically resolves postpartum and does not recur or localize to other body sites.
+- The similarity in appearance to PUPPS rash is possible, but the timing and location strongly suggest a reaction to the implant rather than a recurrence of PUPPS.
+
+Recommendation:
+- Evaluate for signs of implant site reaction.
+- Consider removal if symptoms persist or worsen.
+- Symptomatic treatment with topical corticosteroids may help.
+
+In summary, the rash is most likely an implant-related localized dermatitis rather than a recurrence of PUPPS.</div></td><td class='refog'><div>nonspecific rash, unlikely related to Implanon or PUPPP</div></td><td class='refconv'><div>nonspecific rash, unlikely related to Implanon or PUPPP</div></td></tr>
+<tr><td>78</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, I m trying to conceive and I have been taking ovulation tests and last week I got a positive (smiley face) ovulation test, then negative the next day, then positive the day after that, and today (1 week later) I got a positive again! what does that mean? why could that be hapenning?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A woman attempting to conceive used ovulation tests over the past week. She obtained a positive ovulation test result, followed by a negative result the next day, then another positive test result the day after. One week later, she again received a positive ovulation test. What is the most likely diagnosis?</div></td><td class='respog'><div>A positive ovulation test detects a surge in luteinizing hormone (LH), which typically occurs 24-36 hours before ovulation. Normally, you see a single positive surge followed by negatives as LH levels drop after ovulation.
+
+Having multiple positive results spread over a week is unusual and could mean:
+
+1. **Multiple LH surges:** Sometimes, women experience more than one LH surge in a cycle, which can happen due to hormonal fluctuations.
+2. **Testing errors:** Variations in test timing, hydration, or test sensitivity can cause inconsistent results.
+3. **Delayed ovulation:** Your ovulation might be delayed or irregular, causing repeated LH surges.
+4. **Other factors:** Certain medical conditions (like polycystic ovary syndrome - PCOS) can cause prolonged or multiple LH surges.
+
+If you continue to get positive results over many days, or if your cycles are irregular, it’s a good idea to consult your healthcare provider or a fertility specialist. They can perform more precise monitoring (ultrasound, blood tests) to determine your ovulation timing and overall fertility status.</div></td><td class='respconv'><div>The most likely explanation is that the woman is experiencing multiple LH surges or fluctuations in luteinizing hormone levels, which can sometimes occur in the menstrual cycle. This pattern can be seen in:
+
+- **Multiple LH surges:** Some women have more than one LH peak in a cycle, leading to intermittent positive ovulation tests.
+- **Polycystic ovary syndrome (PCOS):** Women with PCOS often have irregular LH surges and may show multiple positive ovulation tests over a prolonged period.
+- **Testing variability:** Ovulation test sensitivity and timing can cause fluctuating results if testing is done at different times of day or if LH levels are near the threshold.
+
+Given the repeated positive tests a week apart, the most likely diagnosis is **anovulatory cycles with multiple LH surges or PCOS-related LH fluctuations** rather than a single, clear ovulation event.
+
+**Recommendation:** She should consult a healthcare provider for further evaluation, including hormonal assays and ultrasound monitoring, to confirm ovulation and assess for conditions like PCOS.</div></td><td class='refog'><div>Possible ovulation kit error or delayed/second ovulation</div></td><td class='refconv'><div>Possible ovulation kit error or delayed/second ovulation</div></td></tr>
+<tr><td>82</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I am 27 years old female. I am having right lower abdominal pain for past 2 years. The pain goes away after taking a course of antibiotics but reoccurs after some time. In the beginning the frequency of reoccurance was after 4 to 6 months, but now its occuring again and again within 15 to 20 days. I have the following symptoms. C1)fatigue, Feeling discomfort and tired always2)nausea always. Sensation is more after few minutes of food intake3)severe pain in lower right abdomen4)feeling burning pain in all over the abdomenal area5)Getting constipation for few days and then loose motion for few days Have done abdomincal scan and showed results as1)Left renal stone2)Minimal fluid in cul de sac Have done blood, urine and stool tests and reports showed these1)Haemoglobin is low2)ESR is high - 343)Showed pus cells in stool, occassional and stool is brown in color.4)showed 1-2 leucocytes and 2-3 epithelial cells in urineMenstrual periods  regular(30-32</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 27-year-old female presents with right lower abdominal pain for the past two years. The pain temporarily resolves following a course of antibiotics but recurs with increasing frequency, initially every 4 to 6 months and now every 15 to 20 days. Associated symptoms include persistent fatigue, nausea that worsens shortly after food intake, severe right lower abdominal pain, burning pain throughout the abdominal area, and alternating constipation followed by loose stools for several days. Investigations reveal a left renal stone and minimal fluid in the cul-de-sac on abdominal scan. Laboratory results show low hemoglobin, elevated ESR at 34, occasional pus cells in brown-colored stool, and urine microscopy with 1-2 leukocytes and 2-3 epithelial cells. Menstrual periods are regular, occurring every 30-32 days. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms and test results suggest a chronic inflammatory or infectious process in the lower abdomen, possibly involving the gastrointestinal and/or genitourinary tract. Key points:
+
+1. **Right lower abdominal pain recurring frequently** with partial response to antibiotics suggests a possible chronic infection or inflammation such as:
+   - Chronic appendicitis or appendiceal pathology
+   - Pelvic inflammatory disease (PID)
+   - Chronic pelvic inflammatory or tubo-ovarian abscess
+   - Inflammatory bowel disease (e.g., Crohn’s disease affecting terminal ileum)
+   - Recurrent urinary tract infection or renal stone-related irritation
+
+2. **Fatigue, nausea after eating, burning abdominal pain, and alternating constipation and diarrhea** point toward a possible chronic gastrointestinal disorder such as:
+   - Inflammatory bowel disease (IBD)
+   - Irritable bowel syndrome (IBS) with superimposed infection
+   - Chronic infection or parasitic infestation
+
+3. **Lab findings:**
+   - Low hemoglobin (anemia) could be due to chronic inflammation, nutritional deficiency, or blood loss.
+   - High ESR (343) indicates significant ongoing inflammation.
+   - Pus cells in stool suggest intestinal infection or inflammation.
+   - Minimal pus cells in urine could indicate mild urinary tract inflammation.
+   - Left renal stone may contribute to some symptoms but does not explain right lower quadrant pain.
+
+4. **Minimal fluid in cul-de-sac** may indicate pelvic inflammation or infection.
+
+### Likely diagnosis:
+- **Chronic pelvic inflammatory disease or chronic appendicitis**
+- **Inflammatory bowel disease (Crohn’s disease)**
+- **Chronic infectious enterocolitis**
+
+### Recommended next steps:
+- Referral to a gastroenterologist and gynecologist for further evaluation.
+- Consider colonoscopy and pelvic ultrasound or MRI to evaluate bowel and pelvic organs.
+- Repeat urine culture and stool culture to identify specific pathogens.
+- Blood tests for inflammatory markers, iron studies, and possibly autoimmune markers.
+- Consider laparoscopy if diagnosis remains unclear.
+
+### Urgent attention:
+- Persistent severe pain and high inflammation markers require prompt specialist evaluation.
+- Do not self-treat with antibiotics repeatedly without clear diagnosis.
+
+Please consult your healthcare provider urgently for detailed evaluation and management.</div></td><td class='respconv'><div>The patient's presentation includes:
+
+- Chronic right lower abdominal pain for 2 years, temporarily relieved by antibiotics but recurring more frequently.
+- Associated symptoms: persistent fatigue, nausea after eating, severe right lower abdominal pain, burning abdominal pain, and alternating constipation and diarrhea.
+- Investigations:
+  - Left renal stone (likely incidental, as pain is right-sided).
+  - Minimal fluid in the cul-de-sac (could suggest pelvic inflammation).
+  - Low hemoglobin (anemia).
+  - Elevated ESR (34) indicating inflammation.
+  - Occasional pus cells in brown-colored stool (suggests intestinal inflammation or infection).
+  - Urine microscopy with minimal leukocytes and epithelial cells (no significant urinary infection).
+- Regular menstrual cycles.
+
+**Differential considerations:**
+
+1. **Chronic appendicitis or recurrent appendiceal inflammation:** Could cause right lower quadrant pain but usually does not cause alternating bowel habits or systemic inflammation over years.
+
+2. **Inflammatory bowel disease (IBD), especially Crohn's disease:**  
+   - Chronic right lower abdominal pain (terminal ileum involvement common).  
+   - Alternating constipation and diarrhea.  
+   - Systemic symptoms like fatigue and anemia.  
+   - Elevated ESR and pus cells in stool indicating intestinal inflammation.  
+   - Nausea after food intake and burning abdominal pain consistent with chronic inflammation.  
+   - Minimal fluid in cul-de-sac could be reactive pelvic inflammation.  
+   - Brown-colored stool with pus cells supports intestinal mucosal inflammation.
+
+3. **Irritable bowel syndrome (IBS):** Usually no systemic inflammation or anemia.
+
+4. **Pelvic inflammatory disease (PID):** Usually associated with abnormal menstruation, vaginal discharge, and more prominent urinary symptoms.
+
+5. **Endometriosis:** Can cause right lower quadrant pain and fluid in cul-de-sac, but no mention of dysmenorrhea or cyclical symptoms; also, stool pus cells and elevated ESR less typical.
+
+6. **Urinary tract infection or renal colic:** Left renal stone is present but pain is right-sided; urine microscopy is not strongly suggestive of infection.
+
+**Most likely diagnosis:**  
+**Crohn's disease (a form of inflammatory bowel disease)** involving the terminal ileum and/or right colon.
+
+This explains chronic right lower abdominal pain, systemic inflammation, anemia, stool pus cells, alternating bowel habits, and partial response to antibiotics (which may reduce secondary bacterial overgrowth or infection).
+
+**Recommendation:**  
+Further evaluation with ileocolonoscopy and biopsy, along with imaging (CT enterography or MRI enterography), to confirm diagnosis and assess extent of disease.
+
+---
+
+**Summary:**  
+The most likely diagnosis is **Crohn's disease (inflammatory bowel disease)**.</div></td><td class='refog'><div>Pelvic inflammatory disease (PID), possible urinary tract infection (UTI)</div></td><td class='refconv'><div>Pelvic inflammatory disease (PID), possible urinary tract infection (UTI)</div></td></tr>
+<tr><td>88</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hifenac mr tablet was taken by my wife age 29 due to the pain in her lower waist , the reason is i suppose body cramp due to a massage by a proffesional.now she is suffering a severe pain in her waist and could not able to move and walk. should i go for a injection,pain killer or any spray pain relief ?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 29-year-old woman took Hifenac MR tablet for pain in the lower back, which is presumed to be due to muscle cramp following a professional massage. Subsequently, she developed severe pain in the lower back and is unable to move or walk. What is the most likely diagnosis?</div></td><td class='respog'><div>Severe pain in the lower waist with inability to move or walk after taking Hifenac MR (a painkiller and muscle relaxant) suggests a serious issue that needs urgent medical evaluation. This could be due to a muscle injury, nerve compression, or other underlying problems.
+
+**What you should do:**
+- Seek immediate medical attention from a doctor or visit the emergency room.
+- Avoid self-medicating with injections, additional painkillers, or sprays without professional advice.
+- Rest and avoid any movements that worsen the pain.
+
+A healthcare professional will need to examine her, possibly order imaging (like X-ray or MRI), and provide appropriate treatment. Do not delay, as severe pain and immobility can indicate a serious condition.</div></td><td class='respconv'><div>The most likely diagnosis is **spinal epidural hematoma** or **spinal cord compression** due to bleeding or nerve injury precipitated by the use of Hifenac MR (a sustained-release diclofenac, a nonsteroidal anti-inflammatory drug) combined with trauma or muscle injury from the massage.
+
+Key points supporting this diagnosis:
+- Hifenac MR (diclofenac) can increase bleeding risk by inhibiting platelet function.
+- Severe worsening of lower back pain and inability to move or walk suggests acute neurological compromise.
+- Muscle cramp after massage is unlikely to cause such severe symptoms unless complicated by bleeding or nerve injury.
+
+Immediate evaluation with MRI of the spine is warranted to confirm diagnosis and initiate urgent treatment to prevent permanent neurological damage.</div></td><td class='refog'><div>severe muscle spasm or possible nerve injury</div></td><td class='refconv'><div>severe muscle spasm or possible nerve injury</div></td></tr>
+<tr><td>89</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, im a 27 yr old female and over the past 2 yrs i have been getting left sided chest pain, and pain in my left rib that also radiates to the back. my 3rd rib is protruding as thats what my doctor said. i feel breathless n i get skipped hb everyime i get pain in that rib. I have had x rays done but everything seems normal.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 27-year-old female has experienced left-sided chest pain and pain in the left rib radiating to the back for the past 2 years. She reports protrusion of the third rib as noted by her doctor. The patient also experiences breathlessness and skipped heartbeats during episodes of rib pain. Chest X-rays have been performed and show normal results. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms of left-sided chest pain, pain in the left rib radiating to the back, a protruding 3rd rib, breathlessness, and skipped heartbeats (palpitations) suggest a few possible conditions:
+
+1. **Costochondritis or Rib Subluxation**: Inflammation or misalignment of the rib cartilage can cause localized pain and a feeling of rib protrusion.
+2. **Tietze Syndrome**: Similar to costochondritis but with visible swelling of the rib cartilage.
+3. **Musculoskeletal causes**: Muscle strain or nerve irritation around the ribs.
+4. **Cardiac causes**: Although your X-rays are normal, palpitations and breathlessness warrant evaluation for arrhythmias or other heart conditions.
+5. **Other causes**: Less commonly, structural abnormalities like cervical rib or thoracic outlet syndrome.
+
+Given your symptoms and normal X-rays, further evaluation is important:
+
+- **Cardiac evaluation**: ECG, Holter monitor to assess skipped beats.
+- **Chest CT or MRI**: To better visualize ribs and soft tissues.
+- **Referral to a specialist**: Cardiologist and possibly a thoracic or orthopedic specialist.
+
+If you experience worsening chest pain, shortness of breath, dizziness, or fainting, seek emergency care immediately.
+
+Please follow up with your healthcare provider for detailed assessment and appropriate investigations.</div></td><td class='respconv'><div>The clinical presentation of a young woman with chronic left-sided chest and rib pain, rib protrusion (notably of the third rib), breathlessness, and palpitations, along with normal chest X-rays, is most consistent with **Tietze syndrome** or **costochondritis**.
+
+However, the key feature here is the **protrusion of the third rib**, which suggests a structural abnormality rather than just inflammation. This points toward **slipping rib syndrome** or **rib subluxation**, where the costal cartilage or rib moves abnormally, causing pain and sometimes a visible or palpable protrusion.
+
+**Key points supporting slipping rib syndrome:**
+- Chronic localized rib pain
+- Rib protrusion noted clinically
+- Normal chest X-ray (since this is a soft tissue/cartilage problem)
+- Symptoms exacerbated by movement or breathing
+- Associated autonomic symptoms like palpitations and breathlessness can occur due to pain or irritation of intercostal nerves
+
+**Most likely diagnosis:**  
+**Slipping rib syndrome (rib subluxation)**
+
+Further confirmation can be done by physical exam maneuvers (hooking maneuver) and possibly dynamic ultrasound. Treatment is usually conservative with pain management and physical therapy.</div></td><td class='refog'><div>musculoskeletal chest pain (likely costochondral or rib origin); arrhythmia to be ruled out</div></td><td class='refconv'><div>musculoskeletal chest pain (likely costochondral or rib origin); arrhythmia to be ruled out</div></td></tr>
+<tr><td>101</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>My son is 3.4 years old and weight is 13 Kg. He is having cough from past 10 days along with fever and cold. Fever is down and he is having light cold. We had given ventryl 4.5 ml dose 3 times per days for 3 days. Still the cough is not reduced. Could you please prescribe best medicine for cough?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 3.4-year-old child weighing 13 kg has had a cough for the past 10 days accompanied by fever and cold. The fever has resolved, but a mild cold persists. The child was treated with Ventryl 4.5 ml three times daily for 3 days without improvement in the cough. What is the most likely diagnosis?</div></td><td class='respog'><div>Your son has had a cough for 10 days along with fever and cold, and the fever has now subsided but the cough persists. Since the cough has lasted more than a week and has not improved with the current treatment (ventryl), it is important to have him evaluated by a pediatrician to determine the cause of the cough (e.g., viral, bacterial, asthma, or other conditions).
+
+I cannot prescribe medication directly, but I recommend:
+
+1. **Consult a pediatrician promptly** for a thorough examination.
+2. The doctor may consider:
+   - Chest examination and possibly a chest X-ray.
+   - Assessing for asthma or reactive airway disease.
+   - Considering other treatments such as inhalers, antibiotics (if bacterial infection), or cough suppressants if appropriate.
+3. Continue supportive care:
+   - Keep him well hydrated.
+   - Use a humidifier in his room.
+   - Avoid exposure to smoke or irritants.
+
+Do not give any new medication without medical advice, especially in young children. If your son develops difficulty breathing, persistent high fever, or worsening symptoms, seek emergency care immediately.</div></td><td class='respconv'><div>In a 3.4-year-old child with a 10-day history of cough, fever (now resolved), and persistent mild cold symptoms, who did not improve with Ventryl (a cough suppressant/antihistamine), the most likely diagnosis is **pertussis (whooping cough)** or a prolonged viral bronchitis.
+
+Key points supporting this:
+- Duration of cough >7 days
+- Initial fever that has resolved
+- Persistent cough despite symptomatic treatment
+- Age group is typical for pertussis susceptibility if not vaccinated or incomplete vaccination
+
+Other considerations:
+- Viral bronchitis or post-viral cough is common but usually improves gradually.
+- Bacterial pneumonia is less likely without ongoing fever or worsening symptoms.
+- Asthma or reactive airway disease could cause prolonged cough but usually has wheezing.
+
+**Recommendation:** Evaluate for pertussis with PCR or culture if available, consider macrolide antibiotics if pertussis is suspected, and supportive care. If symptoms worsen or new signs develop, further evaluation is needed.</div></td><td class='refog'><div>post-viral cough</div></td><td class='refconv'><div>post-viral cough</div></td></tr>
+<tr><td>110</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hello i have been having a problem with a swollen lump on the side of my neck near my chin. sometimes it will be painful and there will be a sudden "burst" of the lump and and i can taste a bitter fluid coming up my throat. is that a swollen lymph gland?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient presents with a swollen lump on the side of the neck near the chin. The lump is sometimes painful and occasionally suddenly "bursts," leading to a bitter fluid taste in the throat. What is the most likely diagnosis?</div></td><td class='respog'><div>A swollen lump on the side of your neck near your chin that sometimes bursts and releases a bitter fluid is unlikely to be just a swollen lymph gland. This description suggests the possibility of a salivary gland issue, such as a blocked or infected salivary gland (like a submandibular gland stone or sialadenitis), which can cause swelling, pain, and discharge of bitter fluid (saliva or pus) into the mouth or throat.
+
+Swollen lymph nodes typically do not burst or release fluid into the throat.
+
+It is important to see a healthcare professional for a thorough examination, possible imaging (like an ultrasound), and appropriate treatment. If you experience fever, increasing pain, or difficulty swallowing or breathing, seek medical attention promptly.</div></td><td class='respconv'><div>The most likely diagnosis is a **branchial cleft cyst with secondary infection or fistula formation**.
+
+Explanation:
+- A swollen lump on the side of the neck near the chin is a common location for branchial cleft cysts.
+- These cysts can become infected, causing pain and swelling.
+- The sudden "bursting" and release of bitter fluid into the throat suggests a fistula or sinus tract connecting the cyst to the pharynx or oral cavity, allowing cyst contents to drain and cause the bitter taste.
+
+Other possibilities like lymphadenitis or salivary gland abscess are less likely to cause recurrent bursting with fluid taste.
+
+Recommendation:
+- Clinical examination and imaging (ultrasound or CT) to confirm.
+- ENT referral for possible surgical excision after infection control.</div></td><td class='refog'><div>submandibular salivary gland swelling, likely sialadenitis with possible ductal stone or stricture</div></td><td class='refconv'><div>submandibular salivary gland swelling, likely sialadenitis with possible ductal stone or stricture</div></td></tr>
+<tr><td>113</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi Doctor,  I need one information. I sometimes get red colored ulcers on my tongue after eating few particular things like Indian gooseberry or something which is sour and tangy.It again goes off immediately after I drink water or something which is cold.Please can you suggest what can be the reason behind this.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient reports occasional red-colored ulcers on the tongue that appear after consuming certain sour or tangy foods, such as Indian gooseberry. These ulcers resolve quickly after drinking water or cold beverages. What is the most likely diagnosis?</div></td><td class='respog'><div>Hello! The red-colored ulcers on your tongue that appear after eating sour or tangy foods like Indian gooseberry and improve with cold drinks are likely due to **minor aphthous ulcers (canker sores)** or **irritation caused by acidic foods**.
+
+Possible reasons include:
+- **Sensitivity or mild allergic reaction** to acidic or tangy foods.
+- **Minor trauma or irritation** to the tongue's surface from acidic substances.
+- **Nutritional deficiencies** (like vitamin B12, iron, or folate) can sometimes cause recurrent ulcers.
+- **Oral mucosal sensitivity** or mild inflammation triggered by certain foods.
+
+Since the ulcers resolve quickly with cold drinks, it suggests the cold helps soothe the irritation and reduce inflammation.
+
+**Recommendations:**
+- Avoid or limit intake of highly acidic or sour foods that trigger the ulcers.
+- Maintain good oral hygiene.
+- Stay hydrated.
+- If ulcers become frequent, large, very painful, or persist beyond 2 weeks, consult a healthcare provider for further evaluation and possible tests.
+
+If you have other symptoms like fever, weight loss, or ulcers elsewhere, please seek medical advice promptly.</div></td><td class='respconv'><div>The most likely diagnosis is **minor aphthous stomatitis (canker sores)** triggered by acidic or sour foods. These ulcers commonly appear on the tongue or oral mucosa, are painful, and tend to resolve quickly, especially with soothing measures like drinking water or cold beverages. The association with sour foods like Indian gooseberry supports this diagnosis, as acidic foods often precipitate or irritate aphthous ulcers.</div></td><td class='refog'><div>sensitive taste buds with local reaction to acidic foods</div></td><td class='refconv'><div>sensitive taste buds with local reaction to acidic foods</div></td></tr>
+<tr><td>115</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi I am 51 female ,perimenopausal,for the last 18 months I have suffered with a yellow coated tongue in the morning and it is getting a lot worse.I feel awful in the mornings any way and look generaly unwell.I have a healthy diet.I am seeing a gynocologist for cyst on my ovaries and my uterus had a thicker lining than normal.I have a lot of wind and bloating and pains in my abdomen-I am a bit of a mess. Can you help</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 51-year-old perimenopausal female has experienced a yellow coated tongue in the mornings for the past 18 months, which is progressively worsening. She reports feeling generally unwell and awful in the mornings despite maintaining a healthy diet. She is under gynecological care for ovarian cysts and has a thickened uterine lining. Additionally, she experiences significant abdominal bloating, wind, and pain. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear you're feeling unwell. Your symptoms—yellow coated tongue, morning malaise, abdominal pain, bloating, and ovarian cysts with thickened uterine lining—suggest a few possibilities that need careful evaluation:
+
+1. **Oral hygiene and infections:** A yellow coated tongue can be due to poor oral hygiene, fungal infections (like oral thrush), or bacterial overgrowth. Make sure to maintain good oral hygiene and consider seeing a dentist or doctor for evaluation.
+
+2. **Gastrointestinal issues:** Your bloating, wind, and abdominal pain could indicate digestive problems such as irritable bowel syndrome (IBS), small intestinal bacterial overgrowth (SIBO), or other GI conditions. These can also contribute to a coated tongue and general malaise.
+
+3. **Hormonal changes:** Perimenopause can cause various systemic symptoms, but the thickened uterine lining and ovarian cysts need close monitoring by your gynecologist to rule out endometrial hyperplasia or other conditions.
+
+4. **Systemic illness:** Feeling generally unwell with these symptoms warrants blood tests to check for infections, anemia, liver function, and other metabolic issues.
+
+**Recommendations:**
+- Continue follow-up with your gynecologist regarding ovarian cysts and uterine lining.
+- See your primary care doctor for a full evaluation including blood tests (CBC, liver/kidney function, inflammatory markers).
+- Consider a gastroenterology review for your abdominal symptoms.
+- Maintain good oral hygiene; if the tongue coating persists, get a dental or medical assessment.
+
+If you develop fever, severe pain, weight loss, or worsening symptoms, seek urgent medical care.</div></td><td class='respconv'><div>The key features in this case are:
+
+- A 51-year-old perimenopausal woman  
+- Yellow coated tongue in the mornings, progressively worsening over 18 months  
+- General malaise, especially in the mornings  
+- Under gynecological care for ovarian cysts and thickened endometrium  
+- Significant abdominal bloating, wind, and pain  
+
+**Interpretation:**
+
+1. **Yellow coated tongue** often suggests oral or systemic issues such as poor oral hygiene, fungal infection (e.g., oral candidiasis), or gastrointestinal problems causing altered flora or bile reflux.
+
+2. **General malaise and morning symptoms** may indicate systemic illness or chronic inflammation.
+
+3. **Gynecological findings**: Ovarian cysts and thickened uterine lining (endometrial hyperplasia) in a perimenopausal woman raise concern for hormonal imbalance, possibly estrogen excess.
+
+4. **Abdominal bloating, wind, and pain** are nonspecific but could be related to gastrointestinal dysfunction or a pelvic mass.
+
+**Most likely diagnosis:**
+
+Given the combination of:
+
+- Perimenopausal status with ovarian cysts and thickened endometrium  
+- Abdominal bloating and pain  
+- Systemic symptoms and yellow coated tongue  
+
+The most likely diagnosis is **ovarian neoplasm (possibly borderline or malignant tumor) with associated gastrointestinal symptoms and systemic effects**.
+
+**Rationale:**
+
+- Ovarian tumors can cause abdominal bloating, pain, and systemic symptoms.  
+- Thickened endometrium may be due to unopposed estrogen from ovarian cysts or tumor.  
+- The yellow coated tongue and malaise may reflect systemic illness or secondary infection.  
+- The progressive nature over 18 months suggests a chronic process rather than a simple infection.
+
+**Next steps:**
+
+- Urgent pelvic imaging (ultrasound, MRI) to characterize ovarian cysts and uterine lining.  
+- Tumor markers (CA-125, HE4) to assess for ovarian cancer.  
+- Referral to gynecologic oncology if malignancy suspected.  
+- Evaluation of oral cavity to rule out candidiasis or other causes of yellow tongue.
+
+---
+
+**Summary:**  
+The most likely diagnosis is an ovarian neoplasm (benign or malignant) causing hormonal imbalance, abdominal symptoms, and systemic illness. Further gynecological and oncological evaluation is essential.</div></td><td class='refog'><div>yellow tongue due to bacterial accumulation, possibly exacerbated by hormonal changes</div></td><td class='refconv'><div>yellow tongue due to bacterial accumulation, possibly exacerbated by hormonal changes</div></td></tr>
+<tr><td>117</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi my daughter age 7 is not breathing right .when she is eating food she needs to stop chewing and take deep breath from her mouth,and she gets uncomfortable,is her nose blocked or is she just not used to breathing from her nose I don t understand what to do</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 7-year-old female presents with difficulty breathing while eating. She needs to stop chewing and take deep breaths through her mouth, which causes her discomfort. The caregiver is unsure if the child has nasal obstruction or if she is unaccustomed to nasal breathing. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear your daughter is having trouble breathing while eating. Difficulty breathing through the nose during eating can be due to nasal congestion, allergies, or anatomical issues like enlarged adenoids. It could also be that she is not used to coordinating breathing and chewing properly.
+
+Here are some steps you can take:
+- Check if her nose looks or sounds blocked (e.g., sniffling, noisy breathing).
+- Observe if she has other symptoms like nasal congestion, runny nose, or mouth breathing at other times.
+- Encourage her to chew slowly and take small bites to help coordinate breathing.
+- Use a saline nasal spray to relieve possible nasal congestion.
+
+If she continues to have difficulty breathing, appears very uncomfortable, or shows signs of distress (like turning blue, gasping, or persistent coughing), seek medical attention promptly.
+
+It would be best to have her evaluated by a pediatrician to determine the cause and get appropriate treatment.</div></td><td class='respconv'><div>The most likely diagnosis is **adenoid hypertrophy causing nasal obstruction**.
+
+Explanation:
+- Difficulty breathing while eating, especially needing to stop chewing to breathe, suggests impaired nasal airflow.
+- Children normally breathe through their nose while eating; mouth breathing during eating indicates nasal obstruction.
+- Adenoid hypertrophy is common in children around this age and can cause nasal airway blockage.
+- This leads to mouth breathing, discomfort, and difficulty coordinating breathing and chewing.
+
+Further evaluation with nasal examination and possibly lateral neck X-ray or nasopharyngoscopy can confirm adenoid enlargement.</div></td><td class='refog'><div>nasal congestion</div></td><td class='refconv'><div>nasal congestion</div></td></tr>
+<tr><td>121</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hello , i am mohammed 32 years old last 3 years before i married that time i am only 3 month sex  with my wife after that i go foreign after  2 YEAR I came from foreign. my wife got 1st month result  possitive (preganancy test) after 3 month  my wife baby  misscarriage and also doctor advice to clean the utrus bag that we  done. after that doctor advice to take  ar wonder tablet for me this is  the right one can you please give me your good suggestion i hope   for your rely</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 32-year-old man reports that he had sexual intercourse with his wife for three months before going abroad for two years. After returning, his wife had a positive pregnancy test but miscarried three months later. The wife underwent uterine evacuation as advised by the doctor. The patient was then advised to take a medication called 'ar wonder'. What is the most likely diagnosis?</div></td><td class='respog'><div>Hello Mohammed, I’m sorry to hear about your wife’s miscarriage. It’s important to follow your doctor’s advice regarding treatment after a miscarriage. The "AR Wonder" tablet you mentioned is not a widely recognized medication name, so I recommend confirming the exact medication and its purpose with your doctor or pharmacist.
+
+After a miscarriage, doctors often recommend certain medications or supplements to help with recovery and prepare for a healthy future pregnancy. These may include vitamins, iron supplements, or medications to help the uterus heal.
+
+My suggestion:
+1. Follow your doctor’s instructions carefully.
+2. Ask your doctor to explain the purpose and benefits of any medication prescribed.
+3. Ensure your wife gets proper rest and follow-up care.
+4. If you or your wife have any concerns or symptoms, consult your healthcare provider promptly.
+
+If you want, you can share the exact name and details of the medication, and I can provide more information. Wishing you and your wife good health and a successful pregnancy in the future.</div></td><td class='respconv'><div>Based on the history:
+
+- The couple had regular intercourse for three months before the man went abroad.
+- The wife became pregnant but had a miscarriage at three months.
+- Uterine evacuation was performed.
+- The patient was advised to take a medication called "ar wonder" (likely a brand or local name, possibly related to treatment for infections or infertility).
+
+The key points are recurrent early pregnancy loss (miscarriage at 3 months) after a period of unprotected intercourse.
+
+**Most likely diagnosis:**  
+The scenario suggests **secondary infertility or recurrent miscarriage possibly due to an infection or immunological cause**. Given the timing (man was away for 2 years), a common cause could be an infection transmitted by the husband after his return, such as **Chlamydia trachomatis or other sexually transmitted infections (STIs)** leading to pelvic inflammatory disease (PID) in the wife, causing miscarriage.
+
+Alternatively, if "ar wonder" is a medication for treating infections (e.g., antibiotics or antiretrovirals), it supports an infectious cause.
+
+**Summary:**  
+- Most likely diagnosis: **Infection-related recurrent miscarriage (e.g., Chlamydia infection or other STI-related PID)**  
+- This would explain miscarriage and need for uterine evacuation, and treatment with medication afterward.
+
+Further evaluation with STI screening, pelvic ultrasound, and possibly immunological tests would be warranted.</div></td><td class='refog'><div>No male infertility; miscarriage likely unrelated to male factor</div></td><td class='refconv'><div>No male infertility; miscarriage likely unrelated to male factor</div></td></tr>
+<tr><td>122</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I had a hammer hit me in my right pelvis area where I imagine my ovarie to be ... I have been married 2 years and no luck getting pregnant how can I get this looked at. Can it make me not get pregnant? How much does it cost for in vitriol or to get my husbands sperm tested</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient reports trauma to the right pelvic area, approximately over the location of the ovary, due to being hit by a hammer. The patient has been married for two years and has experienced infertility during that time. The patient is concerned about whether the pelvic trauma could be contributing to infertility. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear about your injury and difficulties with pregnancy. Here's some important information:
+
+1. **Pelvic Injury and Fertility:**  
+   A direct hit to the pelvic area can potentially cause damage to reproductive organs, including the ovaries, fallopian tubes, or uterus. This might affect fertility, but not always. It's important to get a thorough medical evaluation to assess any injury and its impact on your reproductive health.
+
+2. **Next Steps for Evaluation:**  
+   - **See a Gynecologist:** They can perform a physical exam, pelvic ultrasound, and possibly blood tests to check ovarian function.  
+   - **Fertility Testing:** This may include hormone tests, imaging, and assessment of your fallopian tubes (e.g., hysterosalpingography).  
+   - **Your Husband's Sperm Test:** A semen analysis is a simple test to evaluate sperm count, motility, and morphology.
+
+3. **Costs:**  
+   - **Semen Analysis:** Typically ranges from $50 to $150 depending on location and facility.  
+   - **Fertility Evaluation:** Initial consultation and tests can range from $200 to $500 or more.  
+   - **In Vitro Fertilization (IVF):** IVF costs vary widely but generally range from $12,000 to $20,000 per cycle in the US, not including medications which can add several thousand dollars.
+
+4. **Insurance:**  
+   Check with your insurance provider as some or all of these tests and treatments may be covered.
+
+**Recommendation:**  
+Make an appointment with a gynecologist or fertility specialist as soon as possible to discuss your injury, fertility concerns, and to start appropriate testing. Early evaluation can help identify any issues and guide treatment options.
+
+If you want, I can help you prepare questions for your doctor or provide more details on fertility testing and treatments.</div></td><td class='respconv'><div>The most likely diagnosis is **ovarian trauma with possible resultant damage affecting fertility**.
+
+Explanation:
+- Trauma to the pelvic area over the ovary can cause direct injury to the ovary, such as hemorrhage, hematoma, or disruption of ovarian tissue.
+- Ovarian damage can impair ovulation or reduce ovarian reserve, potentially contributing to infertility.
+- Since the patient has a history of infertility for two years, the trauma could exacerbate or reveal underlying ovarian dysfunction.
+- Other pelvic structures (fallopian tubes, uterus) could also be affected by trauma, leading to adhesions or tubal damage, further impacting fertility.
+
+Further evaluation with pelvic ultrasound and hormonal assays (e.g., AMH, FSH) is recommended to assess ovarian function and structural damage. Referral to a gynecologist or fertility specialist is advised for comprehensive assessment and management.</div></td><td class='refog'><div>Unlikely infertility due to pelvic trauma; infertility workup recommended</div></td><td class='refconv'><div>Unlikely infertility due to pelvic trauma; infertility workup recommended</div></td></tr>
+<tr><td>125</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, my lower back usually is sore. Im only 17 and already have back pains. But today, Ive been having lower pains by my spin, but of to the right a little, near my butt. Usually when I have back pains, I lay on a hard flat surface and it feels like my back shifts into place, but this time when I did it, it cracked about 7 times, then I felt a major pain so I rolled over to my stomach, cried for a few seconds, and stood up. I thought the pain was gone, til I started walking around again? I already been told my back was mis aligned. but I have no clue what this is.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 17-year-old patient with a history of chronic lower back soreness presents with new onset of lower back pain localized to the right side near the buttock. The patient reports that attempting to self-manipulate the back by lying on a hard flat surface caused multiple cracking sounds followed by severe pain, which initially subsided upon standing but recurred with walking. The patient has a prior diagnosis of back misalignment. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear about your pain. Your symptoms—lower back pain radiating slightly to the right near the buttock, cracking sounds, and sharp pain—could be related to several issues such as muscle strain, a misaligned spine, or possibly irritation of the sciatic nerve (sciatica). Since you have a history of back misalignment and now experienced a sharp pain with multiple cracks and difficulty standing, this could indicate a more significant problem like a joint or disc issue.
+
+Given the severity of your pain, inability to stand comfortably, and the fact that you are young but already have chronic back issues, I strongly recommend you see a healthcare professional promptly. A doctor or physical therapist can perform a thorough examination, possibly including imaging (like X-rays or MRI), to determine the exact cause and provide appropriate treatment.
+
+In the meantime:
+- Avoid activities that worsen the pain.
+- Use ice or heat on the painful area.
+- Avoid heavy lifting or twisting movements.
+- Try to rest in a comfortable position.
+
+If you experience worsening pain, numbness, weakness in your legs, or loss of bladder/bowel control, seek emergency medical care immediately.</div></td><td class='respconv'><div>The most likely diagnosis is **acute sacroiliac joint dysfunction or sacroiliac joint strain**.
+
+Rationale:
+- The pain is localized near the right lower back/buttock area, which corresponds to the sacroiliac (SI) joint region.
+- History of chronic lower back soreness and prior back misalignment suggests underlying biomechanical instability.
+- Self-manipulation causing cracking sounds followed by severe pain is typical of SI joint subluxation or strain.
+- Pain initially subsiding on standing but recurring with walking aligns with SI joint irritation aggravated by weight-bearing and movement.
+
+Other considerations like lumbar disc herniation or muscle strain are less likely given the localization and history. Imaging and physical exam maneuvers (e.g., FABER test) can help confirm the diagnosis.</div></td><td class='refog'><div>Mechanical back pain</div></td><td class='refconv'><div>Mechanical back pain</div></td></tr>
+<tr><td>129</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hi. My 15 year old girl has been waking up sat, sun and today with swelling in her fingers, and ankles and complains of itching different parts of body, feet, hands, and tops of legs, back. I think she has been laying in bed too long, prolonged sitting, and drinking lots of chocolate/banana smoothies, not enough water. I have told her to move around, drink water, and back off on smoothies in diet, I also told he she could take benedryll liquid and apply cream. Any other suggestions?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 15-year-old female presents with swelling in her fingers and ankles upon waking on several consecutive days (Saturday, Sunday, and Monday). She also reports itching on various parts of her body, including the feet, hands, tops of legs, and back. There is a history of prolonged bed rest and sitting, consumption of chocolate/banana smoothies, and inadequate water intake. The patient has taken diphenhydramine liquid and applied topical cream without specified results. What is the most likely diagnosis?</div></td><td class='respog'><div>Your daughter's symptoms of swelling in fingers and ankles along with itching on various body parts could be due to several causes including allergic reactions, fluid retention, or possibly an underlying medical condition.
+
+Your current advice to increase movement and hydration, reduce smoothie intake, and use Benadryl (diphenhydramine) and topical cream for itching is reasonable as initial measures.
+
+Additional suggestions:
+- Monitor for other symptoms like rash, difficulty breathing, fever, or joint pain.
+- Encourage a balanced diet with reduced high-sugar drinks.
+- Elevate swollen limbs when resting to reduce swelling.
+- Avoid known allergens or new skincare products that might cause itching.
+- If swelling and itching persist beyond a couple of days, worsen, or are accompanied by other symptoms, seek prompt medical evaluation to rule out allergies, infections, or other causes such as kidney or liver issues.
+
+If she develops difficulty breathing, facial swelling, or severe symptoms, seek emergency care immediately.</div></td><td class='respconv'><div>The most likely diagnosis is **allergic contact dermatitis with associated mild dependent edema**.
+
+**Reasoning:**
+
+- **Swelling in fingers and ankles upon waking:** This suggests mild dependent edema, possibly related to prolonged bed rest and sitting, leading to fluid accumulation in distal extremities overnight.
+
+- **Itching on multiple body parts (feet, hands, legs, back):** This widespread pruritus points toward an allergic or irritant dermatitis rather than localized infection or systemic disease.
+
+- **History of chocolate/banana smoothie consumption:** Both chocolate and bananas are common allergens or can trigger histamine release, potentially contributing to allergic symptoms.
+
+- **Inadequate water intake:** Dehydration can worsen skin barrier function and pruritus.
+
+- **Use of diphenhydramine and topical cream without clear improvement:** Suggests ongoing allergic or irritant exposure.
+
+**Summary:** The combination of pruritus, swelling related to dependent positioning, and possible allergen exposure (dietary and/or topical) supports allergic contact dermatitis with mild dependent edema.
+
+**Recommendations:**  
+- Avoid known allergens (chocolate, banana).  
+- Improve hydration.  
+- Elevate limbs to reduce edema.  
+- Consider evaluation by a dermatologist for patch testing and appropriate topical corticosteroids or other treatments.  
+- If symptoms worsen or systemic signs develop, further workup is warranted.</div></td><td class='refog'><div>allergic reaction (urticaria) vs. scabies</div></td><td class='refconv'><div>allergic reaction (urticaria) vs. scabies</div></td></tr>
+<tr><td>131</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>occasional blood spots in my urine, not on a daily basis. now I noted a back pain, it seems like to my left hip, I am feeling the pain when getting up from a sitting position and walking, I am not taking any pain meds, my only medication is Fosamax with Vit D once a week. Please help.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient reports occasional blood spots in urine, not occurring daily. Recently, the patient developed pain localized to the left hip/back area, which is exacerbated by rising from a sitting position and walking. The patient is not currently using any pain medication and takes weekly Fosamax with vitamin D. What is the most likely diagnosis?</div></td><td class='respog'><div>The presence of occasional blood spots in urine (hematuria) combined with new onset left hip/back pain is concerning and warrants prompt medical evaluation. Possible causes include:
+
+- Urinary tract infection or kidney stones causing bleeding and pain
+- Musculoskeletal issues or injury related to your hip/back
+- More serious conditions such as kidney disease or malignancy
+
+Since you are on Fosamax (alendronate), which is used for osteoporosis, bone-related issues should also be considered.
+
+**Recommendations:**
+- See a healthcare provider promptly for a thorough history, physical exam, and investigations.
+- Urinalysis and urine culture to check for infection or other abnormalities.
+- Imaging studies (e.g., ultrasound, X-ray, or CT scan) to evaluate kidneys, urinary tract, and hip.
+- Blood tests including kidney function and markers of inflammation.
+
+Do not ignore these symptoms, especially with blood in urine and new pain. If you develop fever, severe pain, difficulty urinating, or worsening symptoms, seek emergency care immediately.</div></td><td class='respconv'><div>The combination of occasional hematuria (blood spots in urine) and localized left hip/back pain worsened by movement, in a patient on weekly Fosamax (alendronate) with vitamin D, suggests a possible underlying bone or urinary tract issue.
+
+**Most likely diagnosis:**  
+**Osteoporotic vertebral or pelvic fracture** or **insufficiency fracture** related to osteoporosis.
+
+**Rationale:**  
+- Fosamax is used to treat osteoporosis, indicating the patient is at risk for fragility fractures.  
+- Pain localized to the hip/back, worsened by movement, is characteristic of a fracture or bone pathology.  
+- Occasional hematuria may be incidental or related to minor urinary tract irritation but is less likely the primary cause of pain.  
+- The absence of daily hematuria and no mention of infection symptoms makes urinary tract infection or malignancy less likely but should be ruled out if symptoms persist.
+
+**Next steps:**  
+- Imaging (X-ray or MRI) of the lumbar spine and pelvis to evaluate for fractures.  
+- Urinalysis and possibly urine cytology to assess hematuria cause.  
+- Bone density assessment if not recently done.
+
+If the pain is severe or neurological symptoms develop, urgent evaluation is warranted.</div></td><td class='refog'><div>renal calculus or urinary tract infection (differential diagnosis)</div></td><td class='refconv'><div>renal calculus or urinary tract infection (differential diagnosis)</div></td></tr>
+<tr><td>133</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi doctor,I had a small growth like in my thigh near anal part.  It was first observed in year 2010 and was slightly increasing its size very slowly.  But it was soft in nature.  Now it is about 1.8 cms in diameter. Today suddenly I felt that it became slightly harder as if it is pressure filled.  I have Piles.  But no treatment has been taken till now.  Is it dangerous that tonight itself should I visit the hospital.  Advise please.  I have high blood pressure also normally.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient presents with a small, soft growth on the thigh near the anal region, first noticed in 2010, which has slowly increased in size to approximately 1.8 cm in diameter. Recently, the growth became slightly harder, suggestive of possible pressure or filling. The patient has a history of untreated piles and well-controlled hypertension. What is the most likely diagnosis?</div></td><td class='respog'><div>Based on your description, the small growth near your anal area that has been slowly increasing in size and recently became harder could be related to several conditions, including an anal cyst, abscess, hemorrhoid complication, or other benign growths. Since you have piles (hemorrhoids) and now feel a sudden change in consistency (harder, pressure-filled), it might indicate inflammation, infection, or thrombosis.
+
+**Important points:**
+- Sudden hardness and pressure sensation could suggest an abscess or thrombosed hemorrhoid, which may require prompt medical attention.
+- If you experience severe pain, fever, spreading redness, or difficulty passing stool, you should seek emergency care.
+- High blood pressure is a consideration but does not directly affect this growth unless you need urgent treatment.
+
+**Advice:**
+- If the area is very painful, swollen, or you develop fever, visit the hospital tonight.
+- If symptoms are mild and no systemic signs (fever, severe pain), you can schedule a visit with a colorectal specialist or general surgeon soon for evaluation.
+- Avoid straining during bowel movements and maintain good hygiene.
+
+In summary, if the hardness is associated with pain, fever, or rapid worsening, go to the hospital tonight. Otherwise, arrange a medical evaluation promptly.</div></td><td class='respconv'><div>The most likely diagnosis is a **perianal (anal) skin tag** or possibly a **perianal cyst or benign growth such as a fibroma or lipoma**.
+
+Key points supporting this:
+- Location near the anal region.
+- Slow growth over many years (since 2010).
+- Initially soft, now slightly harder, possibly due to pressure or internal changes.
+- History of untreated piles (hemorrhoids) can lead to secondary skin tags.
+- Size around 1.8 cm is consistent with a benign lesion rather than an aggressive malignancy.
+
+Other considerations:
+- An **anal skin tag** is common in patients with hemorrhoids.
+- A **perianal cyst** (e.g., epidermoid cyst) can present similarly.
+- Less likely but important to rule out: perianal abscess or malignancy (e.g., squamous cell carcinoma), but these usually have more rapid growth or other symptoms.
+
+Recommendation:
+- Clinical examination including digital rectal exam.
+- Consider ultrasound or biopsy if uncertain.
+- Manage underlying piles to prevent further skin tags.
+
+In summary, the most likely diagnosis is a **perianal skin tag related to chronic hemorrhoids**.</div></td><td class='refog'><div>thrombosed prolapsed pile (hemorrhoid)</div></td><td class='refconv'><div>thrombosed prolapsed pile (hemorrhoid)</div></td></tr>
+<tr><td>137</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>sir my son has got small pimple on right hand 5 days back now it has grown and become hard & red i checked with children specilist 2 days back he told it is a bite of some bee or ant but it has spread more i am worriying more YYYY@YYYY</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A child developed a small pimple on the right hand 5 days ago, which has since enlarged, become hard, red, and spread. A pediatric specialist evaluated the lesion 2 days ago and diagnosed it as a bee or ant bite. What is the most likely diagnosis?</div></td><td class='respog'><div>A small pimple that has grown, become hard, red, and is spreading over 5 days after a suspected insect bite could indicate an infection such as cellulitis or an allergic reaction. Since it is worsening and spreading, it is important to seek medical attention promptly. Please take your son to a healthcare provider or emergency room as soon as possible for evaluation and treatment, which may include antibiotics or other interventions. Do not delay, as infections can progress quickly.</div></td><td class='respconv'><div>The presentation of a small pimple that enlarged, became hard, red, and spread over 5 days suggests an evolving skin infection rather than a simple insect bite reaction. Given the progression and spreading redness, the most likely diagnosis is **cellulitis**—a bacterial skin infection, commonly caused by Staphylococcus aureus or Streptococcus species.
+
+A bee or ant bite can initially cause localized inflammation, but the development of a hard, red, spreading lesion indicates secondary bacterial infection.
+
+**Summary:**
+- Initial lesion: small pimple (possible insect bite site)
+- Progression: enlargement, hardness, redness, spreading
+- Most likely diagnosis: **Cellulitis**
+
+Prompt antibiotic treatment is usually required to prevent further spread.</div></td><td class='refog'><div>infected skin lesion (possible abscess) following insect bite</div></td><td class='refconv'><div>infected skin lesion (possible abscess) following insect bite</div></td></tr>
+<tr><td>139</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>My daughter sears haven been pierced for 10+years. Today when she took one pair of earrings out her right ear hole for her earrings started to bleed but the other did not. What would cause it. She put another pair of earrings in her ears today and then tonight took them out and bleed again. We cleaned with wound cleaner and rubbing alcohol and then it stops. Very weird. Please advise any advice you may have.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A female patient with ear piercings for over 10 years experienced bleeding from the right ear piercing site after removing earrings today. The left ear did not bleed. After reinserting another pair of earrings and removing them tonight, bleeding recurred from the right ear. The sites were cleaned with wound cleaner and rubbing alcohol, after which the bleeding stopped. What is the most likely diagnosis?</div></td><td class='respog'><div>Bleeding from a long-healed earlobe piercing after removing earrings can be caused by several factors:
+
+1. **Irritation or minor trauma:** Removing earrings can sometimes cause small tears or irritation, especially if the earrings are tight, heavy, or if the hole has narrowed.
+2. **Infection:** Even a mild infection can cause inflammation and bleeding. Signs include redness, swelling, pain, or discharge.
+3. **Allergic reaction:** Some metals can cause irritation or allergic reactions, leading to inflammation and bleeding.
+4. **Dryness or skin fragility:** Using rubbing alcohol can dry out the skin, making it more prone to cracking and bleeding.
+5. **Underlying skin condition:** Less commonly, conditions like eczema or dermatitis can affect the piercing site.
+
+**Advice:**
+- Avoid using rubbing alcohol frequently; it can dry and irritate the skin. Instead, clean the area gently with saline solution or mild soap and water.
+- Use hypoallergenic earrings (e.g., surgical steel, titanium, or gold) to reduce irritation.
+- Avoid heavy or tight earrings for a while to allow healing.
+- Monitor for signs of infection: increased redness, swelling, warmth, pain, or pus.
+- If bleeding persists, worsens, or signs of infection develop, consult a healthcare professional for evaluation and possible treatment.
+
+If the bleeding is minimal and stops quickly, it may just be minor irritation. However, careful cleaning and avoiding further trauma are important.</div></td><td class='respconv'><div>The most likely diagnosis is **traumatic bleeding from the right ear piercing site due to mechanical irritation or minor injury**.
+
+Explanation:
+- The patient has had ear piercings for over 10 years, so chronic infection or new piercing-related complications are less likely.
+- Bleeding occurred immediately after removing earrings, suggesting mechanical trauma to the piercing tract or surrounding skin.
+- The left ear did not bleed, indicating a localized issue on the right side.
+- Cleaning with wound cleaner and rubbing alcohol stopped the bleeding, supporting a superficial injury rather than an active infection.
+- No mention of signs of infection (redness, swelling, pus) or systemic symptoms.
+
+Management:
+- Avoid frequent removal and reinsertion of earrings to minimize trauma.
+- Use hypoallergenic earrings to prevent irritation.
+- Keep the site clean and monitor for signs of infection.
+- If bleeding persists or infection develops, seek medical evaluation.
+
+In summary, this is most consistent with minor trauma-induced bleeding at a long-standing ear piercing site.</div></td><td class='refog'><div>local infection or inflammation of ear piercing</div></td><td class='refconv'><div>local infection or inflammation of ear piercing</div></td></tr>
+<tr><td>142</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hello sir, i don t know english well so forgive my grammer mistakes. well, actually the problem that the docter prefer some tablets to my mom for some venter problems , after taking the medicine my mom feeling, like something burning in her trachea.please sir if you describe the problem we be very thankfull to you.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>An elderly female patient was prescribed tablets for heart problems. After taking the medication, she experienced a burning sensation in her trachea. What is the most likely diagnosis?</div></td><td class='respog'><div>Hello, no problem with your English—I understand you well. 
+
+Your mother is feeling a burning sensation in her trachea (throat/windpipe) after taking medicine for heart problems. This burning feeling could be caused by:
+
+1. **Medication side effect:** Some heart medicines can irritate the throat or cause acid reflux, leading to a burning sensation.
+2. **Acid reflux or heartburn:** Some medicines relax the valve between the stomach and esophagus, causing stomach acid to come up and burn the throat.
+3. **Esophagitis:** Inflammation of the esophagus caused by the medicine irritating the lining.
+
+What you should do:
+- Tell the doctor about this burning feeling as soon as possible.
+- Do not stop the medicine without doctor advice.
+- Drinking water after taking medicine may help reduce irritation.
+- Avoid lying down immediately after taking medicine.
+- If the burning is severe, or if your mother has difficulty swallowing, breathing, or chest pain, seek emergency medical help.
+
+Please consult the doctor to review the medicine and possibly change it or add treatment to reduce the burning sensation.</div></td><td class='respconv'><div>The most likely diagnosis is **pill-induced esophagitis** or **pill esophagitis**. 
+
+Explanation:
+- Elderly patients taking certain heart medications (e.g., potassium chloride, bisphosphonates, tetracyclines, or NSAIDs) can develop irritation or injury to the esophageal mucosa if the pill lodges in the esophagus.
+- This can cause a burning sensation or pain behind the sternum or in the tracheal area.
+- Symptoms often occur shortly after taking the medication, especially if taken without enough water or just before lying down.
+
+Recommendation:
+- Ensure the patient takes pills with plenty of water.
+- Avoid lying down immediately after taking medication.
+- If symptoms persist, evaluation by endoscopy may be needed.
+
+If you provide the specific medication, I can give a more tailored assessment.</div></td><td class='refog'><div>Gastroesophageal Reflux Disease (GERD)</div></td><td class='refconv'><div>Gastroesophageal Reflux Disease (GERD)</div></td></tr>
+<tr><td>143</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I was fine till about 3 o clock in the morning I woke up to a pain in the tip of my penis( it feels like i have to pee but very little comes out. i am a 53 year old virgin and have not had sex with a woman yet. the last time i masterbated was 2 weeks ago. what should i do?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 53-year-old male reports waking at 3 AM with pain localized to the tip of the penis. He experiences a sensation of needing to urinate but passes only a small amount of urine. The patient is a virgin and has not had sexual intercourse. His last masturbation was two weeks prior. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms of pain at the tip of the penis and a frequent urge to urinate with little output could indicate a urinary tract infection (UTI), urethritis, or possibly another issue such as prostatitis or irritation. Even without sexual activity, infections or inflammation can occur.
+
+What you should do:
+1. **See a healthcare provider promptly** for a proper evaluation and urine test.
+2. **Avoid irritants** such as harsh soaps or lotions on the genital area.
+3. **Stay well hydrated** to help flush the urinary tract.
+4. **Avoid sexual activity or masturbation** until evaluated.
+
+If you develop fever, chills, worsening pain, or inability to urinate, seek emergency care immediately.
+
+Early diagnosis and treatment are important to prevent complications. Please make an appointment with a healthcare professional as soon as possible.</div></td><td class='respconv'><div>The patient's symptoms—nocturnal penile tip pain, urgency to urinate with only a small amount passed, and no history of sexual activity—suggest a non-infectious cause. Given the localized pain at the tip of the penis and urinary symptoms, the most likely diagnosis is **meatal stenosis**.
+
+**Rationale:**
+- Meatal stenosis is a narrowing of the urethral opening (meatus), leading to obstructed urine flow.
+- It can cause pain at the tip of the penis, especially during urination or when the bladder is full.
+- The sensation of needing to urinate but passing only a small amount is consistent with obstructive symptoms.
+- It is not related to sexual activity and can occur in adults.
+- Other causes like urethritis or sexually transmitted infections are less likely given the patient's virgin status and lack of sexual exposure.
+
+**Next steps:**
+- Physical examination focusing on the urethral meatus.
+- Urinalysis to rule out infection.
+- Uroflowmetry or imaging if needed.
+- Referral to urology for possible meatotomy if confirmed.
+
+**Summary:**  
+Most likely diagnosis: **Meatal stenosis causing obstructive urinary symptoms and penile tip pain.**</div></td><td class='refog'><div>acute urinary tract infection; possible prostate enlargement</div></td><td class='refconv'><div>acute urinary tract infection; possible prostate enlargement</div></td></tr>
+<tr><td>146</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>sir, i get marry just 5 months ago. my wife took unwanted 72 for birth control . but she got lot of problems like weight loss , headache , body pain, tiredness, n feeling too weakness. and her periods are irregular for one n half months, i mean she did not get periods for 1and half month. last time when she got periods, there were blood cloud from her vagina during periods. m worry due to this. and her body skin is going down and becoming dark. so how her body and face get the previous freshness and glowing face? what should be the diets in her meal and daily routine. plz suggest sir.....</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A woman who started using an emergency contraceptive pill five months ago is experiencing significant symptoms including weight loss, headache, body pain, tiredness, weakness, and irregular menstruation with an absence of periods for one and a half months. Her last menstrual bleeding included blood clots. Additionally, she has noticed skin darkening and loss of facial freshness. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear about your wife's health issues. The symptoms she is experiencing—weight loss, headache, body pain, tiredness, weakness, irregular periods, unusual bleeding, and skin changes—are concerning and may be related to the use of emergency contraception (the "unwanted 72" pill) or other underlying health problems.
+
+**Important steps:**
+
+1. **See a doctor promptly:** She needs a thorough medical evaluation by a gynecologist or general physician to rule out hormonal imbalances, infections, or other conditions causing these symptoms.
+
+2. **Blood tests:** Tests for hormone levels, anemia, thyroid function, and infection screening may be necessary.
+
+3. **Ultrasound:** To check the uterus and ovaries for any abnormalities.
+
+**Diet and lifestyle suggestions to improve general health and skin:**
+
+- **Balanced diet:** Include plenty of fresh fruits (like berries, oranges), vegetables (spinach, carrots), whole grains, lean proteins (chicken, fish, legumes), and healthy fats (nuts, seeds, olive oil).
+- **Hydration:** Drink at least 8 glasses of water daily.
+- **Avoid processed foods, excessive sugar, and caffeine.**
+- **Regular moderate exercise:** Walking, yoga, or light workouts to improve circulation and energy.
+- **Adequate sleep:** 7-8 hours per night.
+- **Stress management:** Meditation or relaxation techniques.
+
+**For skin health:**
+
+- Use gentle skincare products.
+- Protect skin from excessive sun exposure.
+- Include foods rich in antioxidants (vitamin C, E) and omega-3 fatty acids.
+
+**Do not delay medical consultation** as irregular bleeding and systemic symptoms need prompt attention. Please encourage your wife to visit a healthcare provider as soon as possible.</div></td><td class='respconv'><div>The symptoms described—weight loss, headache, body pain, tiredness, weakness, irregular menstruation with amenorrhea for 1.5 months, blood clots during last menstruation, skin darkening, and loss of facial freshness—are suggestive of **Addison's disease (primary adrenal insufficiency)**.
+
+Key points supporting this diagnosis:
+- **Skin darkening (hyperpigmentation)** is a classic sign of Addison's disease due to increased ACTH stimulating melanocytes.
+- **Weight loss, weakness, and fatigue** are common systemic symptoms.
+- **Irregular menstruation and amenorrhea** can occur due to hormonal imbalances.
+- **Headache and body pain** may be related to electrolyte imbalances or general malaise.
+- The use of emergency contraceptive pills is unlikely to cause these systemic symptoms and skin changes.
+
+**Next steps:**
+- Measure serum cortisol and ACTH levels.
+- Electrolyte panel (look for hyponatremia, hyperkalemia).
+- ACTH stimulation test.
+- Refer to endocrinology for confirmation and management.
+
+**Summary:** The most likely diagnosis is **Addison's disease (primary adrenal insufficiency)**.</div></td><td class='refog'><div>possible underlying hormonal problem</div></td><td class='refconv'><div>possible underlying hormonal problem</div></td></tr>
+<tr><td>147</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I am 44 years old female.I experienced this 2nd time in 2 weeks that when I do my grocery shopping and i lift some thing too heavy I started pain in my chest n I become short of breath.it gives me dizziness and bit like num feelings in head.I feel very weak.I have to lay down for at least 15/20 minutes.is it some thing serious?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 44-year-old female experienced chest pain and shortness of breath on two occasions within two weeks, occurring after lifting heavy items during grocery shopping. The episodes are associated with dizziness, numbness in the head, and weakness, requiring her to lie down for 15 to 20 minutes. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms—chest pain, shortness of breath, dizziness, numbness in the head, and weakness triggered by lifting heavy objects—are concerning and could indicate a serious condition such as angina (reduced blood flow to the heart), a heart problem, or other cardiovascular issues.
+
+You should seek immediate medical evaluation, especially since this has happened more than once in a short period. If the chest pain is severe, lasts more than a few minutes, or is accompanied by sweating, nausea, or pain radiating to your arm or jaw, call emergency services right away.
+
+Please do not ignore these symptoms. Visit your healthcare provider promptly for a thorough assessment, including a physical exam, ECG, and possibly other tests to determine the cause and ensure your safety.</div></td><td class='respconv'><div>The patient's symptoms—chest pain and shortness of breath triggered by physical exertion (lifting heavy items), accompanied by dizziness, numbness in the head, and weakness—are concerning for a cardiac cause, most likely **angina pectoris** due to myocardial ischemia.
+
+Key points supporting this diagnosis:
+- Chest pain with exertion suggests myocardial oxygen demand exceeding supply.
+- Associated symptoms (dizziness, weakness, numbness) may reflect transient cerebral hypoperfusion or autonomic symptoms related to cardiac ischemia.
+- The need to rest for symptom relief is typical of angina.
+
+Other considerations like musculoskeletal pain or anxiety are less likely given the systemic symptoms and exertional nature.
+
+**Most likely diagnosis:** Stable angina pectoris (exertional angina).
+
+**Recommended next steps:** Urgent cardiac evaluation including ECG, stress testing, and possibly coronary imaging to confirm diagnosis and guide treatment.</div></td><td class='refog'><div>possible cardiac disease (exertional angina), consider respiratory or hematologic causes</div></td><td class='refconv'><div>possible cardiac disease (exertional angina), consider respiratory or hematologic causes</div></td></tr>
+<tr><td>149</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>i have a broken blood vessel in my arm i know this cause I looked up pictures to find out what was on my arm. It is about 1 inch by about 1/4 of an inch big and it is slightly raised and there is a kind of a cold/dull ache and almost numb sensation. should i be worried</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient presents with a broken blood vessel on the arm measuring approximately 1 inch by 0.25 inch. The lesion is slightly raised and associated with a cold, dull ache and near numbness in the area. What is the most likely diagnosis?</div></td><td class='respog'><div>A broken blood vessel in the arm, often appearing as a bruise or small raised red/purple area, is usually not serious and often resolves on its own. However, the size you describe (1 inch by 1/4 inch), along with the cold/dull ache and numb sensation, suggests some nerve involvement or possible inflammation.
+
+You should seek medical evaluation if you experience any of the following:
+- Increasing pain, swelling, or redness
+- Numbness or tingling that worsens or spreads
+- Signs of infection (warmth, pus, fever)
+- The area does not improve or worsens over several days
+
+If symptoms are mild and stable, you can monitor it, keep the area clean, avoid trauma, and apply cold compresses to reduce swelling.
+
+In summary, while it may not be an emergency, the numbness and ache warrant a prompt check by a healthcare professional to rule out complications. If in doubt, see a doctor for a proper examination.</div></td><td class='respconv'><div>The presentation of a broken blood vessel (likely a superficial purpura or ecchymosis) that is slightly raised, accompanied by a cold, dull ache and near numbness suggests more than a simple bruise. The symptoms of numbness and cold sensation indicate possible nerve involvement or vascular compromise.
+
+**Most likely diagnosis:**  
+**Superficial thrombophlebitis or localized hematoma with nerve irritation**
+
+- The broken blood vessel and raised lesion suggest localized bleeding or inflammation of a superficial vein.
+- The cold, dull ache and numbness point toward possible nerve compression or ischemia in the area.
+- This could be due to trauma causing a hematoma compressing nearby nerves or superficial vein inflammation (thrombophlebitis).
+
+**Other considerations:**  
+- Compartment syndrome (less likely given size and location but important if symptoms worsen)
+- Early signs of vascular injury or nerve entrapment
+
+**Recommendation:**  
+- Clinical examination focusing on vascular status (capillary refill, pulses) and neurological exam.
+- If symptoms worsen or signs of ischemia develop, urgent vascular or surgical evaluation is needed.
+
+In summary, the most likely diagnosis is a localized hematoma or superficial thrombophlebitis causing nerve irritation.</div></td><td class='refog'><div>hematoma</div></td><td class='refconv'><div>hematoma</div></td></tr>
+<tr><td>150</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I am a cheerleader so I am flexible and do many different stretches and flexibility training daily, so today during a tryout I went into my right splits and heard three very loud pops and then very bad pain! I continued with my tryout which had several different jumps and kicks and with each I felt even more pain and now I am feeling constant pain on minimal movements. What could be going on?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A cheerleader who performs daily stretching and flexibility training experienced three loud pops in the right side of the body during a right split attempt, followed by severe pain. Despite the pain, the patient continued the tryout involving jumps and kicks, with increasing pain during each activity. The patient now has constant pain with minimal movement. What is the most likely diagnosis?</div></td><td class='respog'><div>Hearing three loud pops followed by severe pain during a stretch like the splits suggests a possible significant injury, such as:
+
+- Muscle or tendon tear (e.g., hamstring or adductor strain/rupture)
+- Ligament injury around the hip or knee
+- Possible joint injury or dislocation
+
+Continuing activity despite pain may have worsened the injury.
+
+You should:
+
+- Stop all activity immediately
+- Apply ice to reduce swelling
+- Keep the leg elevated and avoid weight-bearing if painful
+- Seek prompt evaluation by a healthcare professional (orthopedic specialist or sports medicine doctor) for a thorough exam and imaging (like MRI) to determine the extent of injury and appropriate treatment
+
+Do not try to push through the pain, as this can lead to further damage.</div></td><td class='respconv'><div>The most likely diagnosis is a **proximal hamstring tendon rupture** or severe hamstring muscle/tendon injury on the right side.
+
+Rationale:
+- Loud popping sounds during a forceful stretch (right split) suggest a tendon or muscle tear.
+- The location (right side) and mechanism (extreme hip flexion with knee extension in a split) commonly stress the hamstring tendons.
+- Severe pain initially and worsening pain with activity are consistent with a significant soft tissue injury.
+- Continuing activity despite injury often worsens symptoms and leads to persistent pain with minimal movement.
+
+Further evaluation with physical exam and imaging (MRI or ultrasound) is recommended to confirm the diagnosis and assess the extent of injury.</div></td><td class='refog'><div>muscle strain or partial muscle tear</div></td><td class='refconv'><div>muscle strain or partial muscle tear</div></td></tr>
+<tr><td>153</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Four days ago, i was swimming at the beach and a wave pushed me and I twisted my knee. I have put ice packs, knee brace and tried to stay off my foot as much as possible. My knee never swelled. It is only painful when I sit too long or have to move to get up. Please advise.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient twisted their knee four days ago during swimming when a wave pushed them. They have applied ice packs, used a knee brace, and tried to avoid weight-bearing. There is no swelling noted. Pain occurs only when sitting for prolonged periods or when transitioning to standing. What is the most likely diagnosis?</div></td><td class='respog'><div>Based on your history of twisting the knee with no swelling but pain after prolonged sitting or when getting up, it is likely a mild knee sprain or soft tissue irritation (such as a ligament strain or meniscal irritation).
+
+Advice:
+- Continue using ice packs for 15-20 minutes several times a day for the next few days.
+- Keep using the knee brace for support.
+- Avoid activities that cause pain.
+- Gentle range of motion exercises can help prevent stiffness.
+- Over-the-counter pain relievers like ibuprofen or acetaminophen can help with pain.
+
+If you develop swelling, instability, severe pain, inability to bear weight, or if pain persists beyond 1-2 weeks, see a healthcare provider for further evaluation and possible imaging.
+
+If symptoms are mild and improving, conservative care is appropriate.</div></td><td class='respconv'><div>The most likely diagnosis is **patellofemoral pain syndrome (PFPS)** or **anterior knee pain** due to irritation of the patellar cartilage or soft tissues. 
+
+Key points supporting this diagnosis:
+- Injury mechanism: twisting injury to the knee.
+- No swelling or significant trauma signs.
+- Pain with prolonged sitting (often called "theater sign") and during transitions from sitting to standing.
+- Pain localized around the front of the knee.
+
+Other diagnoses like ligament tears or meniscal injury typically present with swelling, instability, or mechanical symptoms, which are absent here.
+
+Recommendation: Continue conservative management with activity modification, physical therapy focusing on quadriceps strengthening, and gradual return to activity. If symptoms persist or worsen, further imaging (MRI) may be warranted.</div></td><td class='refog'><div>knee ligament sprain</div></td><td class='refconv'><div>knee ligament sprain</div></td></tr>
+<tr><td>155</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hey my name is aya, i live in the states, i have more than a question, my mother had been having frequent heart pulpitations from time to time and she started to high blood sugar since my grandfather died, she had been under medication for 9 months now for her blood sugar but she stopped it because it became normal and 2 days ago she started to have high blood sugar like its level is 210 which is high for her, so what can she do ? and what does it mean to have frequent pulpitations?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A middle-aged woman has experienced frequent heart palpitations intermittently and was diagnosed with high blood sugar approximately nine months ago following a family stressor. She was treated with medication for her hyperglycemia but discontinued it after her blood sugar normalized. Two days ago, her blood sugar was elevated again to 210 mg/dL. The patient has a history of intermittent palpitations and recent recurrent hyperglycemia. What is the most likely diagnosis?</div></td><td class='respog'><div>Hello Aya, thank you for sharing your concerns. Here's some important information regarding your mother's condition:
+
+1. **High Blood Sugar (Hyperglycemia) at 210 mg/dL:**
+- A blood sugar level of 210 mg/dL is considered high and may indicate that her diabetes or blood sugar control is not optimal.
+- Stopping medication without medical advice can lead to blood sugar fluctuations and complications.
+- She should contact her healthcare provider promptly to discuss her current blood sugar levels and medication plan.
+- Meanwhile, she should monitor her blood sugar regularly, maintain a healthy diet, stay hydrated, and avoid high-sugar foods.
+
+2. **Frequent Heart Palpitations:**
+- Palpitations are sensations of a rapid, fluttering, or pounding heartbeat.
+- They can be caused by stress, anxiety, caffeine, medications, or underlying heart conditions.
+- Given her history of high blood sugar and palpitations, it is important to evaluate her heart health.
+- She should see a healthcare provider for a thorough evaluation, which may include an ECG or Holter monitor.
+
+**Recommendations:**
+- Do not stop or change any medication without consulting her doctor.
+- Schedule an appointment with her healthcare provider as soon as possible.
+- If she experiences chest pain, shortness of breath, dizziness, or fainting along with palpitations, seek emergency care immediately.
+
+If you want, I can provide guidance on how to prepare for her medical visit or suggest lifestyle tips to help manage her condition.</div></td><td class='respconv'><div>The most likely diagnosis is **pheochromocytoma**.
+
+Rationale:
+- The patient has intermittent heart palpitations, which can be caused by episodic catecholamine release.
+- Recurrent hyperglycemia can result from catecholamine-induced insulin resistance and increased gluconeogenesis.
+- The history of stress and episodic symptoms fits the paroxysmal nature of pheochromocytoma.
+- Pheochromocytoma is a catecholamine-secreting tumor that causes episodic hypertension, palpitations, headaches, and hyperglycemia.
+
+Further evaluation with plasma free metanephrines or 24-hour urine catecholamines is warranted to confirm the diagnosis.</div></td><td class='refog'><div>possible cardiac arrhythmia; possible diabetes mellitus</div></td><td class='refconv'><div>possible cardiac arrhythmia; possible diabetes mellitus</div></td></tr>
+<tr><td>164</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hi doctor, i am a 21 years old female, i fell 1 month ago while i was walking,, my left leg near the ankle hearts me till now, it is not a continueous pain, just when i move it to the right.. i didnt go to a doctor because my legs color didnt change and i didnt experience any swellig.. but this pain while rotating my leg to the right i bothering me.. a week ago, the pain also reached my left knee.. i would really appreciate your help in telling me what might have happened to my leg.. and how to treat this pain. I dont know if it would be helpful to tell you that i am diagnosed with vitamin D deficiency. thanks for your time.</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 21-year-old female reports a history of a fall one month ago while walking. Since then, she has experienced intermittent pain near the left ankle, specifically when rotating the leg to the right. There has been no skin color change or swelling noted. One week ago, the pain extended to the left knee. The patient has a history of vitamin D deficiency. What is the most likely diagnosis?</div></td><td class='respog'><div>Thank you for sharing your symptoms. Based on your history of a fall, persistent pain near the ankle that worsens with movement, and now pain reaching the knee, a few possibilities include:
+
+1. **Ligament or tendon injury** around the ankle that may not have caused swelling but still causes pain with certain movements.
+2. **A minor fracture or bone bruise** that was not initially obvious.
+3. **Referred pain or altered gait** from the ankle injury causing knee discomfort.
+4. **Vitamin D deficiency** can contribute to bone pain or delayed healing.
+
+**Recommendations:**
+- It is important to get a thorough evaluation, including a physical exam and imaging (X-ray or MRI) to rule out fractures, ligament injuries, or other structural problems.
+- Meanwhile, avoid movements that cause pain, apply ice to the area if swollen or painful, and consider over-the-counter pain relief like acetaminophen or ibuprofen.
+- Since the pain has persisted for a month and now involves the knee, please see an orthopedic specialist or visit a clinic soon.
+- Also, ensure your vitamin D deficiency is being treated as per your doctor’s advice, as it can affect bone health and healing.
+
+If you develop swelling, bruising, inability to bear weight, or worsening pain, seek urgent medical care.
+
+Would you like guidance on how to prepare for your medical visit or advice on pain management until then?</div></td><td class='respconv'><div>The patient's history of a fall followed by intermittent pain near the left ankle, especially with leg rotation, and subsequent extension of pain to the left knee suggests a musculoskeletal injury rather than an acute inflammatory or vascular issue (no swelling or skin changes).
+
+Key points:
+- Trauma (fall) one month ago
+- Intermittent ankle pain with leg rotation
+- Pain spreading to the knee after one week
+- History of vitamin D deficiency (which can predispose to bone weakness)
+
+Most likely diagnosis:
+**Stress fracture or occult fracture of the distal tibia or fibula**  
+- The mechanism (fall) and pain with rotation suggest possible bone injury.
+- Vitamin D deficiency increases risk of insufficiency fractures.
+- Pain spreading proximally could be referred pain or related to altered gait mechanics.
+
+Other considerations:
+- Ligamentous injury (e.g., ankle sprain) is possible but less likely to cause pain extending to the knee.
+- Tendon injury or referred pain from the knee is less likely given the initial ankle trauma.
+
+Recommendation:
+- Imaging (X-ray or MRI) of the ankle and lower leg to evaluate for fracture or bone injury.
+- Assess vitamin D levels and consider supplementation.
+
+**Summary:** Most likely diagnosis is a stress or occult fracture of the distal tibia/fibula related to trauma and underlying vitamin D deficiency.</div></td><td class='refog'><div>soft tissue injury (likely sprain or bursitis)</div></td><td class='refconv'><div>soft tissue injury (likely sprain or bursitis)</div></td></tr>
+<tr><td>167</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi Can you help? I have a pain in my top front tooth , I went to a dentist two years ago and he said i need a small filling in this tooth and from then on I have had pain. I have been back five times to him also another two dentists and I am told there is nothing wrong. My mother passed away at the time I had the filling so one dentist said it was stress .</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient reports persistent pain in a top front tooth. Two years prior, a dentist recommended a small filling in this tooth. Since then, the patient has experienced ongoing pain. The patient has consulted the original dentist five times and two additional dentists, all of whom found no dental abnormalities. One dentist suggested the pain might be related to stress due to the death of the patient's mother around the time of the filling. What is the most likely diagnosis?</div></td><td class='respog'><div>I'm sorry to hear about your ongoing tooth pain and your loss. Persistent pain in a tooth after a filling can have several causes, including:
+
+- Incomplete removal of decay or microleakage around the filling
+- Pulp inflammation or nerve damage (pulpitis)
+- Cracks or fractures in the tooth
+- Bite issues causing pressure on the tooth
+- Referred pain from another source
+
+Since multiple dentists have examined you and found no clear problem, but the pain continues, I recommend:
+
+1. Getting a thorough clinical and radiographic (X-ray) evaluation, possibly including advanced imaging like a CBCT scan.
+2. Considering a second opinion from an endodontist (a root canal specialist) who can assess nerve health.
+3. Evaluating for non-dental causes of pain, including nerve-related or sinus issues.
+
+If the pain is severe or persistent, further diagnostic tests or treatment like root canal therapy may be needed.
+
+If you want, I can guide you on questions to ask your dentist or help you understand possible next steps.</div></td><td class='respconv'><div>The most likely diagnosis is **persistent dentoalveolar pain disorder (PDAP)**, also known as atypical odontalgia. This condition is characterized by chronic tooth pain without identifiable dental pathology, often following dental procedures like fillings. It can be associated with neuropathic pain mechanisms and may be influenced by psychological factors such as stress or grief.</div></td><td class='refog'><div>persistent pain after dental filling, possible pulp involvement or recurrent caries</div></td><td class='refconv'><div>persistent pain after dental filling, possible pulp involvement or recurrent caries</div></td></tr>
+<tr><td>169</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi, they put me on cephalexin for infection that I have above my lip, got put on it yesterday 3 times a day and its 500 mg. When will i see results? And its still swollen and red in one area.And is ok to swollow the pill I hope cause they did not say like one of the pages that you should not so I hope thats ok. They said they are not sure what happen  and I think maybe I got bitten or something cause there was a mark there and know like I said still a mark but red around it and I was running a temp also of 100</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient was prescribed cephalexin 500 mg three times daily for an infection above the upper lip starting one day ago. The affected area remains swollen and red with a visible mark and surrounding redness. The patient has also experienced a fever of 100°F. The patient wonders about the expected timeframe for clinical improvement and whether swallowing the pill is appropriate, as no specific instructions were given. What is the most likely diagnosis?</div></td><td class='respog'><div>Cephalexin is an antibiotic commonly used to treat skin infections. You should generally start to see improvement in redness, swelling, and pain within 48 to 72 hours of starting the medication. However, full resolution may take about 7 to 10 days depending on the severity of the infection.
+
+It is absolutely okay to swallow the cephalexin capsules or tablets whole with water, as this is the normal way to take them. If you have a liquid form, follow the dosing instructions provided.
+
+Since you have swelling, redness, and a fever (100°F), it’s important to monitor your symptoms closely. If the redness or swelling worsens, if you develop a higher fever, increased pain, or if you do not see any improvement after 3 days of antibiotics, you should contact your healthcare provider promptly.
+
+In the meantime, keep the area clean, avoid touching or picking at it, and take the medication exactly as prescribed.
+
+If you have any concerns or new symptoms, don’t hesitate to reach out to your doctor.</div></td><td class='respconv'><div>The most likely diagnosis is **cellulitis (or an abscess) of the upper lip**, possibly a bacterial skin infection such as **impetigo or a localized soft tissue infection** caused by common skin flora (e.g., Staphylococcus aureus or Streptococcus species).
+
+Key points supporting this diagnosis:
+- Swelling, redness, and a visible mark above the upper lip.
+- Surrounding erythema.
+- Fever (100°F), indicating systemic involvement.
+- Treatment with cephalexin, a common antibiotic for skin infections.
+
+Regarding clinical improvement:
+- Patients typically start to see improvement within 48-72 hours of appropriate antibiotic therapy.
+- If no improvement or worsening occurs after 72 hours, re-evaluation is necessary.
+
+Regarding medication administration:
+- Cephalexin is an oral antibiotic and should be swallowed whole with water.
+- It can be taken with or without food, but taking it with food may reduce stomach upset.
+
+If the swelling, redness, or fever worsens, or if the patient develops difficulty breathing, swallowing, or severe pain, urgent medical evaluation is needed.</div></td><td class='refog'><div>local skin infection (possible folliculitis or insect bite reaction)</div></td><td class='refconv'><div>local skin infection (possible folliculitis or insect bite reaction)</div></td></tr>
+<tr><td>173</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>Hi Doctor, I have been suffering from pain in right upper jaw from quite some time. Now I am having headache and pain behind ear. Last year went through series of surgeries as my lower wisdom tooth and bone next it had got infected both the sides. Later I was diagnosed with TMJ. Now I am not on any treatment. Can you please suggest.Thanks & Regards</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A patient presents with pain in the right upper jaw of prolonged duration, accompanied by headache and pain behind the ear. The patient has a history of bilateral lower wisdom tooth and adjacent bone infections that required multiple surgeries last year. The patient was later diagnosed with temporomandibular joint disorder (TMJ) and is currently not receiving any treatment. What is the most likely diagnosis?</div></td><td class='respog'><div>Your symptoms of right upper jaw pain, headache, and pain behind the ear, combined with your history of wisdom tooth infection and TMJ (temporomandibular joint) diagnosis, suggest that your TMJ disorder may be contributing to your current discomfort. TMJ issues can cause jaw pain, headaches, and ear pain.
+
+However, given your history of infection and surgeries, it is important to rule out any ongoing infection, dental issues, or other complications.
+
+**Recommendations:**
+1. **See a dentist or oral surgeon** for a thorough examination, including imaging (X-rays or CT scan) to check for any residual infection or structural problems.
+2. **Consult a TMJ specialist or a maxillofacial specialist** to evaluate your TMJ status and consider treatment options such as physical therapy, pain management, or splints.
+3. **Pain management:** Over-the-counter pain relievers (like ibuprofen) may help temporarily.
+4. Avoid hard chewing, excessive jaw movements, and stress on the jaw.
+5. If you develop fever, swelling, or worsening pain, seek urgent care as it may indicate infection.
+
+Please schedule an appointment with your healthcare provider promptly for a detailed evaluation and tailored treatment.</div></td><td class='respconv'><div>The patient's symptoms—prolonged pain in the right upper jaw, headache, and pain behind the ear—combined with a history of bilateral lower wisdom tooth and adjacent bone infections requiring multiple surgeries, and a diagnosis of temporomandibular joint disorder (TMJ) suggest a complex clinical picture.
+
+**Most likely diagnosis:**  
+**Chronic osteomyelitis of the jaw with secondary temporomandibular joint disorder exacerbation.**
+
+**Rationale:**  
+- History of multiple surgeries for bone infections (likely osteomyelitis) increases the risk of chronic or recurrent infection in the jaw bones.  
+- Prolonged pain in the upper jaw and headache can be due to persistent or spreading osteomyelitis or related inflammatory changes.  
+- Pain behind the ear is characteristic of TMJ involvement, which may be secondary to or worsened by the underlying bone infection or inflammation.  
+- TMJ disorder diagnosis without treatment may contribute to ongoing symptoms but does not fully explain the prolonged jaw pain and history of infections.
+
+**Recommendation:**  
+- Imaging studies (panoramic X-ray, CT scan) to assess bone integrity and rule out active osteomyelitis or abscess.  
+- Referral to oral and maxillofacial specialist for evaluation.  
+- Consider biopsy or culture if infection suspected.  
+- Initiate appropriate antibiotic therapy if infection is active.  
+- Manage TMJ symptoms concurrently.
+
+If untreated, chronic osteomyelitis can cause persistent pain and complications, so prompt evaluation is essential.</div></td><td class='refog'><div>Possible tooth or gum infection; TMJ disorder</div></td><td class='refconv'><div>Possible tooth or gum infection; TMJ disorder</div></td></tr>
+<tr><td>174</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>hello doctor, i am 20 weeks pregnant and my scan report shows the followingA single, live, intra uterine fetus is seen exhibiting active movementsplacenta; posterior       maturity grade.  1amniotic fluid: adequateheart;150 bpmBpd: 42mmAC: 130 mmFL :28 mmestimated gestational age: 18 w 6 daysestimated fetal weight: 0256 gmsis there  any  problems in this report  and what about the growth ?  it is 1 week lowe than the actual</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>A 20-week pregnant patient underwent an ultrasound scan revealing a single live intrauterine fetus with active movements. The placenta is posterior with maturity grade 1, amniotic fluid volume is adequate, and fetal heart rate is 150 bpm. Biometric measurements include biparietal diameter (BPD) 42 mm, abdominal circumference (AC) 130 mm, and femur length (FL) 28 mm. The estimated gestational age (EGA) by scan is 18 weeks 6 days, with an estimated fetal weight of 256 grams. The patient notes that the fetal age is approximately one week less than expected. What is the most likely diagnosis?</div></td><td class='respog'><div>Your ultrasound report shows a single, live fetus with active movements, a posterior placenta of grade 1 maturity, adequate amniotic fluid, and a fetal heart rate of 150 bpm, all of which are normal findings.
+
+Regarding growth:
+- Biparietal diameter (BPD): 42 mm
+- Abdominal circumference (AC): 130 mm
+- Femur length (FL): 28 mm
+- Estimated gestational age (EGA) based on measurements: 18 weeks 6 days
+- Your actual gestational age: 20 weeks
+
+The estimated fetal age is about 1 week behind your actual gestational age. This slight discrepancy can be normal, as fetal growth can vary. However, it is important to monitor growth with follow-up scans to ensure the baby continues to grow well.
+
+Overall, there are no immediate concerns in this report, but keep regular prenatal visits and follow your doctor's advice for ongoing monitoring.</div></td><td class='respconv'><div>The ultrasound findings show a single live intrauterine fetus with normal heart rate and movements, a posterior placenta with grade 1 maturity (appropriate for 20 weeks), and adequate amniotic fluid. However, the biometric measurements correspond to an estimated gestational age (EGA) of 18 weeks 6 days, which is about one week less than the patient's expected gestational age of 20 weeks.
+
+**Key points:**
+- Biometric measurements lag by about 1 week compared to expected dates.
+- No signs of fetal compromise (normal heart rate, movements, adequate fluid).
+- Placental maturity appropriate for 20 weeks.
+- Single live fetus.
+
+**Most likely diagnosis:**
+
+**Mild fetal growth delay or small for gestational age (SGA) fetus** relative to the expected gestational age, possibly due to slight dating discrepancy or early mild intrauterine growth restriction (IUGR).
+
+Since the discrepancy is about one week, this is often within normal variation or due to slight errors in dating (e.g., irregular menstrual cycles or late ovulation). If the patient is certain of dates and no other abnormalities are present, this is likely a normal variant or early mild growth lag.
+
+**Summary:**
+- The fetus is slightly smaller than expected for 20 weeks.
+- Most likely diagnosis: Mild fetal growth lag or small for gestational age fetus.
+- Recommend follow-up ultrasound in 2-3 weeks to assess growth trend and rule out progressive growth restriction.
+
+If other clinical concerns arise (e.g., maternal hypertension, preeclampsia, or abnormal Dopplers), further evaluation would be warranted.</div></td><td class='refog'><div>Normal fetal growth and anatomy for gestational age</div></td><td class='refconv'><div>Normal fetal growth and anatomy for gestational age</div></td></tr>
+<tr><td>175</td><td class='qog'><strong>judge_label_og:</strong> CORRECT<br><div>I have a hole in the bottom of my mouth near the front very tiny hole but painful ... however my daughter and I were playing and her nail did hurt the inside of my mouth ... this has happened before but never for this long without going to the dentist what can I do?</div></td><td class='conv'><strong>judge_label_conv:</strong> WRONG<br><div>The patient presents with a small painful hole on the floor of the mouth near the front. The symptom began after trauma caused by a nail during play with their daughter. Similar episodes have occurred previously but not with this prolonged duration. What is the most likely diagnosis?</div></td><td class='respog'><div>A tiny, painful hole in the bottom of your mouth near the front could be a minor injury or ulcer caused by trauma, such as your daughter's nail scratching the area. Since it has happened before and is now lasting longer, it might be an aphthous ulcer (canker sore), a minor infection, or a small mucosal tear.
+
+What you can do:
+- Rinse your mouth gently with warm salt water (1/2 teaspoon salt in 8 oz water) several times a day to reduce pain and promote healing.
+- Avoid spicy, acidic, or rough-textured foods that may irritate the area.
+- Maintain good oral hygiene but be gentle around the sore.
+- Over-the-counter topical oral gels or pain relievers may help reduce discomfort.
+- Avoid further trauma to the area.
+
+If the hole does not start to heal within 7-10 days, becomes larger, more painful, or is accompanied by other symptoms like fever or swelling, you should see a dentist or healthcare professional for evaluation to rule out infection or other causes.</div></td><td class='respconv'><div>The most likely diagnosis is a **mucocele (oral mucous cyst)** or a **traumatic ulcer** on the floor of the mouth.
+
+Rationale:
+- A small painful hole on the floor of the mouth following trauma suggests localized tissue injury.
+- Mucoceles commonly occur due to trauma to minor salivary glands, leading to mucus extravasation and cyst formation.
+- Recurrent episodes and prolonged duration may indicate repeated trauma or incomplete healing.
+- Traumatic ulcers can also present as painful lesions after injury.
+
+If the lesion is a persistent painful ulcer or fistula, other possibilities include a **ranula** (a type of mucocele on the floor of the mouth) or a small abscess/fistula from salivary gland duct injury.
+
+Further evaluation by an oral surgeon or ENT specialist is recommended for definitive diagnosis and management.</div></td><td class='refog'><div>traumatic oral ulcer</div></td><td class='refconv'><div>traumatic oral ulcer</div></td></tr>
+</table>
+<p>Showing up to 50 examples where the model's accuracy dropped after normalization.<br>
+Columns included: Original/Converted question & prompt, model responses, and reference diagnoses.</p>
+</body></html>
