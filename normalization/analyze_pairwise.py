@@ -4,7 +4,7 @@ import os
 
 # ==== Paths ====
 judge1_path = "./results/HCM_ref-9k/gpt-4.1_pairwise_judge.json"  # e.g. gpt-4.1
-judge2_path = "./results/HCM_ref-9k/gpt-4.1-mini_pairwise_judge.json"  # e.g. gpt-4.1-mini
+judge2_path = "./results/HCM_ref-9k/gpt-4.1-mini_pairwise_judge_gpt-5-mini.json"  # e.g. gpt-4.1-mini
 fig_save_dir = "./figs/normalization/"
 os.makedirs(fig_save_dir, exist_ok=True)
 
@@ -50,7 +50,7 @@ html_parts = [
     "<h1>Examples Where Two Judges Disagree</h1>",
     "<p>",
     "<strong>label_j1</strong> / <strong>reasoning_j1</strong> = gpt-4.1 JSON<br>",
-    "<strong>label_j2</strong> / <strong>reasoning_j2</strong> = gpt-4.1-mini JSON",
+    "<strong>label_j2</strong> / <strong>reasoning_j2</strong> = gpt-5-mini JSON",
     "</p>",
     "<table>",
     "<tr>",
@@ -91,7 +91,7 @@ html_parts.extend([
 
 html_text = "\n".join(html_parts)
 
-output_html_path = os.path.join(fig_save_dir, "judge_disagreements.html")
+output_html_path = os.path.join(fig_save_dir, "judge_disagreements_4.1_5.html")
 with open(output_html_path, "w", encoding="utf-8") as f:
     f.write(html_text)
 
