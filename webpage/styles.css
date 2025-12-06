@@ -175,7 +175,81 @@ body {
     background: #F8F9FA;
     border-left: 4px solid var(--berkeley-blue);
 }
+/* Collapsible Question Styles */
+.collapsible-question {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
 
+.collapsible-question:hover {
+    background: #F0F4F8;
+}
+
+.collapsible-question .question-content {
+    padding-right: 40px;
+}
+
+.collapsible-question.collapsed {
+    max-height: 200px;
+}
+
+.question-preview {
+    display: block;
+}
+
+.question-full {
+    display: none;
+}
+
+.question-full .last-sentence {
+    font-weight: 700;
+    color: var(--berkeley-blue);
+}
+
+.collapsible-question.collapsed .question-preview {
+    display: block !important;
+}
+
+.collapsible-question.collapsed .question-full {
+    display: none !important;
+}
+
+.collapsible-question:not(.collapsed) .question-preview {
+    display: none !important;
+}
+
+.collapsible-question:not(.collapsed) .question-full {
+    display: block !important;
+}
+
+.collapse-indicator {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--berkeley-blue);
+    border-radius: 50%;
+    color: white;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.collapsible-question:not(.collapsed) .collapse-indicator {
+    transform: rotate(180deg);
+}
+
+.toggle-hint {
+    font-size: 0.85rem;
+    color: var(--berkeley-gray);
+    font-weight: 400;
+    margin-left: 10px;
+    font-style: italic;
+}
 .model-response-box {
     background: #FFF9F0;
     border-left: 4px solid var(--berkeley-orange);

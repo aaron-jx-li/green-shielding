@@ -19,6 +19,27 @@ class AnnotationApp {
         document.querySelectorAll('input[name="annotation"]').forEach(radio => {
             radio.addEventListener('change', () => this.handleAnnotationChange());
         });
+
+        // Question collapse/expand toggle
+        document.getElementById('questionText').addEventListener('click', () => this.toggleQuestion());
+    }
+
+    toggleQuestion() {
+        const questionBox = document.getElementById('questionText');
+        questionBox.classList.toggle('collapsed');
+    }
+
+    extractLastSentence(text) {
+        // Match sentences ending with . ! or ?
+        const sentences = text.match(/[^.!?]+[.!?]+/g);
+        if (!sentences || sentences.length === 0) {
+            return { lastSentence: text.trim(), restOfText: '' };
+        }
+        
+        const lastSentence = sentences[sentences.length - 1].trim();
+        const restOfText = sentences.slice(0, -1).join(' ').trim();
+        
+        return { lastSentence, restOfText };
     }
 
     async loadNextQuestion() {
@@ -50,8 +71,32 @@ class AnnotationApp {
     updateDisplay() {
         if (!this.currentQuestion) return;
 
-        // Update content
-        document.getElementById('questionText').textContent = this.currentQuestion.question;
+        // Update question with collapsible functionality
+        const questionText = this.currentQuestion.question;
+        const { lastSentence, restOfText } = this.extractLastSentence(questionText);
+        
+        // Set preview (last sentence only)
+        document.getElementById('questionPreview').textContent = lastSentence;
+        
+        // Set full text with last sentence bolded
+        const questionFull = document.getElementById('questionFull');
+        questionFull.innerHTML = '';
+        
+        if (restOfText) {
+            const restSpan = document.createElement('span');
+            restSpan.textContent = restOfText + ' ';
+            questionFull.appendChild(restSpan);
+        }
+        
+        const lastSentenceSpan = document.createElement('span');
+        lastSentenceSpan.className = 'last-sentence';
+        lastSentenceSpan.textContent = lastSentence;
+        questionFull.appendChild(lastSentenceSpan);
+        
+        // Reset to collapsed state
+        document.getElementById('questionText').classList.add('collapsed');
+        
+        // Update other content
         document.getElementById('modelResponse').textContent = this.currentQuestion.default_response;
         document.getElementById('groundTruth').textContent = this.currentQuestion.truth;
 

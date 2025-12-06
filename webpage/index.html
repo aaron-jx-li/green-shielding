@@ -25,8 +25,21 @@
             </div>
 
             <div class="content-section">
-                <h3>Question</h3>
-                <div class="content-box question-box" id="questionText">
+                <h3>Question <span class="toggle-hint">(click to expand/collapse)</span></h3>
+                <div class="content-box question-box collapsible-question collapsed" id="questionText">
+                    <div class="question-content">
+                        <span class="question-preview" id="questionPreview">Loading...</span>
+                        <span class="question-full" id="questionFull">Loading...</span>
+                    </div>
+                    <div class="collapse-indicator">
+                        <span class="expand-icon">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Ground Truth</h3>
+                <div class="content-box ground-truth-box" id="groundTruth">
                     Loading...
                 </div>
             </div>
@@ -34,13 +47,6 @@
             <div class="content-section">
                 <h3>Model Response</h3>
                 <div class="content-box model-response-box" id="modelResponse">
-                    Loading...
-                </div>
-            </div>
-
-            <div class="content-section">
-                <h3>Ground Truth</h3>
-                <div class="content-box ground-truth-box" id="groundTruth">
                     Loading...
                 </div>
             </div>
