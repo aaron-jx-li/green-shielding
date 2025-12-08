@@ -13,7 +13,6 @@ judged_converted_data = json.load(open(judged_converted_data_path))['per_sample'
 judged_original_data_path = "/Users/sancheznicolas/Documents/Research/GreenTeam/green_shield_eval/green-shielding/results/HCM_ref-9k/gpt-4.1-mini_full_judged.json"
 judged_original_data = json.load(open(judged_original_data_path))['per_sample']
 
-
 # get converted_data except for the factors column into a pandas dataframe
 converted_data_df = []
 factors = []
@@ -52,11 +51,13 @@ joined_data_df = pd.merge(
 # Correctly join the DataFrames on model_response_conv == model_response
 joined_data_all_df = pd.merge(
     joined_data_df,
-    joined_data_converted_df[fac_cols + ["model_response","normalized_prompt"]],
+    joined_data_converted_df[fac_cols + ["model_response","normalized_prompt","original_output"]],
     left_on="model_response_conv",
     right_on="model_response",
     how="inner"
 )
+
+joined_data_all_df.to_csv("/Users/sancheznicolas/Documents/Research/GreenTeam/green_shield_eval/green-shielding/webpage_local/annotation_manager/ak_review_round0/normalization/normalization_judge_disagreements_joined.csv", index=False)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -131,7 +132,7 @@ fig.savefig(figpath, bbox_inches='tight')
 plt.close(fig)
 
 
-import pdb; pdb.set_trace()
+
 
 import pandas as pd
 
@@ -149,7 +150,7 @@ columns_to_show = [
     "model_response_og",
     "model_response_conv",
     "reference_diagnosis_og",
-    "reference_diagnosis_conv"
+    "original_output"
 ]
 
 examples_to_show = joined_data_all_df.loc[criteria, columns_to_show]
@@ -183,7 +184,7 @@ html_parts = [
     "<th>Original Model Response</th>"
     "<th>Converted Model Response</th>"
     "<th>Original Reference Diagnosis</th>"
-    "<th>Converted Reference Diagnosis</th>"
+    "<th>Original Output</th>"
     "</tr>"
 ]
 
@@ -196,13 +197,13 @@ for idx, row in examples_to_show.iterrows():
         f"<td class='respog'><div>{row.get('model_response_og', '')}</div></td>"
         f"<td class='respconv'><div>{row.get('model_response_conv', '')}</div></td>"
         f"<td class='refog'><div>{row.get('reference_diagnosis_og', '')}</div></td>"
-        f"<td class='refconv'><div>{row.get('reference_diagnosis_conv', '')}</div></td>"
+        f"<td class='refconv'><div>{row.get('original_output', '')}</div></td>"
         f"</tr>"
     )
 html_parts.extend([
     "</table>",
     "<p>Showing up to 50 examples where the model's accuracy dropped after normalization.<br>",
-    "Columns included: Original/Converted question & prompt, model responses, and reference diagnoses.</p>",
+    "Columns included: Original/Converted question & prompt, model responses, and original output.</p>",
     "</body></html>"
 ])
 html_text = "\n".join(html_parts)
@@ -215,3 +216,18 @@ print(f"HTML summary written to {output_html_path}")
 
 
 print("Done")
+
+
+python judge_triplet.py 
+  --input_path ../webpage_local/annotation_manager/ak_review_round0/normalization/normalization_judge_disagreements_joined.csv \
+  --output_path ../results/HCM_ref-9k/gpt-4.1-mini_full_triplet_judged.json \
+  --judge_model gpt-4.1-mini \
+  --original_user_input_field question_og \
+  --original_output_field original_output \
+  --original_model_output_field model_response_og \
+  --converted_model_output_field model_response_conv
+
+
+
+
+python judge_triplet.py --input_path ../webpage_local/annotation_manager/ak_review_round0/normalization/normalization_judge_disagreements_joined.csv --output_path ../results/HCM_ref-9k/gpt-4.1-mini_full_triplet_judged.json --judge_model gpt-4.1-mini --original_user_input_field question_og --original_output_field original_output --original_model_output_field model_response_og --converted_model_output_field model_response_conv
