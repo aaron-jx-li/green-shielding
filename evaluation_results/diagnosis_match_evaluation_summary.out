@@ -1,1 +1,7 @@
+Statistics:
+  Model A average hit rate: 0.5118
+  Model B average hit rate: 0.4889
+  Model A relationship counts: {'same': 885, 'contains': 2820, 'contained_by': 15130, 'different': 22384}
+  Model B relationship counts: {'same': 1101, 'contains': 4648, 'contained_by': 11021, 'different': 23096}
+  Evaluated samples: 9100
 
