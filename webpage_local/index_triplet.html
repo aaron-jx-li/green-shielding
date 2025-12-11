@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triplet Annotation Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Emergency Doctor Annotation Tool</h1>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+            <span class="progress-text" id="progressText">0 / 0</span>
+        </div>
+
+        <div class="annotation-card" id="annotationCard">
+            <div class="card-header">
+                <h2>Current Case</h2>
+            </div>
+
+            <!-- Original Question -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('question_og')">
+                    <h3>Original Question</h3>
+                    <span class="collapse-icon" id="icon_question_og">▼</span>
+                </div>
+                <div class="collapsible-content collapsed" id="content_question_og">
+                    <div class="content-box" id="question_og">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Response 1 -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('response1')">
+                    <h3 id="header_response1">Response 1</h3>
+                    <span class="collapse-icon" id="icon_response1">▼</span>
+                </div>
+                <div class="collapsible-content collapsed" id="content_response1">
+                    <div class="content-box" id="response1">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Response 2 -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('response2')">
+                    <h3 id="header_response2">Response 2</h3>
+                    <span class="collapse-icon" id="icon_response2">▼</span>
+                </div>
+                <div class="collapsible-content collapsed" id="content_response2">
+                    <div class="content-box" id="response2">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Response 3 -->
+            <div class="collapsible-section">
+                <div class="collapsible-header" onclick="toggleSection('response3')">
+                    <h3 id="header_response3">Response 3</h3>
+                    <span class="collapse-icon" id="icon_response3">▼</span>
+                </div>
+                <div class="collapsible-content collapsed" id="content_response3">
+                    <div class="content-box" id="response3">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Annotation Section - Diagnostic Content -->
+            <div class="annotation-section">
+                <h3>In terms of diagnostic content:</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="all_resp_match" id="allMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">All responses match</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="none_resp_match" id="noneMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">No two responses match</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="resp1_outlier" id="resp1OutlierRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Response 1 is outlier, the other two match</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="resp2_outlier" id="resp2OutlierRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Response 2 is outlier, the other two match</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="resp3_outlier" id="resp3OutlierRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Response 3 is outlier, the other two match</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Annotation Section - Diagnostic Correctness -->
+            <div class="annotation-section">
+                <h3>In terms of diagnostic correctness:</h3>
+                <div class="checkbox-group">
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="correctness" value="resp1_correct" id="resp1CorrectCheckbox">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Response 1 is correct</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="correctness" value="resp2_correct" id="resp2CorrectCheckbox">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Response 2 is correct</span>
+                    </label>
+                    <label class="checkbox-option">
+                        <input type="checkbox" name="correctness" value="resp3_correct" id="resp3CorrectCheckbox">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Response 3 is correct</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" id="nextBtn" disabled>Next Question</button>
+            </div>
+        </div>
+
+        <div class="summary-section" id="summarySection" style="display: none;">
+            <h2>🎉 Annotation Complete!</h2>
+            <p class="completion-message">All questions have been annotated.</p>
+        </div>
+    </div>
+
+    <script src="script_triplet.js"></script>
+</body>
+</html>
