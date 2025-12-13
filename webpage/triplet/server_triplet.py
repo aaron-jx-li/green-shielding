@@ -13,7 +13,19 @@ app = Flask(__name__)
 CORS(app)
 
 # Path to the triplet CSV file ### MUST CHANGE ####
-TRIPLET_CSV_PATH = "/Users/sancheznicolas/Documents/Research/GreenTeam/green_shield_eval/green-shielding/webpage_local/annotation_manager/ak_review_round0/normalization/rand_sample_triplet.csv"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+TRIPLET_CSV_PATH = os.path.abspath(
+    os.path.join(
+        BASE_DIR,
+        "..",
+        "annotation_manager",
+        "ak_review_round0",
+        "normalization",
+        "rand_sample_triplet.csv"
+    )
+)
+
 
 def get_next_triplet():
     """Get a random triplet from the CSV. Returns dict or None if completed."""
