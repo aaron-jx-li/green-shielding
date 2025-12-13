@@ -175,6 +175,7 @@ body {
     background: #F8F9FA;
     border-left: 4px solid var(--berkeley-blue);
 }
+
 /* Collapsible Question Styles */
 .collapsible-question {
     cursor: pointer;
@@ -250,6 +251,7 @@ body {
     margin-left: 10px;
     font-style: italic;
 }
+
 .model-response-box {
     background: #FFF9F0;
     border-left: 4px solid var(--berkeley-orange);
@@ -368,6 +370,73 @@ body {
 }
 
 .radio-label {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #2c2c2c;
+    line-height: 1.6;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 18px;
+    background: var(--white);
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-option:hover {
+    border-color: var(--berkeley-light-blue);
+    background: #f8f9fa;
+}
+
+.checkbox-option:has(input[type="checkbox"]:checked) {
+    border-color: var(--berkeley-blue);
+    background: #f0f7ff;
+    box-shadow: 0 0 0 3px rgba(0, 50, 98, 0.1);
+}
+
+.checkbox-option input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--berkeley-gray);
+    border-radius: 4px;
+    margin-right: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.checkbox-option input[type="checkbox"]:checked + .checkbox-custom {
+    border-color: var(--berkeley-blue);
+    background: var(--berkeley-blue);
+}
+
+.checkbox-option input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.checkbox-label {
     font-size: 1.05rem;
     font-weight: 500;
     color: #2c2c2c;
@@ -549,4 +618,66 @@ body {
     .radio-label {
         font-size: 1rem;
     }
+}
+
+/* Collapsible Section Styles for Triplet */
+.collapsible-section {
+    margin-bottom: 20px;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--berkeley-light-gray);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 2px solid #d0d0d0;
+}
+
+.collapsible-header:hover {
+    background: #e8e8e8;
+}
+
+.collapsible-header h3 {
+    margin: 0;
+    color: var(--berkeley-blue);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.collapse-icon {
+    font-size: 1.2rem;
+    color: var(--berkeley-blue);
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 20px;
+}
+
+.collapsible-content.collapsed {
+    max-height: 0;
+    padding: 0 20px;
+}
+
+.collapsible-content:not(.collapsed) {
+    max-height: 2000px;
+    transition: max-height 0.5s ease-in;
+    padding: 20px;
+}
+
+.collapsible-content .content-box {
+    margin: 0;
+    max-height: 500px;
+    overflow-y: auto;
 }
