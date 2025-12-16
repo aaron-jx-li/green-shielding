@@ -14,6 +14,7 @@ CORS(app)
 
 # Path to the triplet CSV file ### MUST CHANGE ####
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+WEBPAGE_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 TRIPLET_CSV_PATH = os.path.abspath(
     os.path.join(
@@ -183,10 +184,9 @@ def save_annotation():
         traceback.print_exc()
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/<path:filename>')
+@app.route('/static/<path:filename>')
 def serve_static(filename):
-    """Serve static files (CSS, JS)."""
-    return send_from_directory('.', filename)
+    return send_from_directory(WEBPAGE_DIR, filename)
 
 if __name__ == '__main__':
     print("🚀 Starting Triplet Annotation Server...")
