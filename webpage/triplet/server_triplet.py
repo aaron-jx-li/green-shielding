@@ -184,9 +184,15 @@ def save_annotation():
         traceback.print_exc()
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/static/<path:filename>')
-def serve_static(filename):
+# Serve CSS from webpage/
+@app.route('/static/css/<path:filename>')
+def serve_css(filename):
     return send_from_directory(WEBPAGE_DIR, filename)
+
+# Serve JS from webpage/triplet/
+@app.route('/static/js/<path:filename>')
+def serve_js(filename):
+    return send_from_directory(os.path.join(WEBPAGE_DIR, "triplet"), filename)
 
 if __name__ == '__main__':
     print("🚀 Starting Triplet Annotation Server...")
