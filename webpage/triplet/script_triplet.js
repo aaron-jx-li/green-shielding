@@ -75,7 +75,9 @@ async function loadTriplet() {
 
 function validateContentVsCorrectness() {
     const selectedRadio = document.querySelector('input[name="annotation"]:checked');
-    if (!selectedRadio) return false;
+    if (!selectedRadio) {
+        return { valid: false, message: 'Please select an annotation option.' };
+    }
 
     const key = (selectedRadio.value || "").trim();
 
@@ -89,7 +91,6 @@ function validateContentVsCorrectness() {
         .filter(k => correctness[k])
         .map(Number);
 
-    // Mapping of outlier → matching pair
     const rules = {
         resp1_outlier: { outlier: 1, pair: [2, 3] },
         resp2_outlier: { outlier: 2, pair: [1, 3] },
@@ -99,64 +100,65 @@ function validateContentVsCorrectness() {
     };
 
     if (!(key in rules)) {
-        alert(`Unknown annotation value: "${key}"`);
-        return false;
+        return { valid: false, message: 'Invalid annotation selection.' };
     }
 
     // No constraint
-    if (rules[key] === 'none') return true;
+    if (rules[key] === 'none') {
+        return { valid: true };
+    }
 
     // All must be correct
     if (rules[key] === 'all') {
         if (selectedCorrect.length !== 3) {
-            alert('You indicated all responses match. Please mark all three as correct.');
-            return false;
+            return {
+                valid: false,
+                message: 'You indicated all responses match. Please mark all three as correct.'
+            };
         }
-        return true;
+        return { valid: true };
     }
 
     const { outlier, pair } = rules[key];
-    const pairSelected = pair.filter(r => selectedCorrect.includes(r));
     const outlierSelected = selectedCorrect.includes(outlier);
+    const pairSelected = pair.filter(r => selectedCorrect.includes(r));
 
     // ✔ Valid cases
     if (
-        (outlierSelected && selectedCorrect.length === 1) || // outlier alone
+        (outlierSelected && selectedCorrect.length === 1) ||     // outlier only
         (!outlierSelected && pairSelected.length === 2 && selectedCorrect.length === 2) // pair only
     ) {
-        return true;
+        return { valid: true };
     }
 
-    // ❌ Everything else is invalid
-    alert(
-        `Invalid correctness selection.\n\n` +
-        `You marked Response ${outlier} as the outlier.\n\n` +
-        `Valid options:\n` +
-        `• Response ${outlier} only\n` +
-        `• Responses ${pair[0]} & ${pair[1]} only`
-    );
-
-    return false;
+    // ❌ Invalid
+    return {
+        valid: false,
+        message:
+            `Invalid correctness selection.\n\n` +
+            `You marked Response ${outlier} as the outlier.\n\n` +
+            `Valid options:\n` +
+            `• Response ${outlier} only\n` +
+            `• Responses ${pair[0]} & ${pair[1]} only`
+    };
 }
 
 
+
 async function saveAndNext() {
-    const selectedRadio = document.querySelector('input[name="annotation"]:checked');
-    
-    if (!selectedRadio) {
-        alert('Please select an annotation option before proceeding.');
+    const result = validateContentVsCorrectness();
+
+    if (!result.valid) {
+        alert(result.message);
         return;
     }
 
-    if (!validateContentVsCorrectness()) {
-        return;
-    }
-
-    
     if (!currentQuestion) {
         alert('No question loaded.');
         return;
     }
+
+    const selectedRadio = document.querySelector('input[name="annotation"]:checked');
     
     const annotation = selectedRadio.value;
     const csvIndex = currentQuestion.csv_index;
@@ -240,16 +242,11 @@ function showCompletion(stats) {
 }
 
 function handleAnnotationChange() {
-    const selectedRadio = document.querySelector('input[name="annotation"]:checked');
     const nextBtn = document.getElementById('nextBtn');
-
-    if (!selectedRadio) {
-        nextBtn.disabled = true;
-        return;
-    }
-
-    nextBtn.disabled = !validateContentVsCorrectness(false);
+    const result = validateContentVsCorrectness();
+    nextBtn.disabled = !result.valid;
 }
+
 
 
 function collapseAllSections() {
