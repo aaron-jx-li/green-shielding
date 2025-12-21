@@ -73,11 +73,10 @@ async function loadTriplet() {
     }
 }
 
-function validateContentVsCorrectness(showAlert = true) {
+function validateContentVsCorrectness() {
     const selectedRadio = document.querySelector('input[name="annotation"]:checked');
     if (!selectedRadio) return false;
 
-    // ✅ Normalize (prevents "resp1_outlier " / casing issues)
     const key = (selectedRadio.value || "").trim();
 
     const correctness = {
@@ -86,43 +85,58 @@ function validateContentVsCorrectness(showAlert = true) {
         3: document.getElementById('resp3CorrectCheckbox').checked,
     };
 
-    // ✅ Mapping table (more reliable than switch)
-    const requiredMap = {
-        resp1_outlier: [2, 3],
-        resp2_outlier: [1, 3],
-        resp3_outlier: [1, 2],
-        all_resp_match: [1, 2, 3],
-        none_resp_match: null, // no constraint
+    const selectedCorrect = Object.keys(correctness)
+        .filter(k => correctness[k])
+        .map(Number);
+
+    // Mapping of outlier → matching pair
+    const rules = {
+        resp1_outlier: { outlier: 1, pair: [2, 3] },
+        resp2_outlier: { outlier: 2, pair: [1, 3] },
+        resp3_outlier: { outlier: 3, pair: [1, 2] },
+        all_resp_match: 'all',
+        none_resp_match: 'none',
     };
 
-    // 🔎 Debug (temporarily keep this to confirm what key is)
-    console.log("validateContentVsCorrectness:", { value: selectedRadio.value, key, correctness });
-
-    // If key is unknown, FAIL CLOSED (don’t allow next)
-    if (!(key in requiredMap)) {
-        if (showAlert) {
-            alert(`Unknown annotation option value: "${selectedRadio.value}". Check your radio input values.`);
-        }
+    if (!(key in rules)) {
+        alert(`Unknown annotation value: "${key}"`);
         return false;
     }
 
-    const required = requiredMap[key];
-    if (required === null) return true; // none_resp_match
+    // No constraint
+    if (rules[key] === 'none') return true;
 
-    const missing = required.filter(r => !correctness[r]);
-
-    if (missing.length > 0) {
-        if (showAlert) {
-            alert(
-                `You indicated Responses ${required.join(" & ")} match in diagnostic content.\n\n` +
-                `Please mark ALL matching responses as correct.\n\n` +
-                `Missing: Response ${missing.join(", ")}`
-            );
+    // All must be correct
+    if (rules[key] === 'all') {
+        if (selectedCorrect.length !== 3) {
+            alert('You indicated all responses match. Please mark all three as correct.');
+            return false;
         }
-        return false;
+        return true;
     }
 
-    return true;
+    const { outlier, pair } = rules[key];
+    const pairSelected = pair.filter(r => selectedCorrect.includes(r));
+    const outlierSelected = selectedCorrect.includes(outlier);
+
+    // ✔ Valid cases
+    if (
+        (outlierSelected && selectedCorrect.length === 1) || // outlier alone
+        (!outlierSelected && pairSelected.length === 2 && selectedCorrect.length === 2) // pair only
+    ) {
+        return true;
+    }
+
+    // ❌ Everything else is invalid
+    alert(
+        `Invalid correctness selection.\n\n` +
+        `You marked Response ${outlier} as the outlier.\n\n` +
+        `Valid options:\n` +
+        `• Response ${outlier} only\n` +
+        `• Responses ${pair[0]} & ${pair[1]} only`
+    );
+
+    return false;
 }
 
 
