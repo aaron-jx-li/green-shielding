@@ -73,6 +73,51 @@ async function loadTriplet() {
     }
 }
 
+function validateContentVsCorrectness() {
+    const selectedRadio = document.querySelector('input[name="annotation"]:checked');
+    if (!selectedRadio) return false;
+
+    const correctness = {
+        1: document.getElementById('resp1CorrectCheckbox').checked,
+        2: document.getElementById('resp2CorrectCheckbox').checked,
+        3: document.getElementById('resp3CorrectCheckbox').checked,
+    };
+
+    let required = [];
+
+    switch (selectedRadio.value) {
+        case 'resp1_outlier':
+            required = [2, 3];
+            break;
+        case 'resp2_outlier':
+            required = [1, 3];
+            break;
+        case 'resp3_outlier':
+            required = [1, 2];
+            break;
+        case 'all_resp_match':
+            required = [1, 2, 3];
+            break;
+        case 'none_resp_match':
+            return true; // no constraint
+    }
+
+    const missing = required.filter(r => !correctness[r]);
+
+    if (missing.length > 0) {
+        alert(
+            `You indicated that Response${required.length > 1 ? 's' : ''} ${required.join(
+                ' & '
+            )} match in diagnostic content.\n\n` +
+            `Please mark ALL matching responses as correct.\n\n` +
+            `Missing: Response ${missing.join(', ')}`
+        );
+        return false;
+    }
+
+    return true;
+}
+
 async function saveAndNext() {
     const selectedRadio = document.querySelector('input[name="annotation"]:checked');
     
@@ -80,6 +125,11 @@ async function saveAndNext() {
         alert('Please select an annotation option before proceeding.');
         return;
     }
+
+    if (!validateContentVsCorrectness()) {
+        return;
+    }
+
     
     if (!currentQuestion) {
         alert('No question loaded.');
@@ -170,7 +220,13 @@ function showCompletion(stats) {
 function handleAnnotationChange() {
     const selectedRadio = document.querySelector('input[name="annotation"]:checked');
     const nextBtn = document.getElementById('nextBtn');
-    nextBtn.disabled = !selectedRadio;
+
+    if (!selectedRadio) {
+        nextBtn.disabled = true;
+        return;
+    }
+
+    nextBtn.disabled = !validateContentVsCorrectness();
 }
 
 function collapseAllSections() {
@@ -212,4 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[name="annotation"]').forEach(radio => {
         radio.addEventListener('change', handleAnnotationChange);
     });
+
+    document.querySelectorAll('input[name="correctness"]').forEach(cb => {
+    cb.addEventListener('change', handleAnnotationChange);
+    });
+
 });
