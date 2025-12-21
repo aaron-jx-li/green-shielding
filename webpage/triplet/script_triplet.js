@@ -73,9 +73,12 @@ async function loadTriplet() {
     }
 }
 
-function validateContentVsCorrectness() {
+function validateContentVsCorrectness(showAlert = true) {
     const selectedRadio = document.querySelector('input[name="annotation"]:checked');
     if (!selectedRadio) return false;
+
+    // ✅ Normalize (prevents "resp1_outlier " / casing issues)
+    const key = (selectedRadio.value || "").trim();
 
     const correctness = {
         1: document.getElementById('resp1CorrectCheckbox').checked,
@@ -83,40 +86,45 @@ function validateContentVsCorrectness() {
         3: document.getElementById('resp3CorrectCheckbox').checked,
     };
 
-    let required = [];
+    // ✅ Mapping table (more reliable than switch)
+    const requiredMap = {
+        resp1_outlier: [2, 3],
+        resp2_outlier: [1, 3],
+        resp3_outlier: [1, 2],
+        all_resp_match: [1, 2, 3],
+        none_resp_match: null, // no constraint
+    };
 
-    switch (selectedRadio.value) {
-        case 'resp1_outlier':
-            required = [2, 3];
-            break;
-        case 'resp2_outlier':
-            required = [1, 3];
-            break;
-        case 'resp3_outlier':
-            required = [1, 2];
-            break;
-        case 'all_resp_match':
-            required = [1, 2, 3];
-            break;
-        case 'none_resp_match':
-            return true; // no constraint
+    // 🔎 Debug (temporarily keep this to confirm what key is)
+    console.log("validateContentVsCorrectness:", { value: selectedRadio.value, key, correctness });
+
+    // If key is unknown, FAIL CLOSED (don’t allow next)
+    if (!(key in requiredMap)) {
+        if (showAlert) {
+            alert(`Unknown annotation option value: "${selectedRadio.value}". Check your radio input values.`);
+        }
+        return false;
     }
+
+    const required = requiredMap[key];
+    if (required === null) return true; // none_resp_match
 
     const missing = required.filter(r => !correctness[r]);
 
     if (missing.length > 0) {
-        alert(
-            `You indicated that Response${required.length > 1 ? 's' : ''} ${required.join(
-                ' & '
-            )} match in diagnostic content.\n\n` +
-            `Please mark ALL matching responses as correct.\n\n` +
-            `Missing: Response ${missing.join(', ')}`
-        );
+        if (showAlert) {
+            alert(
+                `You indicated Responses ${required.join(" & ")} match in diagnostic content.\n\n` +
+                `Please mark ALL matching responses as correct.\n\n` +
+                `Missing: Response ${missing.join(", ")}`
+            );
+        }
         return false;
     }
 
     return true;
 }
+
 
 async function saveAndNext() {
     const selectedRadio = document.querySelector('input[name="annotation"]:checked');
@@ -226,8 +234,9 @@ function handleAnnotationChange() {
         return;
     }
 
-    nextBtn.disabled = !validateContentVsCorrectness();
+    nextBtn.disabled = !validateContentVsCorrectness(false);
 }
+
 
 function collapseAllSections() {
     const sections = ['question_og', 'response1', 'response2', 'response3'];
