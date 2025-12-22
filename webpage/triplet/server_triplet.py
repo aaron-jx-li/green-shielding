@@ -8,29 +8,17 @@ from flask_cors import CORS
 import os
 import pandas as pd
 import csv
+from datetime import datetime
 
-import json
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.auth.transport.requests import Request
+import json
+
 
 app = Flask(__name__)
 CORS(app)
-
-def get_drive_service():
-    token_json = os.getenv("GOOGLE_TOKEN_JSON")
-    scopes = os.getenv("SCOPES").split()
-
-    if not token_json:
-        raise Exception("Missing GOOGLE_TOKEN_JSON")
-
-    creds = Credentials.from_authorized_user_info(json.loads(token_json), scopes)
-
-    if creds.expired and creds.refresh_token:
-        creds.refresh(Request())
-
-    return build("drive", "v3", credentials=creds)
 
 # Path to the triplet CSV file ### MUST CHANGE ####
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -47,42 +35,63 @@ TRIPLET_CSV_PATH = os.path.abspath(
     )
 )
 
-TRIPLET_SOURCE_CSV_PATH = TRIPLET_CSV_PATH
-
-TRIPLET_RESULTS_CSV_PATH = os.path.abspath(
+RESULTS_CSV_PATH = os.path.abspath(
     os.path.join(
         BASE_DIR,
         "..",
         "annotation_manager",
         "ak_review_round0",
         "normalization",
-        "rand_sample_triplet_results.csv"
+        "triplet_annotations_results.csv"
     )
 )
 
-def init_results_csv():
-    if os.path.exists(TRIPLET_RESULTS_CSV_PATH):
+def ensure_results_csv():
+    if not os.path.exists(RESULTS_CSV_PATH):
+        df = pd.DataFrame(columns=[
+            "timestamp",
+            "csv_index",
+            "question_og",
+            "annotation",
+            "resp1_correct",
+            "resp2_correct",
+            "resp3_correct"
+        ])
+        df.to_csv(RESULTS_CSV_PATH, index=False, quoting=csv.QUOTE_ALL)
+
+def upload_results_to_drive():
+    if not os.getenv("GOOGLE_TOKEN_JSON"):
+        print("⚠️ Drive upload skipped (no token)")
         return
 
-    source_df = pd.read_csv(TRIPLET_SOURCE_CSV_PATH, quoting=csv.QUOTE_ALL)
+    creds = Credentials.from_authorized_user_info(
+        json.loads(os.getenv("GOOGLE_TOKEN_JSON")),
+        ["https://www.googleapis.com/auth/drive.file"]
+    )
 
-    # Annotation columns only
-    results_df = pd.DataFrame({
-        "csv_index": source_df.index,
-        "all_resp_match": 0,
-        "none_resp_match": 0,
-        "resp1_outlier": 0,
-        "resp2_outlier": 0,
-        "resp3_outlier": 0,
-        "resp1_correct": 0,
-        "resp2_correct": 0,
-        "resp3_correct": 0,
-        "user_annotated": -1
-    })
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
 
-    results_df.to_csv(TRIPLET_RESULTS_CSV_PATH, index=False, quoting=csv.QUOTE_ALL)
-    print("✅ Initialized results CSV")
+    service = build("drive", "v3", credentials=creds)
 
+    file_name = os.path.basename(RESULTS_CSV_PATH)
+    media = MediaFileUpload(RESULTS_CSV_PATH, resumable=True)
+
+    query = f"name='{file_name}' and '{os.getenv('FOLDER_ID')}' in parents and trashed=false"
+    existing = service.files().list(q=query, fields="files(id)").execute().get("files", [])
+
+    if existing:
+        service.files().update(
+            fileId=existing[0]["id"],
+            media_body=media
+        ).execute()
+        print("🔄 Updated Drive results CSV")
+    else:
+        service.files().create(
+            body={"name": file_name, "parents": [os.getenv("FOLDER_ID")]},
+            media_body=media
+        ).execute()
+        print("✅ Uploaded new Drive results CSV")
 
 def get_next_triplet():
     """Get a random triplet from the CSV. Returns dict or None if completed."""
@@ -100,14 +109,15 @@ def get_next_triplet():
         return {'success': False, 'error': 'CSV file is empty'}
     
     # Get unannotated rows
-    source_df = pd.read_csv(TRIPLET_SOURCE_CSV_PATH, quoting=csv.QUOTE_ALL)
-    results_df = pd.read_csv(TRIPLET_RESULTS_CSV_PATH, quoting=csv.QUOTE_ALL)
+    if os.path.exists(RESULTS_CSV_PATH):
+        results_df = pd.read_csv(RESULTS_CSV_PATH)
+        annotated_indices = set(results_df["csv_index"].astype(int))
+    else:
+        annotated_indices = set()
 
-    unannotated_indices = results_df[results_df['user_annotated'] == -1]['csv_index']
-    unannotated_df = source_df.loc[unannotated_indices]
+    unannotated_df = df[~df.index.isin(annotated_indices)]
 
-    source_df = pd.read_csv(TRIPLET_SOURCE_CSV_PATH, quoting=csv.QUOTE_ALL)
-    total = len(source_df)
+    total = len(df)
     unannotated = len(unannotated_df)
     annotated = total - unannotated
     
@@ -174,108 +184,46 @@ def serve_index():
     """Serve the triplet HTML file."""
     return send_from_directory('.', 'index_triplet.html')
 
+
 @app.route('/save_annotation', methods=['POST'])
 def save_annotation():
-    """Save annotation to CSV and get next question."""
     print("💾 /save_annotation endpoint called")
     try:
         data = request.get_json()
-        
-        if not data or 'annotation' not in data:
-            return jsonify({'success': False, 'error': 'No annotation provided'}), 400
-        
-        csv_index = int(data.get('csv_index'))
-        annotation = data.get('annotation')
-        
-        if csv_index is None:
-            return jsonify({'success': False, 'error': 'No CSV index provided'}), 400
-        
-        print(f"📝 Saving annotation '{annotation}' for row {csv_index}")
-        
-        # Read the CSV
-        df = pd.read_csv(TRIPLET_RESULTS_CSV_PATH, quoting=csv.QUOTE_ALL)
-        matches = df[df['csv_index'] == csv_index]
-        if len(matches) != 1:
-            return jsonify({'success': False, 'error': 'Invalid csv_index'}), 400
 
-        row = matches.index[0]
+        csv_index = int(data['csv_index'])
+        annotation = data['annotation']
 
-        
-        if csv_index >= len(df):
-            return jsonify({'success': False, 'error': f'Index {csv_index} out of range'}), 400
-        
-        # Initialize all annotation columns to 0
-        df.loc[row, 'all_resp_match'] = 0
-        df.loc[row, 'none_resp_match'] = 0
-        df.loc[row, 'resp1_outlier'] = 0
-        df.loc[row, 'resp2_outlier'] = 0
-        df.loc[row, 'resp3_outlier'] = 0
-        
-        # Set the selected annotation to 1
-        if annotation == 'all_resp_match':
-            df.loc[row, 'all_resp_match'] = 1
-        elif annotation == 'none_resp_match':
-            df.loc[row, 'none_resp_match'] = 1
-        elif annotation == 'resp1_outlier':
-            df.loc[row, 'resp1_outlier'] = 1
-        elif annotation == 'resp2_outlier':
-            df.loc[row, 'resp2_outlier'] = 1
-        elif annotation == 'resp3_outlier':
-            df.loc[row, 'resp3_outlier'] = 1
-        else:
-            return jsonify({'success': False, 'error': 'Invalid annotation value'}), 400
-        
-        # Save correctness checkboxes
-        df.loc[row, 'resp1_correct'] = int(data.get('resp1_correct', 0))
-        df.loc[row, 'resp2_correct'] = int(data.get('resp2_correct', 0))
-        df.loc[row, 'resp3_correct'] = int(data.get('resp3_correct', 0))
+        ensure_results_csv()
 
-        print(f"✅ Correctness: resp1={df.loc[row, 'resp1_correct']}, resp2={df.loc[row, 'resp2_correct']}, resp3={df.loc[row, 'resp3_correct']}")
-        # Set user_annotated to 1
-        df.loc[row, 'user_annotated'] = 1
-        
-        # Save the CSV
-        df.to_csv(TRIPLET_RESULTS_CSV_PATH, index=False, quoting=csv.QUOTE_ALL)
-        print(f"✅ Annotation saved successfully for row {csv_index}")
-        
+        row = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "csv_index": csv_index,
+            "question_og": data.get("question_og", ""),
+            "annotation": annotation,
+            "resp1_correct": int(data.get("resp1_correct", 0)),
+            "resp2_correct": int(data.get("resp2_correct", 0)),
+            "resp3_correct": int(data.get("resp3_correct", 0)),
+        }
+
+        df = pd.DataFrame([row])
+        df.to_csv(
+            RESULTS_CSV_PATH,
+            mode="a",
+            header=False,
+            index=False,
+            quoting=csv.QUOTE_ALL
+        )
+
+        print("✅ Annotation appended")
+
+
         upload_results_to_drive()
-        # Get next question
-        result = get_next_triplet()
-        if result.get('success'):
-            return jsonify(result)
-        else:
-            return jsonify(result), 500
-        
+        return jsonify(get_next_triplet())
+
     except Exception as e:
-        print(f"❌ Error in save_annotation: {e}")
-        import traceback
-        traceback.print_exc()
+        print("❌ Error:", e)
         return jsonify({'success': False, 'error': str(e)}), 500
-
-def upload_results_to_drive():
-    try:
-        service = get_drive_service()
-        file_name = os.path.basename(TRIPLET_RESULTS_CSV_PATH)
-        folder_id = os.getenv("FOLDER_ID")
-
-        query = f"name='{file_name}' and '{folder_id}' in parents and trashed=false"
-        files = service.files().list(q=query, fields="files(id)").execute().get("files", [])
-
-        media = MediaFileUpload(TRIPLET_RESULTS_CSV_PATH, resumable=True)
-
-        if files:
-            service.files().update(fileId=files[0]['id'], media_body=media).execute()
-            print("🔄 Updated results CSV on Drive")
-        else:
-            service.files().create(
-                body={"name": file_name, "parents": [folder_id]},
-                media_body=media
-            ).execute()
-            print("✅ Uploaded results CSV to Drive")
-
-    except Exception as e:
-        print(f"⚠️ Drive sync failed: {e}")
-
 
 # Serve CSS from webpage/
 @app.route('/static/css/<path:filename>')
@@ -289,8 +237,7 @@ def serve_js(filename):
 
 if __name__ == '__main__':
     print("🚀 Starting Triplet Annotation Server...")
-    init_results_csv()
-    print(f"📊 Source CSV: {TRIPLET_SOURCE_CSV_PATH}")
-    print(f"📝 Results CSV: {TRIPLET_RESULTS_CSV_PATH}")
+    print(f"📊 CSV path: {TRIPLET_CSV_PATH}")
+    ensure_results_csv()
+    print("🌐 Server will be available at: http://localhost:5001")
     app.run(debug=True, host='0.0.0.0', port=5001)
-

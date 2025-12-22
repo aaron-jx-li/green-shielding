@@ -118,18 +118,23 @@ def get_slrt_random_unannotated_question():
     poss_cats = questions_df['category'].unique()
     for curr_cat in poss_cats:
         cat_questions_df = questions_df[questions_df['category'] == curr_cat]
-        cat_num_seen = sum(~cat_questions_df['to_be_seen'])
+        cat_num_seen = (~cat_questions_df['to_be_seen'].astype(bool)).sum()
         print("Category: ", curr_cat, "Number seen: ", cat_num_seen)
         min_samples = slrt_bounds_df.n.min()
         max_samples = slrt_bounds_df.n.max()
         if cat_num_seen < min_samples or cat_num_seen > max_samples:
             continue
 
-        print("csv_index:", csv_index, "len(questions_json):", len(questions_json))
+        # print("csv_index:", csv_index, "len(questions_json):", len(questions_json))
         print("cat_num_seen:", cat_num_seen, "n values:", slrt_bounds_df['n'].tolist())
 
-        cat_low_bound = slrt_bounds_df[slrt_bounds_df['n'] == cat_num_seen]['lower'].values[0]
-        cat_high_bound = slrt_bounds_df[slrt_bounds_df['n'] == cat_num_seen]['upper'].values[0]
+        row = slrt_bounds_df[slrt_bounds_df['n'] == cat_num_seen]
+        if row.empty:
+            continue
+
+        cat_low_bound = row['lower'].iloc[0]
+        cat_high_bound = row['upper'].iloc[0]
+
         num_incorrect = cat_questions_df[cat_questions_df['expert_dec'].isin([0, 1])].shape[0]
         print("Number incorrect: ", num_incorrect)
         print("Category low bound: ", cat_low_bound)
@@ -193,7 +198,12 @@ def save_annotation_to_csv(csv_index, annotation_value, comment=""):
         print("Saving annotation for index:", csv_index, "with value:", annotation_value)
         if comment:
             print("Saving comment: ", comment)
-        df = pd.read_csv(CONFIG['all_questions_metadata_csv_path'], quoting=csv.QUOTE_ALL)
+        df = pd.read_csv(
+            CONFIG['all_questions_metadata_csv_path'],
+            quoting=csv.QUOTE_ALL,
+            dtype={"comments": "string"}
+        )
+
 
         if sum(df['Index'] == int(csv_index)) != 1:
             print(f"❌ Error saving annotation: {df.shape[0]} rows found for index {csv_index}")
@@ -306,7 +316,7 @@ def save_and_next():
             return jsonify({'error': 'No annotation provided'}), 400
         
         annotation = data['annotation']
-        csv_index = int(float(data.get('csv_index')))
+        csv_index = int(data['csv_index'])
         comment = data.get('comment', '')
         
         if csv_index is None:
