@@ -5,7 +5,7 @@ from openai import OpenAI
 from tqdm import tqdm
 from typing import Dict, List, Optional
 
-DEFAULT_INSTRUCTION = "You are a helpful medical assistant. Please provide reliable diagnosis results to the user queries. Be concise and accurate."
+DEFAULT_INSTRUCTION = "You are a helpful medical assistant. Given the description of the symptoms, what is the most likely diagnosis? Be concise and accurate."
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Query OpenAI model for JSON samples.")
@@ -97,7 +97,8 @@ def main():
         # print(f"Processing sample {idx}...")
 
         # instruction = sample.get("instruction", "")
-        input_text = sample.get("normalized_prompt", "")
+        # input_text = sample.get("normalized_prompt", "")
+        input_text = sample.get("raw_input", "")
 
         try:
             model_resp = query_model(client, input_text, args.model)
