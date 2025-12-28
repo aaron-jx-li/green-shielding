@@ -192,16 +192,55 @@ Rules:
 # ============================================================
 # OpenAI call helpers
 # ============================================================
+def _extract_first_json_object(text: str) -> str:
+    """
+    Extract the first top-level JSON object {...} from text using brace balancing.
+    Raises ValueError if none found.
+    """
+    if not text:
+        raise ValueError("empty text")
+
+    s = text.strip()
+    start = s.find("{")
+    if start < 0:
+        raise ValueError("no '{' found")
+
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(s)):
+        ch = s[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+        else:
+            if ch == '"':
+                in_str = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    return s[start:i + 1]
+
+    raise ValueError("no complete JSON object found (unbalanced braces)")
 
 def _robust_json_loads(text: str) -> Dict[str, Any]:
     text = (text or "").strip()
+    # Fast path: direct JSON
     try:
         return json.loads(text)
-    except json.JSONDecodeError:
-        m = re.search(r"\{.*\}", text, re.S)
-        if not m:
-            raise
-        return json.loads(m.group(0))
+    except Exception:
+        pass
+
+    # Extract first JSON object via brace balancing
+    js = _extract_first_json_object(text)
+    return json.loads(js)
+
 
 def call_json_judge(
     model: str,
@@ -211,6 +250,8 @@ def call_json_judge(
     retries: int = 4,
 ) -> Dict[str, Any]:
     last_err = None
+    last_text = None
+
     for attempt in range(retries):
         try:
             resp = client.responses.create(
@@ -221,11 +262,32 @@ def call_json_judge(
                     {"role": "user", "content": user_prompt},
                 ],
             )
-            return _robust_json_loads(resp.output_text)
+            last_text = resp.output_text
+            return _robust_json_loads(last_text)
+
         except Exception as e:
             last_err = e
-            time.sleep(min(1.5 * (2 ** attempt), 8.0))
+
+            # On parse-ish failures, try a "repair" prompt once before backing off.
+            # (We do it by appending a strict instruction to the user prompt.)
+            msg = str(e).lower()
+            if ("json" in msg) or ("expecting" in msg) or ("delimiter" in msg) or ("decode" in msg) or ("unbalanced" in msg):
+                user_prompt = (
+                    user_prompt
+                    + "\n\nIMPORTANT: Your previous output was invalid. "
+                      "Return ONLY a single valid JSON object, no markdown, no extra text."
+                )
+
+            # time.sleep(min(1.5 * (2 ** attempt), 8.0))
+
+    # Optional: print a small snippet for debugging (safe)
+    if last_text:
+        snippet = last_text[:400].replace("\n", "\\n")
+        tail = last_text[-200:].replace("\n", "\\n") if len(last_text) > 600 else ""
+        raise RuntimeError(f"Judge failed after retries: {last_err}\nFirst400={snippet}\nLast200={tail}")
+
     raise RuntimeError(f"Judge failed after retries: {last_err}")
+
 
 # ============================================================
 # Semantic matcher with cache (now supports batching)
@@ -323,34 +385,52 @@ class SemanticMatcher:
             chunk = to_judge[i:i + max_pairs_per_call]
             i += max_pairs_per_call
 
-            payload = [{"dx_a": a, "dx_b": b} for (a, b, _) in chunk]
-            user_prompt = "PAIRS:\n" + json.dumps(payload, ensure_ascii=False) + "\nReturn STRICT JSON."
+            stack = [chunk]
+            while stack:
+                sub = stack.pop()
+                payload = [{"dx_a": a, "dx_b": b} for (a, b, _) in sub]
+                user_prompt = "PAIRS:\n" + json.dumps(payload, ensure_ascii=False) + "\nReturn STRICT JSON."
 
-            obj = call_json_judge(
-                model=self.model,
-                system_prompt=SEM_MATCH_BATCH_SYSTEM,
-                user_prompt=user_prompt,
-                temperature=self.temperature,
-            )
+                try:
+                    obj = call_json_judge(
+                        model=self.model,
+                        system_prompt=SEM_MATCH_BATCH_SYSTEM,
+                        user_prompt=user_prompt,
+                        temperature=self.temperature,
+                    )
+                    matches = obj.get("matches", [])
+                    if not isinstance(matches, list):
+                        raise ValueError("missing/invalid 'matches' list")
 
-            matches = obj.get("matches", [])
-            if not isinstance(matches, list):
-                matches = []
+                except Exception as e:
+                    # split and retry
+                    if len(sub) <= 1:
+                        (a, b, k) = sub[0]
+                        out = {"match": False, "relation": "different", "note": f"judge_fail:{type(e).__name__}"}
+                        results[k] = out
+                        self.cache[k] = out
+                        continue
 
-            # enforce correct length
-            if len(matches) < len(chunk):
-                matches = matches + [False] * (len(chunk) - len(matches))
-            elif len(matches) > len(chunk):
-                matches = matches[:len(chunk)]
+                    mid = len(sub) // 2
+                    stack.append(sub[mid:])
+                    stack.append(sub[:mid])
+                    continue
 
-            for (a, b, k), m in zip(chunk, matches):
-                out = {
-                    "match": bool(m),
-                    "relation": "same" if m else "different",
-                    "note": "batch_bool",
-                }
-                results[k] = out
-                self.cache[k] = out
+                # enforce correct length
+                if len(matches) < len(sub):
+                    matches = matches + [False] * (len(sub) - len(matches))
+                elif len(matches) > len(sub):
+                    matches = matches[:len(sub)]
+
+                for (a, b, k), m in zip(sub, matches):
+                    out = {
+                        "match": bool(m),
+                        "relation": "same" if m else "different",
+                        "note": "batch_bool",
+                    }
+                    results[k] = out
+                    self.cache[k] = out
+
 
         return results
 
@@ -718,7 +798,8 @@ def parse_args():
                     help="JSON array with fields: input, judge_dx_space.{plausible_set, highly_likely_set}.")
     ap.add_argument("--output_path", type=str, required=True,
                     help="Where to save metrics JSON.")
-
+    ap.add_argument("--col_name", type=str, required=True,
+                    help="Column name for target response (e.g., 'model_response').")
     ap.add_argument("--dx_extract_model", type=str, default="gpt-4.1-mini",
                     help="Model used to extract diagnoses from model_response.")
     ap.add_argument("--uncertainty_model", type=str, default="gpt-4.1-mini",
@@ -796,7 +877,8 @@ def main():
             break
 
         question = (sample.get("raw_input") or "").strip()
-        model_answer = sample.get("model_response") or sample.get("response") or sample.get("output")
+        out_col = args.col_name
+        model_answer = sample.get(out_col)
         model_answer = (model_answer or "").strip()
 
         if not question or not model_answer:

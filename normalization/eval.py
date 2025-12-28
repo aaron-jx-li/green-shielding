@@ -98,7 +98,7 @@ def main():
 
         # instruction = sample.get("instruction", "")
         # input_text = sample.get("normalized_prompt", "")
-        input_text = sample.get("raw_input", "")
+        input_text = sample.get("normalized_prompt", "")
 
         try:
             model_resp = query_model(client, input_text, args.model)

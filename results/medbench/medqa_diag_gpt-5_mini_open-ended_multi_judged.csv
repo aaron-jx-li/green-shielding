@@ -1,0 +1,957 @@
+index,question_type,original_answer,ground_truth,open_ended_correct,open_ended_q1_correct,open_ended_q2_correct,open_ended_q3_correct,open_ended_q4_correct
+0,diagnosis,F,Acute myelogenous leukemia,True,True,True,True,True
+1,diagnosis,C,Flow cytometry,True,False,False,False,False
+2,diagnosis,A,Squamous cell carcinoma,True,True,True,False,True
+3,diagnosis,A,Acute tubulointerstitial nephritis,True,True,True,False,True
+4,diagnosis,C,Ruptured abdominal aortic aneurysm,True,True,True,False,True
+5,diagnosis,C,Cavernous sinus thrombosis,True,True,True,False,True
+6,diagnosis,A,Cytomegalovirus retinitis,True,True,True,False,True
+7,diagnosis,C,Malingering,True,True,True,False,True
+8,diagnosis,C,Malignant melanoma,True,True,True,False,True
+9,explanation,D,Transfusion complication,True,True,True,True,True
+10,diagnosis,F,"Osteosarcoma
+""",True,True,True,True,True
+11,diagnosis,C,Adjustment disorder with depressed mood,True,True,True,False,True
+12,diagnosis,B,Ehrlichiosis,True,True,True,False,True
+13,diagnosis,A,Acute rheumatic fever,True,True,True,True,True
+14,other,D,Asymmetric septal hypertrophy,True,False,True,True,False
+15,description,C,Normal grief reaction,True,True,True,True,True
+16,description,B,Compartment pressure of 32 mmHg,False,False,False,False,False
+17,explanation,D,Stretching of Glisson capsule,False,False,False,False,False
+18,diagnosis,D,Acute pancreatitis,True,True,True,False,True
+19,diagnosis,A,Conversion disorder,True,True,True,False,True
+20,diagnosis,E,Pick’s disease,True,False,True,False,True
+21,diagnosis,B,Conversion disorder,True,True,True,False,True
+22,diagnosis,C,Cerebellar tumor,True,True,False,False,False
+23,diagnosis,A,Cardiac contusion,True,True,True,False,True
+24,diagnosis,C,Active chronic hepatitis B infection,True,False,False,False,False
+25,diagnosis,E,Schwannoma,True,True,True,False,True
+26,diagnosis,G,"Factitious disorder imposed on another
+""",True,True,True,False,True
+27,diagnosis,E,Colon cancer,True,True,True,False,True
+28,diagnosis,E,Autosomal dominant polycystic kidney disease,True,True,True,True,True
+29,diagnosis,A,Esophageal rupture,True,True,True,True,True
+30,imaging,D,Distended gallbladder,False,False,False,False,False
+31,diagnosis,E,Actinic keratosis,True,True,True,False,True
+32,diagnosis,D,Subarachnoid hemorrhage,False,False,False,False,False
+33,diagnosis,F,Erosive gastritis,True,True,True,True,True
+34,diagnosis,A,1 month of associated symptoms ,False,False,False,False,False
+35,findings,A,Increased c-ANCA titers,True,False,False,False,False
+36,explanation,A,Acute lymphoid leukemia,True,True,True,True,True
+37,diagnosis,D,Nephrolithiasis,True,True,True,False,True
+38,diagnosis,C,Laceration of the spleen,False,False,False,False,False
+39,diagnosis,C,Monoclonal gammopathy of undetermined significance,False,False,False,False,False
+40,diagnosis,A,Serum sickness-like reaction,True,True,True,True,True
+41,diagnosis,A,Pancreatic adenocarcinoma,True,True,True,False,True
+42,description,E,Transmural granulomas in the bowel,False,False,False,False,True
+43,diagnosis,D,Testicular malignancy,False,True,False,False,False
+44,diagnosis,A,Aromatase deficiency,True,True,True,True,True
+45,diagnosis,D,Type II heparin-induced thrombocytopenia,True,True,True,True,True
+46,diagnosis,D,Delirium,True,True,True,True,True
+47,cause,B,Coronary steal,True,True,True,True,True
+48,other,B,Ethylene glycol,True,True,True,True,True
+49,diagnosis,A,Diaphragmatic rupture,True,True,True,False,True
+50,diagnosis,E,Post-traumatic stress disorder,True,True,True,False,True
+51,cause,E,Cholesterol embolization,True,True,True,True,True
+52,explanation,C,Normal stress reaction,True,True,True,True,True
+53,diagnosis,B,Coronary artery occlusion,False,False,False,False,False
+54,diagnosis,F,Hair tourniquet syndrome,True,True,True,True,True
+55,diagnosis,C,Squamous cell carcinoma,True,True,True,False,True
+56,test,B,Small cell lung carcinoma,True,False,False,False,False
+57,diagnosis,E,Hemothorax,True,True,True,False,True
+58,diagnosis,D,Nephrogenic diabetes insipidus,True,True,True,False,True
+59,diagnosis,A,Acalculous cholecystitis,False,False,False,False,False
+60,diagnosis,E,Stress cardiomyopathy,False,False,False,False,False
+61,diagnosis,C,Febrile nonhemolytic reaction,True,True,True,False,True
+62,diagnosis,F,Subdural hematoma,False,False,False,False,False
+63,diagnosis,G,Acute lymphoblastic leukemia,True,True,True,True,True
+64,diagnosis,A,Subacute thyroiditis,True,True,True,True,True
+65,diagnosis,B,Parvovirus B19,True,True,True,False,True
+66,diagnosis,D,Leukemoid reaction,True,True,True,True,True
+67,diagnosis,D,Duodenal peptic ulcer,True,True,True,False,True
+68,diagnosis,D,Lipoma,True,True,False,False,True
+69,diagnosis,E,Transient ischemic attack,True,True,True,True,True
+70,diagnosis,C,Cytomegalovirus infection,True,True,True,True,True
+71,cause,F,Amyloid angiopathy,True,True,True,True,True
+72,diagnosis,E,Trigeminal neuralgia,True,True,True,True,True
+73,diagnosis,C,Consuming meats cooked over a campfire,False,False,False,False,False
+74,diagnosis,A,Acute interstitial nephritis,True,True,True,True,True
+75,diagnosis,E,Subacute sclerosing panencephalitis,True,True,True,True,True
+76,explanation,C,Eosinophilic esophagitis,True,True,True,True,True
+77,diagnosis,E,Transient ischemic attack,True,True,True,True,True
+78,diagnosis,C,Molluscum contagiosum,True,True,True,True,True
+79,diagnosis,D,Osteitis deformans,True,True,True,False,True
+80,diagnosis,D,Drug-induced angioedema,True,True,True,False,False
+81,cause,D,Membranous nephropathy,False,False,False,False,True
+82,cause,D,Partial molar pregnancy,True,False,False,True,False
+83,cause,A,Parvovirus B19,True,True,True,True,True
+84,diagnosis,C,Vascular ectasia within the liver,False,False,False,False,False
+85,diagnosis,E,Muscle strain,True,True,True,False,True
+86,diagnosis,B,Dengue fever,True,True,True,False,True
+87,diagnosis,C,Hemophilia,True,True,True,True,True
+88,cause,C,Medication reaction,True,True,True,True,True
+89,diagnosis,B,Complex partial seizure,True,True,True,True,True
+90,diagnosis,C,Mucosal tear at the gastroesophageal junction,True,True,True,False,True
+91,diagnosis,E,Anorexia nervosa,True,True,True,False,True
+92,diagnosis,D,Rubeola,True,True,True,False,True
+93,cause,A,Cardiac tamponade,True,False,False,False,False
+94,diagnosis,E,Radial head subluxation,True,True,True,False,True
+95,diagnosis,E,Pulmonary contusion,False,False,True,False,False
+96,diagnosis,D,Drug-induced angioedema,True,True,False,False,True
+97,diagnosis,A,Brugada syndrome,False,False,True,False,False
+98,cause,A,Syndrome of Inappropriate Antidiuretic Hormone (SIADH),True,True,True,True,True
+99,other,C,Threatened abortion,True,True,True,True,True
+100,diagnosis,D,Pancreatic pseudocyst,False,False,False,False,False
+101,cause,B,Traumatic aortic dissection,False,True,True,False,False
+102,diagnosis,B,Echinococcosis,True,True,True,False,True
+103,explanation,C,Myelodysplastic syndrome,True,True,True,True,True
+104,cause,D,Rotavirus,True,True,True,True,True
+105,organism,D,Mycoplasma pneumoniae,True,True,True,True,True
+106,other,B,Medium-chain acyl-CoA dehydrogenase,True,True,True,True,True
+107,cause,D,Gilbert syndrome,True,True,True,True,True
+108,diagnosis,B,Infective endocarditis,True,True,True,True,True
+109,diagnosis,F,Chronic lymphocytic leukemia,True,True,True,True,True
+110,explanation,E,Cocaine use,True,True,True,True,True
+111,diagnosis,C,Chronic myeloid leukemia,True,True,True,True,True
+112,findings,C,Hyaline membranes lining the alveoli on lung biopsy,True,False,False,False,False
+113,diagnosis,D,Osteoarthritis,True,True,True,True,True
+114,diagnosis,E,Plasma cell dyscrasia,True,True,True,False,True
+115,diagnosis,E,Perforated peptic ulcer,True,True,True,False,True
+116,diagnosis,A,Cerebral venous thrombosis,False,True,False,True,False
+117,diagnosis,D,Left ventricular free wall rupture,True,True,True,True,True
+118,diagnosis,B,Poliomyelitis,True,True,True,False,True
+119,diagnosis,D,Premature atrial contractions,False,False,False,False,False
+120,cause,B,Atrioventricular reentrant tachycardia from accessory conduction pathway,True,True,True,True,True
+121,other,C,A 41-year-old female with a facial rash and nonerosive arthritis,True,False,False,False,False
+122,diagnosis,A,Exertional heat stroke,False,False,False,False,True
+123,other,A,Simple partial,True,False,True,True,True
+124,diagnosis,A,Phantom limb pain,True,True,True,False,True
+125,cause,E,Idiopathic,False,False,False,False,False
+126,diagnosis,A,Dumping syndrome,True,True,True,False,True
+127,diagnosis,C,Mobitz type I,False,False,False,False,False
+128,diagnosis,C,"Hyperuricemia, hyperkalemia, hyperphosphatemia, lactic acidosis, and urate crystals in the urine",True,False,False,False,False
+129,diagnosis,A,Diaphragmatic rupture,False,False,False,False,True
+130,diagnosis,A,Cardiac tamponade,True,True,True,True,True
+131,diagnosis,A,Abdominal aortic aneurysm,True,False,False,False,True
+132,diagnosis,C,Fibrofatty replacement of the myocardium,False,False,False,False,False
+133,diagnosis,C,Ebstein anomaly,True,True,True,True,False
+134,diagnosis,B,Cardiac contusion,True,True,True,False,False
+135,cause,D,Pulmonary arteriovenous malformations,False,False,False,False,False
+136,diagnosis,A,Cholesterol embolism,False,False,False,False,False
+137,diagnosis,C,Bacterial overgrowth,False,False,False,False,False
+138,explanation,E,Venous valve dysfunction,False,False,True,False,False
+139,diagnosis,C,Esophageal perforation,True,True,True,False,True
+140,diagnosis,C,Oligoarticular juvenile idiopathic arthritis,True,True,True,True,True
+141,cause,G,Bacterial infection from ethmoidal sinus,True,False,False,True,False
+142,diagnosis,B,ASCA positivity,False,False,False,False,False
+143,diagnosis,E,Sideroblastic anemia,True,True,True,True,True
+144,diagnosis,B,Paroxysmal stage,True,False,False,False,False
+145,diagnosis,E,Splenic abscess,True,False,False,False,True
+146,diagnosis,H,Borderline personality disorder,True,True,True,False,True
+147,cause,D,Reactivation of VZV due to immunodeficiency caused by chemotherapy,True,True,True,True,True
+148,test,C,Pleomorphic cells forming pseudopalisades,True,False,False,False,False
+149,diagnosis,B,Pituitary apoplexy,True,True,True,True,True
+150,other,A,Sickle cell disease (SCD),False,True,True,True,True
+151,diagnosis,G,Syringomyelia,True,True,True,True,True
+152,cause,E,Anti-glomerular basement membrane antibodies,True,True,True,True,True
+153,diagnosis,C,Crohn's disease,True,True,True,False,True
+154,other,B,Gallbladder cancer,True,False,True,False,False
+155,diagnosis,D,Small cell lung cancer,False,False,False,False,False
+156,cause,E,Detachment of the placenta,True,True,True,True,True
+157,diagnosis,G,Acute pancreatitis,True,True,True,False,True
+158,diagnosis,E,Pyogenic brain abscess,True,True,True,False,True
+159,cause,E,Vitamin K deficiency,True,True,True,True,True
+160,staging,D,Acute HIV infection,True,True,True,True,True
+161,diagnosis,A,Critical limb ischemia,True,True,True,True,True
+162,medication,A,Cocaine,False,False,False,False,True
+163,diagnosis,D,Chronic myelogenous leukemia,True,True,True,True,True
+164,diagnosis,A,Focal to bilateral tonic-clonic seizure,True,True,True,False,True
+165,cause,E,Hypertensive emergency,True,False,True,True,True
+166,diagnosis,A,Pyelonephritis,True,True,True,True,True
+167,cause,B,Glanzmann’s thrombasthenia,True,True,True,True,False
+168,diagnosis,A,Bronchoalveolar lavage,True,False,False,False,False
+169,cause,B,Hypertrophic cardiomyopathy,True,True,True,True,True
+170,diagnosis,B,"Chronic, non-bacterial prostatitis",True,True,True,False,True
+171,diagnosis,F,Angle-closure glaucoma,True,True,True,False,True
+172,diagnosis,E,Roseola infantum,True,True,True,True,True
+173,diagnosis,E,Intraventricular hemorrhage,True,True,True,False,True
+174,diagnosis,F,Chronic myeloid leukemia,True,True,True,True,True
+175,cause,F,Right anterior cerebral artery occlusion,True,True,True,True,True
+176,diagnosis,F,Meningioma,True,True,True,False,True
+177,diagnosis,C,Gallstone pancreatitis,False,False,False,False,False
+178,diagnosis,E,Vibrio parahaemolyticus infection,True,True,True,False,True
+179,diagnosis,A,Hodgkin lymphoma,True,True,True,False,True
+180,diagnosis,D,Boerhaave syndrome,True,True,True,False,True
+181,diagnosis,A,Separation anxiety disorder,True,True,True,False,True
+182,diagnosis,D,Schizoaffective disorder,True,True,False,True,False
+183,diagnosis,D,Malingering,True,True,True,False,True
+184,cause,D,Hypovolemic shock,True,True,True,True,True
+185,diagnosis,B,Vasovagal syncope,True,True,True,False,True
+186,diagnosis,D,Chronic lymphocytic leukemia,True,True,True,True,True
+187,findings,D,Chronic graft rejection,True,True,True,True,True
+188,description,A,Pancreatic pseudocyst,True,True,True,True,True
+189,cause,A,Acute hemolytic transfusion reaction,True,True,True,True,True
+190,diagnosis,B,Ischemic bowel disease,True,True,True,False,True
+191,diagnosis,C,Bronchiectasis,True,True,True,True,True
+192,cause,A,Asthma attack,True,True,True,True,True
+193,explanation,A,Acute myeloid leukemia,True,True,True,True,True
+194,diagnosis,E,Focal seizure,True,True,True,False,True
+195,cause,E,Sigmoid tumor,True,False,True,True,True
+196,diagnosis,C,Korsakoff's syndrome,True,True,True,False,True
+197,explanation,F,Retroperitoneal hemorrhage,True,True,True,True,True
+198,diagnosis,E,Toxic epidermal necrolysis (TEN),True,True,True,False,True
+199,diagnosis,D,Contrast esophagram,True,False,False,False,False
+200,diagnosis,D,Conus medullaris syndrome,False,False,False,False,False
+201,cause,A,Hypothyroidism,False,False,False,False,False
+202,diagnosis,A,Obstruction of the nasolacrimal duct,False,False,False,False,False
+203,injury,A,Anterior talofibular ligament (ATFL) sprain,True,True,True,True,True
+204,diagnosis,D,Volvulus,True,True,True,False,True
+205,diagnosis,H,Aromatase deficiency,True,True,True,True,True
+206,diagnosis,E,Hypertensive emergency,True,True,True,False,True
+207,diagnosis,A,Goodpasture syndrome,True,True,True,True,True
+208,diagnosis,G,Diverticulitis,True,True,True,False,True
+209,diagnosis,D,CMV retinitis,True,True,True,False,True
+210,diagnosis,E,Somatic symptom disorder,True,False,False,False,False
+211,cause,C,Senile calcific aortic stenosis,False,False,False,False,False
+212,diagnosis,C,Thrombotic thrombocytopenic purpura,True,True,True,True,True
+213,cause,B,Pleural effusion,True,True,True,True,False
+214,diagnosis,D,Wilms' tumor,True,True,True,False,True
+215,cause,E,Right main coronary artery occlusion,False,False,False,False,False
+216,diagnosis,B,Pancreatitis,True,True,True,False,True
+217,diagnosis,E,Granulomatosis with polyangiitis,True,True,True,False,True
+218,diagnosis,E,Intussusception,True,True,True,False,True
+219,diagnosis,D,Acute gout,True,True,True,True,True
+220,diagnosis,C,Posterior cruciate ligament injury,True,True,True,False,True
+221,diagnosis,D,Poor dietary intake,False,False,False,False,False
+222,findings,A,Acute myeloid leukemia,True,True,True,True,True
+223,diagnosis,E,Laryngeal carcinoma,True,True,True,False,True
+224,diagnosis,D,Bulimia nervosa,True,True,True,False,True
+225,diagnosis,C,Acute mesenteric ischemia,True,True,True,False,True
+226,diagnosis,B,Signet ring cells,True,False,False,False,False
+227,explanation,G,Somatic symptom disorder,True,False,True,True,True
+228,diagnosis,B,Acute myelogenous leukemia,False,False,False,False,False
+229,diagnosis,E,Progressive multifocal leukoencephalopathy,True,True,True,False,True
+230,diagnosis,A,Adjustment disorder,True,True,True,False,True
+231,cause,F,Deficient glucose-6-phosphate dehydrogenase,True,True,True,True,True
+232,explanation,B,Cholesteatoma,True,True,False,True,True
+233,diagnosis,C,α1-antitrypsin-deficiency,True,True,True,False,True
+234,diagnosis,C,Pancreatitis,True,True,True,False,True
+235,cause,E,Hemophilia A,True,True,True,True,True
+236,diagnosis,B,Rotator cuff tear,True,True,True,True,True
+237,diagnosis,B,Retinal detachment,True,True,True,False,True
+238,cause,B,Methemoglobinemia,True,True,True,True,True
+239,diagnosis,A,Aplastic anemia,True,True,True,False,True
+240,diagnosis,A,Alcoholic hallucinosis,True,True,True,False,True
+241,diagnosis,C,Bacillus cereus infection,True,False,False,False,True
+242,diagnosis,D,Unstable angina,True,True,True,False,True
+243,diagnosis,E,Pleural empyema,True,True,True,False,True
+244,prognosis,B,Left ventricular dilatation in a spherical pattern with poor systolic function,True,False,False,False,False
+245,diagnosis,E,Placenta previa,True,True,True,False,True
+246,diagnosis,C,Acute limb ischemia,True,True,True,False,True
+247,diagnosis,E,Thoracic aortic rupture,True,True,True,True,True
+248,diagnosis,A,Esophageal atresia,True,True,True,True,True
+249,diagnosis,E,Alopecia areata,True,True,True,False,True
+250,diagnosis,G,Oligoarticular juvenile idiopathic arthritis,True,True,True,False,True
+251,diagnosis,A,Babesiosis,True,True,True,False,True
+252,diagnosis,E,G6PD deficiency,True,True,True,True,True
+253,diagnosis,E,Hyperosmolar hyperglycemic state,True,True,True,False,True
+254,diagnosis,A,Acute coronary syndrome,False,False,False,False,False
+255,diagnosis,A,Malignant otitis externa,True,True,True,False,True
+256,diagnosis,A,Normal labor,False,False,False,False,False
+257,diagnosis,C,Acute decompensated heart failure,True,True,True,False,True
+258,diagnosis,B,Mid-gut Volvulus,True,True,True,False,True
+259,diagnosis,E,Gaucher disease type I,True,True,True,False,True
+260,other,B,Disseminated intravascular coagulation,True,True,True,True,True
+261,diagnosis,F,Meningioma,True,True,True,False,True
+262,diagnosis,A,Acute pericarditis,True,True,True,False,True
+263,diagnosis,D,Sexual masochism,True,True,True,False,True
+264,cause,D,Hepatorenal syndrome,True,True,False,True,True
+265,cause,D,Glucose 6-phosphatase,True,False,True,True,True
+266,diagnosis,B,Acute fatty liver of pregnancy,True,True,True,True,True
+267,cause,A,Viscous distension of gallbladder,False,False,False,False,False
+268,diagnosis,B,Neuroblastoma,True,False,False,False,False
+269,diagnosis,E,Medial collateral ligament injury,True,True,True,False,True
+270,diagnosis,A,Inferior wall myocardial infarction ,True,True,True,False,True
+271,complication,B,Medullary thyroid cancer,True,False,False,False,False
+272,diagnosis,A,Intrinsic apoptotic pathway,False,False,False,False,False
+273,cause,E,Spontaneous pneumothorax,True,True,True,True,True
+274,diagnosis,C,Interstitial lung disease,False,False,False,False,False
+275,diagnosis,D,Chronic Myelogenous Leukemia (CML),True,True,True,False,True
+276,diagnosis,C,Friable irregular masses attached to the valve,False,False,False,False,False
+277,description,A,Separation of the placenta from the decidua,True,False,False,False,False
+278,diagnosis,A,Interstitial pregnancy,True,True,True,False,True
+279,diagnosis,C,Pancoast tumor,True,True,True,False,True
+280,diagnosis,C,Legg-Calve-Perthes disease,False,False,False,False,False
+281,cause,B,Fat embolism,True,True,True,True,True
+282,diagnosis,D,Carotid sinus hypersensitivity,True,True,True,True,True
+283,diagnosis,C,Major blood group incompatibility,True,True,True,False,True
+284,findings,B,Small bowel ischemia,True,True,True,True,True
+285,diagnosis,F,Neuroblastoma,True,True,True,True,True
+286,diagnosis,D,Mesenteric artery occlusion,True,True,True,False,False
+287,cause,A,Charcot-Bouchard aneurysm rupture,True,True,True,True,True
+288,diagnosis,E,Hemophilia,True,True,True,True,True
+289,explanation,A,Eosinophilic granulomatosis with polyangiitis (EGPA),True,True,True,True,True
+290,diagnosis,C,Aortic dissection,True,True,True,True,True
+291,diagnosis,D,Necrotizing fasciitis,False,False,False,False,False
+292,cause,A,Acute tubular necrosis,True,True,True,True,True
+293,diagnosis,A,Abdominal aortic aneurysm,True,True,True,False,True
+294,diagnosis,E,Severe preeclampsia,True,True,True,False,True
+295,diagnosis,A,Chronic benign neutropenia,False,True,True,False,True
+296,explanation,G,Transfusion-associated circulatory overload,True,True,True,True,True
+297,diagnosis,D,Von Willebrand disease,False,False,False,False,False
+298,diagnosis,C,Schizoaffective disorder,True,False,False,False,True
+299,other,D,Frostbite,True,True,True,True,True
+300,diagnosis,C,Epidural hematoma,True,True,True,False,True
+301,diagnosis,C,Obsessive compulsive disorder (OCD),True,True,True,False,True
+302,diagnosis,E,Gastroesophageal reflux disease,True,True,True,False,True
+303,other,D,Prostate cancer,False,False,False,False,True
+304,explanation,F,Synthetic cathinone intoxication,False,False,False,False,False
+305,diagnosis,A,Hirschsprung’s disease,True,True,True,False,True
+306,diagnosis,D,Temporomandibular joint dysfunction,True,True,True,False,True
+307,organism,D,Human papillomavirus,True,False,False,True,False
+308,explanation,D,Toxic tubulointerstitial nephritis,True,False,True,True,True
+309,cause,B,Lymphoma,True,True,True,True,True
+310,diagnosis,B,Chronic lymphocytic leukemia,True,True,True,True,True
+311,diagnosis,B,Chorioamnionitis,True,True,True,True,True
+312,diagnosis,B,Cutaneous leishmaniasis,True,True,True,False,True
+313,diagnosis,C,Mediastinitis,True,False,False,False,True
+314,diagnosis,A,Hordeolum,True,True,True,True,True
+315,diagnosis,C,Sickle cell trait,True,False,False,False,False
+316,diagnosis,E,Acute hepatitis B,True,True,True,False,True
+317,cause,A,Prolonged QT interval,True,True,False,True,False
+318,cause,B,Closed angle glaucoma,True,True,True,True,True
+319,diagnosis,C,Guillain-Barré syndrome,True,True,True,False,True
+320,diagnosis,A,Liposarcoma,True,True,True,False,True
+321,imaging,B,Midshaft humerus,True,False,False,True,False
+322,other,C,Iron,True,True,True,True,True
+323,other,C,Acute pericarditis,True,True,True,True,True
+324,diagnosis,E,Toxic multinodular goiter,True,True,True,True,True
+325,diagnosis,D,Bronzing of the skin and elevated blood glucose levels,False,False,False,False,False
+326,cause,C,Anemia of chronic disease,True,True,True,True,True
+327,diagnosis,D,Papillary necrosis,True,True,True,True,True
+328,diagnosis,D,Acute pericarditis,True,True,True,False,True
+329,diagnosis,E,Conversion disorder,True,True,True,True,True
+330,cause,E,Acute tubular necrosis,True,True,True,True,True
+331,diagnosis,G,Chondrosarcoma,False,False,False,False,False
+332,diagnosis,C,Bipolar I disorder,True,True,True,False,True
+333,other,D,Acute tubular necrosis,True,True,True,True,True
+334,diagnosis,G,Pelvic inflammatory disease,True,True,True,False,True
+335,diagnosis,A,Bronchiectasis,True,True,True,False,True
+336,cause,C,Medication side effect,True,False,False,False,False
+337,diagnosis,E,Subacute granulomatous thyroiditis,True,False,True,False,True
+338,diagnosis,C,Pelvic inflammatory disease,True,True,True,False,True
+339,diagnosis,C,Somatization disorder,True,True,True,False,True
+340,diagnosis,C,Pyelonephritis,True,True,True,True,True
+341,cause,F,Enterococcus faecalis infection,True,False,True,True,True
+342,diagnosis,E,"Ludwig angina
+""",True,True,True,True,True
+343,other,C,Keloid scar formation,True,True,True,True,True
+344,diagnosis,C,Fulminant hepatic failure,True,True,True,True,True
+345,diagnosis,B,Dubin-Johnson syndrome,True,True,True,True,True
+346,diagnosis,D,Infectious mononucleosis,True,True,True,False,True
+347,diagnosis,D,Acute cholangitis,True,True,True,False,True
+348,cause,E,Osgood-Schlatter disease,True,True,True,True,True
+349,diagnosis,A,Acute leukemia,True,True,True,True,True
+350,test,D,Acute lymphoblastic leukemia,True,False,False,False,False
+351,explanation,C,Acute ventricular septal rupture complicating myocardial infarction,True,True,True,True,True
+352,explanation,A,Monoclonal protein overproduction,True,False,False,True,True
+353,cause,B,Central sleep apnea,True,True,True,True,True
+354,other,E,Corneal deposits,True,False,True,True,True
+355,diagnosis,D,Acute otitis media,True,True,True,False,True
+356,cause,G,Traction apophysitis of the tibial tubercle,True,True,True,True,True
+357,cause,D,Subarachnoid Hemorrhage,True,True,True,True,True
+358,mechanism,B,Sick euthyroid syndrome,True,True,False,True,True
+359,diagnosis,A,Prominent vertical nystagmus,True,False,False,False,False
+360,imaging,E,Spleen,True,True,True,True,True
+361,organism,A,Coccidioides species,True,True,True,True,True
+362,cause,D,Reperfusion associated edema,False,False,False,False,False
+363,cause,D,Acute respiratory distress syndrome,True,True,True,True,True
+364,prognosis,A,Acute lymphoblastic leukemia,False,False,False,False,False
+365,diagnosis,B,CNS lymphoma,True,True,True,False,True
+366,description,A,Pulmonary embolism,False,False,False,False,False
+367,explanation,B,Hydrochlorothiazide,False,False,False,False,False
+368,cause,A,Inflammation and edema,False,False,False,False,False
+369,diagnosis,B,Dacryocystitis,False,False,False,False,False
+370,diagnosis,E,Lung cancer,False,False,False,False,False
+371,cause,A,Escherichia coli infection,True,True,True,True,True
+372,diagnosis,C,Syringomyelia,True,True,True,False,True
+373,diagnosis,A,Abruptio placentae,True,True,True,False,True
+374,explanation,G,Papillary muscle rupture,True,True,True,True,True
+375,diagnosis,A,Abnormal cilia motility,False,True,False,False,False
+376,diagnosis,D,Placental abruption,True,True,True,False,True
+377,diagnosis,B,Bicuspid aortic valve,True,False,False,False,False
+378,imaging,D,Pericarditis,True,True,True,True,True
+379,diagnosis,F,Epidural hematoma,True,True,True,False,True
+380,cause,B,Autoimmune adrenalitis,False,False,False,True,False
+381,diagnosis,A,Roseola,True,True,True,True,True
+382,diagnosis,C,Gambling disorder,True,True,True,True,True
+383,imaging,E,Figure E,False,False,False,False,False
+384,cause,A,Canalithiasis,True,True,True,True,True
+385,diagnosis,D,Hemophilia A,True,True,True,False,True
+386,explanation,D,Pulmonary fibrosis,True,True,True,True,True
+387,diagnosis,A,Aortic dissection,True,True,True,False,True
+388,diagnosis,H,Narcissistic personality disorder,True,True,False,False,True
+389,diagnosis,B,Pneumonia,True,True,True,False,True
+390,diagnosis,A,Benign tumor of the thymus,True,True,True,False,True
+391,diagnosis,B,Henoch-Schonlein purpura,True,True,True,True,True
+392,explanation,I,Mood stabilizer intake,False,False,False,False,False
+393,diagnosis,C,Pulmonary contusion,True,True,True,False,True
+394,diagnosis,A,Transient global amnesia,True,True,True,True,True
+395,diagnosis,B,Liver abscess,False,False,False,False,False
+396,other,D,Multiple myeloma,False,True,False,True,True
+397,other,D,Missed dose of venlafaxine,False,False,False,False,False
+398,cause,B,ß-cell hyperplasia,False,False,False,False,True
+399,diagnosis,C,Cavernous sinus thrombosis,True,True,True,True,True
+400,diagnosis,A,Femoropopliteal artery stenosis,False,True,True,False,True
+401,diagnosis,D,Hemolytic uremic syndrome,True,True,True,True,True
+402,cause,D,Papillary muscle rupture,False,False,False,False,False
+403,diagnosis,C,Schizoaffective disorder,True,True,True,False,True
+404,cause,D,Carbon monoxide poisoning,True,True,True,True,True
+405,diagnosis,C,Brown-Sequard syndrome,True,True,True,False,True
+406,diagnosis,C,Rubella,True,True,True,False,True
+407,other,E,Chronic obstructive bronchitis,True,False,False,False,False
+408,diagnosis,E,Placenta abruption,True,True,True,False,True
+409,other,C,Tension pneumothorax,False,False,False,False,False
+410,other,D,Infection of the umbilical stump,False,True,False,False,False
+411,imaging,C,Mucosal arteriovenous malformations,False,False,False,False,False
+412,diagnosis,E,Adenocarcinoma,True,True,True,False,True
+413,cause,A,Leydig cell tumor,True,True,False,True,True
+414,cause,E,Heroin overdose,False,False,True,False,False
+415,diagnosis,D,Local anal trauma,False,False,False,False,False
+416,cause,A,Acute calculous cholecystitis,True,True,True,True,True
+417,diagnosis,C,Placenta previa,True,True,True,False,True
+418,diagnosis,A,Central retinal artery occulsion,True,True,True,False,True
+419,cause,E,Toxin ingestion from non-spore-forming organism,True,True,True,True,False
+420,diagnosis,B,Emphysematous cholecystitis,True,True,True,False,True
+421,diagnosis,A,The most likely diagnosis is cauda equina syndrome and steroids should be started prior to MRI,True,True,True,False,False
+422,diagnosis,A,Factitious thyrotoxicosis,False,False,False,False,False
+423,diagnosis,D,Posttraumatic stress disorder,True,True,True,False,True
+424,cause,E,Subdural hematoma,True,True,True,False,True
+425,diagnosis,E,Antibody binding of leukocytes,False,False,False,False,False
+426,diagnosis,C,Prepatellar bursitis,True,True,True,False,True
+427,diagnosis,H,"Eosinophilic granulomatosis with polyangiitis
+""",True,True,True,True,True
+428,diagnosis,G,Leukocytoclastic vasculitis,False,False,False,False,False
+429,diagnosis,D,Thrombotic thrombocytopenic purpura,True,True,True,True,True
+430,diagnosis,D,Progressive multifocal encephalopathy (PML),True,True,True,True,True
+431,diagnosis,D,Acute bacterial parotitis,True,True,True,False,True
+432,diagnosis,C,Bronchial rupture,True,False,True,False,True
+433,description,F,Adenocarcinoma of pancreas,True,False,False,False,False
+434,diagnosis,D,Dermatomyositis,True,True,True,False,True
+435,diagnosis,A,Aplastic crisis,True,False,True,False,True
+436,cause,D,Acute exacerbation of chronic obstructive pulmonary disease,True,False,True,True,True
+437,diagnosis,D,Bartonella henselae infection,True,True,True,False,True
+438,cause,A,α1-antitrypsin (AAT) deficiency,True,True,False,True,False
+439,diagnosis,G,Anti-HEV IgM,True,False,False,False,False
+440,diagnosis,B,Gitelman’s syndrome,True,True,False,False,True
+441,diagnosis,B,Insulinoma,True,True,True,False,True
+442,other,C,Clear-cell carcinoma,True,False,True,False,True
+443,diagnosis,A,Acute lymphoblastic leukemia,True,True,True,True,True
+444,other,B,Subdural hematoma,True,True,True,True,True
+445,explanation,B,Conversion disorder,True,True,True,True,True
+446,diagnosis,B,Anterior spinal artery syndrome,True,True,True,True,True
+447,description,A,Malignancy,False,False,False,False,False
+448,diagnosis,A,Pericardial effusion,False,False,False,False,False
+449,diagnosis,E,"Glucose: ↓, Proteins: ↑, Cells: 90% neutrophils, Lactic Acid (mmol/l): 4.5",True,True,False,False,False
+450,diagnosis,C,Langerhans cell histiocytosis,True,True,True,False,True
+451,diagnosis,E,Talus fracture,False,False,False,False,False
+452,diagnosis,B,Acute bacterial rhinosinusitis,True,True,True,True,True
+453,diagnosis,E,Supracondular humerus fracture,True,True,True,True,True
+454,diagnosis,A,Myxedema coma,True,True,True,False,True
+455,diagnosis,A,Amebiasis,True,True,True,False,True
+456,other,D,Disseminated gonococcal infection,True,True,True,True,True
+457,diagnosis,E,Abruptio placentae,True,True,True,False,True
+458,diagnosis,B,Spondylolisthesis,True,True,True,False,True
+459,diagnosis,E,Mallory-Weiss tear,True,True,True,False,True
+460,diagnosis,C,Amyotrophic lateral sclerosis,True,True,True,True,True
+461,diagnosis,E,Retinal detachment,True,True,True,True,True
+462,diagnosis,B,Hypovolemic shock,True,True,True,True,True
+463,organism,I,Streptococcus pneumoniae,True,False,True,True,True
+464,other,A,Complication from femoral artery access,False,True,True,True,True
+465,cause,A,Acute rheumatic fever,True,True,True,True,True
+466,other,D,Disseminated intravascular coagulation,True,True,True,True,True
+467,cause,A,Cardioembolic stroke,True,True,True,True,True
+468,diagnosis,H,Neuroleptic malignant syndrome,True,True,True,True,True
+469,description,A,May spread to nodes but rarely with distant metastases,False,False,False,False,False
+470,diagnosis,A,Cyclic vomiting syndrome,True,True,True,False,True
+471,diagnosis,E,Test for anticardiolipin antibodies,True,False,False,False,False
+472,syndrome,D,Borderline,True,True,True,True,True
+473,diagnosis,D,Posterior hip dislocation,True,True,True,False,True
+474,cause,C,Left atrium enlargement,True,True,True,True,True
+475,diagnosis,G,Vitreous hemorrhage,True,True,True,False,True
+476,other,D,Right-sided heart failure,True,False,False,False,False
+477,diagnosis,F,Placenta accreta,True,True,True,False,True
+478,diagnosis,C,Cyanide poisoning,False,True,False,False,False
+479,cause,C,Medication overdose,False,False,False,False,False
+480,diagnosis,D,Disseminated gonococcal infection,True,True,True,False,True
+481,diagnosis,B,Complete abortion,True,True,True,False,True
+482,diagnosis,D,L2-S5 nerve dysfunction,False,False,False,False,False
+483,diagnosis,E,Akathisia,True,True,True,True,True
+484,diagnosis,A,Cerebellar hemorrhage,True,True,True,False,True
+485,diagnosis,D,Testicular torsion,True,True,True,False,True
+486,other,D,Aspirin,True,False,False,False,False
+487,diagnosis,B,Situational syncope,True,True,True,False,False
+488,diagnosis,E,Posterior cerebral artery stroke,True,True,True,True,True
+489,test,G,Placental thrombosis,False,False,False,False,False
+490,other,A,Fibrinoid necrosis,True,False,False,False,False
+491,diagnosis,C,Normal c-peptide levels,False,False,False,False,False
+492,diagnosis,C,Korsakoff amnesia,True,True,True,False,False
+493,other,D,Meckel's diverticulum,True,True,True,True,True
+494,diagnosis,G,Schizophreniform disorder,True,True,True,False,True
+495,cause,B,Acute sinusitis,True,True,True,False,True
+496,diagnosis,B,Idiopathic pulmonary fibrosis,True,True,True,True,True
+497,diagnosis,C,Perforated viscus,True,True,True,False,True
+498,diagnosis,C,Osteogenesis imperfecta,False,True,True,False,False
+499,diagnosis,A,Pancreatic abscess,True,True,True,False,True
+500,diagnosis,C,Staphylococcus infectious arthritis,True,True,True,True,True
+501,other,B,Multiple myeloma,True,False,True,False,False
+502,explanation,B,Antibodies to heparin-platelet factor 4 complex,False,False,True,True,False
+503,other,B,Hypertrophic pyloric stenosis,True,True,True,True,True
+504,diagnosis,A,Post-traumatic stress disorder,True,True,True,False,True
+505,explanation,D,Exposure to excessive androgenic steroids during gestation,True,True,True,True,True
+506,diagnosis,B,Major depressive disorder,True,True,True,False,True
+507,cause,D,Paget disease of the bone,True,True,True,True,True
+508,diagnosis,A,Acute myeloid leukemia,True,True,True,True,True
+509,diagnosis,A,Actinic keratosis,True,True,True,False,True
+510,diagnosis,D,Uterine rupture,True,True,True,True,True
+511,findings,D,Hypertrophic cardiomyopathy,True,True,True,True,True
+512,cause,C,Cervical trauma,True,True,True,False,True
+513,diagnosis,B,Primary sclerosing cholangitis,True,True,True,False,True
+514,diagnosis,E,Gilbert’s syndrome,True,True,True,False,True
+515,diagnosis,C,Toxic megacolon,True,True,True,False,True
+516,diagnosis,D,Nightmare disorder,True,True,True,False,True
+517,other,A,Constrictive pericarditis,False,False,False,False,False
+518,cause,D,Pancreatitis,False,False,False,False,False
+519,diagnosis,F,Marfan syndrome,True,True,True,False,True
+520,cause,B,Hyperparathyroidism,True,True,True,True,True
+521,diagnosis,A,Serous pericarditis,True,True,True,False,False
+522,complication,C,Post-herpetic neuralgia,True,True,True,True,True
+523,other,E,Opioid overdose,True,True,True,True,True
+524,cause,C,Staphylococcus aureus,True,True,True,True,True
+525,diagnosis,D,Intermetatarsal neuroma,True,True,True,False,True
+526,syndrome,C,Immune thrombocytopenic purpura (ITP),True,True,True,True,True
+527,other,A,Transmural infarction,True,False,False,False,False
+528,diagnosis,B,Chronic hepatitis B infection,True,False,False,False,False
+529,laboratory,E,Progression to fulminant hepatitis,False,False,False,False,False
+530,diagnosis,E,Generalized anxiety disorder,True,True,True,False,True
+531,cause,C,Lymphoid hyperplasia,True,False,False,False,False
+532,cause,D,Acute acalculous cholecystitis,True,True,True,True,True
+533,other,D,Absence of CD18 molecule on the surface of leukocytes,True,False,False,True,True
+534,diagnosis,C,Scleroderma,True,True,True,False,True
+535,diagnosis,D,Pes anserine bursitis,True,True,True,False,True
+536,cause,E,Acute papillary necrosis,False,False,False,False,False
+537,cause,B,Non-cardiogenic pulmonary edema,True,False,True,True,False
+538,diagnosis,E,Myelodysplasia,False,False,False,False,False
+539,cause,A,Child abuse,True,True,True,True,True
+540,diagnosis,D,Hemolytic anemia,True,True,True,False,True
+541,cause,H,Avascular necrosis,True,True,True,True,True
+542,diagnosis,H,Central retinal artery occlusion,True,True,True,True,True
+543,diagnosis,D,Surreptitious insulin use,True,False,False,False,False
+544,diagnosis,E,Dissociative amnesia with dissociative fugue,True,True,True,True,True
+545,diagnosis,D,Hyaline arteriosclerosis,False,False,False,False,False
+546,cause,A,Acute pancreatitis,False,False,False,False,False
+547,cause,E,Proteus mirabilis,True,True,True,True,True
+548,other,E,Syndrome of inappropriate antidiuretic hormone,True,False,False,False,False
+549,diagnosis,D,Liver hematoma,True,False,True,False,False
+550,explanation,B,Deficiency of C1 esterase inhibitor,False,False,False,False,False
+551,diagnosis,B,Bronchiolitis,True,True,True,False,True
+552,diagnosis,E,Fat-soluble vitamin overuse,False,False,False,False,False
+553,diagnosis,B,Acetaminophen ingestion,True,True,True,False,True
+554,cause,D,Ruptured abdominal aortic aneurysm,True,True,True,True,True
+555,cause,J,Infarct of the left posterior cerebral artery,True,True,True,True,True
+556,diagnosis,A,Acute rheumatic fever,True,True,True,True,False
+557,diagnosis,C,Midcycle pain,False,True,True,False,False
+558,diagnosis,C,Pelvic inflammatory disease,True,True,True,False,True
+559,cause,C,Syndrome of inappropriate antidiuretic hormone,True,True,True,True,True
+560,diagnosis,D,Schizoid personality disorder,True,True,True,False,True
+561,injury,D,Medial meniscus tear,True,True,True,True,True
+562,diagnosis,B,Normal bereavement,True,True,True,False,True
+563,diagnosis,A,Allergic interstitial nephritis,True,True,True,False,True
+564,diagnosis,E,Analgesic nephropathy,True,True,True,False,True
+565,diagnosis,C,Alpha-1 antitrypsin deficiency,True,True,True,False,False
+566,diagnosis,B,Scalded skin syndrome,True,True,True,True,True
+567,diagnosis,B,Caustic ingestion,False,False,False,False,False
+568,diagnosis,C,Adenocarcinoma of the gallbladder,False,False,False,False,False
+569,diagnosis,D,Medial meniscal tear,True,False,False,False,True
+570,other,B,Deep-partial thickness (3rd degree),False,False,False,False,False
+571,diagnosis,B,Cephalohematoma,True,True,True,False,True
+572,explanation,C,Malingering,True,True,True,True,True
+573,cause,B,Cystic fibrosis,False,False,False,False,True
+574,diagnosis,A,Orbital cellulitis,False,False,False,False,True
+575,diagnosis,H,Conversion disorder,True,True,True,False,True
+576,explanation,A,Pituitary infarction,True,True,True,True,True
+577,explanation,D,Adrenal medullary mass,True,True,True,True,False
+578,cause,D,Pituitary infarction,True,True,True,True,True
+579,diagnosis,E,Situational syncope,True,False,True,False,True
+580,cause,B,Chronic gastritis,False,False,False,False,False
+581,findings,C,CSF India ink stain shows encapsulated yeast cells,True,False,False,False,False
+582,description,B,Precursor T-cell acute lymphoblastic leukemia/lymphoma,True,True,True,True,True
+583,other,A,Absence seizures,True,True,False,False,False
+584,explanation,B,Cholesteatoma,False,True,True,False,False
+585,diagnosis,B,Atheroembolism,True,True,True,True,True
+586,other,B,Multiple myeloma,False,True,True,True,True
+587,diagnosis,C,CT angiography,False,False,False,False,False
+588,other,E,Fulminant liver failure,True,False,False,False,False
+589,diagnosis,B,Multiple myeloma,True,True,True,True,True
+590,other,B,Carcinoid syndrome,False,False,False,False,False
+591,cause,B,Cirrhosis,False,False,False,False,False
+592,diagnosis,B,Labyrinthitis,True,True,True,False,True
+593,diagnosis,B,Bipolar II disorder,True,True,True,False,True
+594,diagnosis,D,Progressive multifocal leukoencephalopathy,True,True,True,True,True
+595,diagnosis,A,Bone marrow biopsy,True,False,False,False,False
+596,explanation,B,Deficiency of protein C,False,False,False,False,False
+597,diagnosis,E,Rotator cuff injury,True,True,True,False,True
+598,diagnosis,D,Stress fracture,True,True,True,False,True
+599,diagnosis,C,Dejerine syndrome,True,False,True,True,True
+600,diagnosis,I,Trachoma conjunctivitis,True,True,True,False,True
+601,diagnosis,G,Appendicitis,True,True,True,False,True
+602,diagnosis,B,Toxic Megacolon,True,True,True,False,True
+603,diagnosis,D,Rhabdomyolysis,True,True,False,False,True
+604,cause,C,Cortical laminar necrosis,False,False,False,True,False
+605,explanation,D,Occlusion of the ophthalmic artery by embolus,False,False,False,False,False
+606,diagnosis,C,Acute mesenteric ischemia,True,True,True,True,True
+607,diagnosis,C,Cluster headache,True,True,True,False,True
+608,diagnosis,A,Pancreatic ductal injury,False,False,True,False,True
+609,other,E,Rhomboid crystals on arthrocentesis,False,False,False,False,False
+610,diagnosis,D,Bone marrow biopsy,True,False,False,False,False
+611,diagnosis,C,Depersonalization disorder,True,True,True,False,True
+612,diagnosis,B,Hypertrophic cardiomyopathy,True,True,True,True,True
+613,diagnosis,C,Ecthyma gangrenosum,False,False,False,False,False
+614,diagnosis,D,Scaphoid fracture,True,True,True,False,True
+615,imaging,D,Accessory pathway from atria to ventricles,True,False,False,False,False
+616,diagnosis,B,Chronic obstructive pulmonary disease,False,False,False,False,False
+617,diagnosis,G,"Treponemal test
+""",False,False,False,False,False
+618,diagnosis,C,Post-traumatic stress disorder (PTSD),True,True,True,False,True
+619,diagnosis,B,Preeclampsia with severe features,True,True,True,True,True
+620,cause,D,Pneumothorax,True,True,True,True,True
+621,cause,E,Flail chest,True,True,True,True,True
+622,findings,A,Soap bubble lesions in the basal ganglia,True,False,False,False,False
+623,diagnosis,E,Figure E,False,False,False,False,False
+624,diagnosis,D,Submandibular infection,False,False,False,False,False
+625,diagnosis,A,Benign paroxysmal positional vertigo,True,True,True,False,True
+626,cause,F,Dressler syndrome,True,True,True,True,True
+627,diagnosis,I,"Kawasaki disease
+""",True,True,True,False,True
+628,diagnosis,B,Linear IgG along the basement membrane,False,False,False,False,False
+629,cause,E,Lung cancer,True,False,False,True,True
+630,cause,B,Benign prostatic enlargement,True,True,True,True,True
+631,diagnosis,D,Squamous cell carcinoma,True,True,True,False,True
+632,mechanism,E,Rupture of the communicating branches of the cerebral arteries,False,False,False,True,True
+633,complication,D,Ventricular aneurysm,False,False,False,False,False
+634,cause,C,Cerebral atrophy,False,False,False,False,False
+635,diagnosis,C,Desmoglein destruction,False,False,False,False,False
+636,diagnosis,A,Acute stress disorder,True,True,True,True,True
+637,diagnosis,A,Chancroid,True,True,True,False,True
+638,diagnosis,E,Primary sclerosing cholangitis,True,False,False,False,False
+639,diagnosis,D,Porphyria cutanea tarda,False,False,False,False,False
+640,diagnosis,H,Chlamydia infection,True,True,True,False,True
+641,cause,F,Seizure,True,True,True,True,True
+642,diagnosis,D,Corpus luteum cyst,True,False,True,False,True
+643,diagnosis,B,Acalculous cholecystitis,True,True,False,False,True
+644,diagnosis,C,Delirium tremens,True,False,False,False,False
+645,diagnosis,C,Hemophilia A,True,True,True,True,True
+646,diagnosis,B,Microscopic polyangiitis,False,False,False,False,False
+647,diagnosis,A,Cholestasis of pregnancy,True,True,True,False,True
+648,other,C,First-degree AV heart block,False,False,False,False,False
+649,diagnosis,C,Fat embolism,True,True,True,True,True
+650,diagnosis,G,Benign prostatic hyperplasia,True,True,True,False,True
+651,cause,A,Chlamydia trachomatis,True,True,True,True,True
+652,diagnosis,H,Femoral artery aneurysm,True,False,False,False,False
+653,diagnosis,C,Direct Coombs test,True,False,False,False,False
+654,diagnosis,G,Pyelonephritis,True,True,True,False,True
+655,explanation,A,Cocaine use,True,True,True,True,True
+656,cause,A,Cholelithiasis,False,False,False,False,False
+657,cause,A,Disseminated intravascular coagulation,True,True,True,True,True
+658,diagnosis,E,Sporotrichosis,True,False,True,False,True
+659,diagnosis,A,Keratoacanthoma,True,True,True,False,True
+660,diagnosis,B,Foreign body obstruction,True,True,True,False,True
+661,diagnosis,E,Vertebral fracture,False,False,False,False,False
+662,diagnosis,D,Spontaneous pneumothorax,True,True,True,False,True
+663,cause,B,Overdose of heroin,True,True,True,True,True
+664,diagnosis,J,Schizophrenia,True,True,True,False,True
+665,cause,C,Central retinal vein occlusion,False,False,False,False,False
+666,diagnosis,A,Factitious disorder,True,True,True,False,True
+667,cause,E,Ulnar neuropathy,True,True,True,True,True
+668,diagnosis,D,Steven-Johnson syndrome,True,True,True,False,True
+669,diagnosis,D,Persistent depressive disorder,True,True,True,False,True
+670,cause,B,Septic emboli,True,True,True,True,True
+671,diagnosis,C,Sigmoid volvulus,True,True,True,False,True
+672,diagnosis,A,Acute myeloblastic leukemia,True,True,True,True,True
+673,findings,D,Traumatic aortic disruption,True,True,True,True,True
+674,diagnosis,B,Hemoglobin electrophoresis,True,False,False,False,False
+675,cause,D,Escherichia coli,True,True,True,True,True
+676,diagnosis,C,Gallstone pancreatitis,False,False,False,False,False
+677,syndrome,E,Somatic symptom disorder,True,True,True,True,True
+678,cause,C,Choledocholithiasis,True,True,True,True,True
+679,description,E,Postpartum psychosis,True,True,True,True,True
+680,cause,D,Acetaminophen overdose,True,True,True,True,True
+681,cause,C,Oligozoospermia,False,False,False,False,False
+682,diagnosis,D,Metastasis,True,True,True,False,True
+683,diagnosis,B,Mallory-Weiss tear,True,True,True,True,True
+684,diagnosis,E,Threatened abortion,False,False,False,False,False
+685,injury,C,Radial nerve,True,True,True,True,True
+686,diagnosis,A,Dysarthria-clumsy hand syndrome,True,False,False,False,False
+687,diagnosis,E,Psoriasis,True,True,True,True,True
+688,diagnosis,D,Rheumatoid arthritis,True,True,False,False,False
+689,diagnosis,A,No additional information is required,False,False,False,False,False
+690,description,F,Self-injurious behavior,True,False,False,False,False
+691,diagnosis,C,Primary adrenal insufficiency,True,True,True,True,True
+692,diagnosis,C,Cholangiocarcinoma,False,False,False,False,False
+693,cause,A,Hypovolemia,True,True,True,True,True
+694,diagnosis,C,Pulmonary embolism,True,True,True,True,True
+695,other,E,Myocardial infarction,True,True,True,True,True
+696,cause,A,Furosemide,False,False,False,False,False
+697,explanation,B,Central catheter-related bacteremia,True,True,True,True,True
+698,explanation,B,Salicylate toxicity,True,True,True,True,True
+699,diagnosis,F,Tardive dyskinesia,True,True,True,False,True
+700,explanation,D,Mutation of the porphobilinogen deaminase enzyme,True,False,True,True,True
+701,diagnosis,B,Munchausen syndrome by proxy,True,True,True,False,True
+702,cause,B,Cholesterol embolization,True,True,True,True,True
+703,diagnosis,E,Wernicke aphasia,True,True,True,False,True
+704,diagnosis,E,Primary dysmenorrhea,True,False,True,False,True
+705,diagnosis,D,Parvovirus B19 infection,False,False,False,False,False
+706,cause,A,Echinococcus granulosus,True,True,True,True,True
+707,cause,C,Cranial neuropathy,False,False,False,False,False
+708,cause,C,Negatively birefringent crystals in the joint,True,False,False,False,True
+709,diagnosis,A,Iliotibial band syndrome,True,True,True,True,True
+710,diagnosis,D,Osteomyelitis,True,True,True,False,True
+711,diagnosis,E,Vascular dementia,True,True,True,True,True
+712,diagnosis,E,Atrial myxoma,True,True,True,False,True
+713,explanation,C,Plague,True,True,True,True,True
+714,diagnosis,B,Classical Hodgkin’s lymphoma (HL),True,True,False,False,False
+715,cause,E,Acute inferior myocardial infarction,False,False,False,False,True
+716,cause,E,Crystalline arthritis,False,False,True,False,False
+717,diagnosis,C,Chronic lymphocytic leukemia,True,True,True,False,True
+718,diagnosis,A,Giant cell tumor of bone,False,False,True,False,False
+719,other,C,Schizoaffective disorder,True,True,True,True,True
+720,diagnosis,E,Sarcoidosis,True,True,True,False,True
+721,diagnosis,E,Neuroleptic malignant syndrome,True,True,True,True,True
+722,diagnosis,B,Heavy metal exposure,False,True,True,False,True
+723,imaging,B,Dehydration,True,False,False,False,False
+724,diagnosis,C,Chronic pancreatitis,True,True,True,False,True
+725,diagnosis,C,Panic disorder,True,True,True,False,True
+726,diagnosis,E,Human herpes virus 8,False,False,False,False,False
+727,diagnosis,B,Aortic transection,False,False,False,False,False
+728,diagnosis,C,Hypertensive emergency,False,False,False,False,False
+729,diagnosis,A,Toxoplasmosis,True,True,True,False,True
+730,diagnosis,B,Choledocholithiasis,False,False,False,False,False
+731,cause,B,Medication-induced symptoms,True,False,False,False,False
+732,diagnosis,E,Vestibular neuritis,True,True,True,False,True
+733,cause,D,Escherichia coli infection,True,True,True,True,True
+734,diagnosis,C,Acute mesenteric ischemia,True,True,True,True,True
+735,cause,A,Enzyme deficiency in red blood cells,True,False,False,False,True
+736,diagnosis,C,Chronic kidney failure,True,True,True,True,True
+737,other,E,Convalescent (window) period,True,False,False,False,False
+738,diagnosis,E,Cerebral toxoplasmosis,True,True,True,False,True
+739,diagnosis,C,Panic disorder,True,True,True,True,True
+740,diagnosis,B,Esophagitis,True,True,True,False,True
+741,diagnosis,E,Pill esophagitis,True,True,True,False,True
+742,diagnosis,A,Acalculous cholecystitis,True,True,True,False,True
+743,cause,A,Ciguatoxin,True,True,True,True,True
+744,diagnosis,C,Creutzfeldt-Jakob disease,True,True,True,True,True
+745,diagnosis,D,Roseola infantum,True,True,True,False,True
+746,description,E,Osteosarcoma,True,False,False,False,False
+747,diagnosis,D,Patellofemoral pain syndrome,True,True,True,False,True
+748,diagnosis,B,Use of oral contraceptives (OCPs) for birth control,True,False,False,False,False
+749,other,A,Epistaxis,True,False,False,False,False
+750,cause,F,"Intracerebral hemorrhage
+""",True,True,True,True,True
+751,diagnosis,E,Keratoacanthoma,True,True,True,False,True
+752,diagnosis,A,Acute pancreatitis,True,False,True,False,False
+753,other,B,Anti-dsDNA antibodies,True,False,False,False,False
+754,other,C,Dissociative fugue disorder,True,True,True,True,True
+755,syndrome,D,Herniation of mucosa and submucosa through the muscular layer of the colon,True,False,False,False,False
+756,diagnosis,F,Leukocytoclastic vasculitis,False,False,False,False,False
+757,diagnosis,C,Toxic shock syndrome,True,True,True,True,True
+758,diagnosis,H,Necrotizing enterocolitis,True,True,True,True,True
+759,cause,A,Bartonella henselae,False,True,False,False,False
+760,diagnosis,E,Waterhouse-Friderichsen syndrome,True,True,True,True,True
+761,diagnosis,C,Borderline personality disorder,True,True,True,False,False
+762,explanation,B,Attachment of the placenta to the lower placental segment over the internal os,True,False,True,True,True
+763,cause,E,Thrombotic stroke at the anterior inferior cerebellar artery (AICA),True,True,True,True,True
+764,diagnosis,E,Positive osmotic fragility test,False,False,False,False,False
+765,diagnosis,B,Marijuana use,True,False,False,False,False
+766,diagnosis,B,Fasting serum gastrin level,True,False,False,False,False
+767,diagnosis,B,Antiphospholipid syndrome,True,True,True,False,False
+768,description,E,Diffuse thickening of glomerular capillaries and basement membrane,False,False,False,False,False
+769,diagnosis,D,Tarsal tunnel syndrome,True,True,True,False,True
+770,diagnosis,C,Osteosarcoma,True,True,True,False,True
+771,cause,E,Diphyllobothrium latum,True,True,True,True,True
+772,description,B,Cardiogenic,True,True,True,True,False
+773,diagnosis,C,Herpetic whitlow,True,True,True,False,True
+774,diagnosis,E,Schizophreniform disorder,True,True,True,False,True
+775,other,D,Kidney laceration,True,True,True,True,True
+776,findings,B,Mucin-producing glands with squamous components,False,False,False,False,False
+777,diagnosis,C,Dejerine-Roussy syndrome,True,True,True,True,True
+778,explanation,E,Malignant proliferation of trophoblastic tissue,True,True,False,True,True
+779,diagnosis,E,Microvascular occlusion,False,False,True,False,False
+780,diagnosis,E,Vascular dementia,False,False,False,False,False
+781,cause,C,Melanoma,True,False,True,False,True
+782,diagnosis,A,Adhesions,False,False,False,False,True
+783,diagnosis,A,Hemophilia A,True,True,True,False,True
+784,diagnosis,E,Testicular torsion,True,True,True,False,True
+785,diagnosis,D,Paget disease of the bone,True,True,True,False,True
+786,diagnosis,A,Exertional heat stroke,True,True,True,False,True
+787,diagnosis,B,Infection posterior to the orbital septum,True,False,False,False,False
+788,explanation,A,CAG triplet expansion on chromosome 4,True,False,False,False,True
+789,diagnosis,A,Major depressive disorder,True,True,True,False,True
+790,diagnosis,A,Aplastic anemia,True,True,True,True,True
+791,diagnosis,D,Acute pericarditis,True,True,True,False,True
+792,cause,A,Diabetes mellitus,False,True,True,False,False
+793,findings,A,Duration of symptoms,True,False,False,False,False
+794,diagnosis,A,Staphylococcal scalded skin syndrome,True,True,True,False,True
+795,cause,A,Minimal change disease,True,True,True,True,True
+796,explanation,C,Defective type 1 collagen gene,True,False,True,False,False
+797,explanation,C,Salicylate intoxication,True,False,False,False,True
+798,diagnosis,E,Tracheobronchial rupture,True,True,True,False,True
+799,diagnosis,C,Paroxysmal atrial fibrillation,True,True,False,False,True
+800,cause,E,Rupture of the posteromedial papillary muscle of the left ventricle,True,True,True,True,True
+801,diagnosis,C,Zollinger-Ellison syndrome,True,True,True,True,True
+802,diagnosis,B,Crohn’s disease,False,True,False,False,True
+803,diagnosis,A,Bartholin gland cyst,True,True,True,False,True
+804,cause,C,Profuse diarrhea,False,False,False,False,False
+805,diagnosis,D,Takotsubo cardiomyopathy,True,True,True,False,True
+806,findings,B,HbS on hemoglobin electrophoresis,True,False,False,False,False
+807,diagnosis,E,Lipohyalinosis,False,False,False,False,False
+808,diagnosis,D,Inflammatory bowel syndrome,False,False,False,False,False
+809,diagnosis,B,Sarcoidosis,True,True,True,False,True
+810,diagnosis,D,Medulloblastoma,True,True,True,True,True
+811,diagnosis,B,Adhesive capsulitis,True,True,True,False,True
+812,diagnosis,C,Central retinal artery occlusion,True,True,True,False,True
+813,diagnosis,E,Hidradenitis suppurativa,True,True,True,False,True
+814,diagnosis,D,Actinic keratosis,True,False,True,False,True
+815,diagnosis,D,Spinal stenosis,True,True,True,False,True
+816,diagnosis,C,Conversion disorder,True,True,True,True,True
+817,other,D,Pneumatosis intestinalis on an abdominal X-ray,True,False,True,True,True
+818,diagnosis,B,Syringomyelia,True,True,True,True,True
+819,diagnosis,B,Lunate dislocation,False,True,True,False,True
+820,diagnosis,B,Atrial septal defect,True,True,True,False,True
+821,explanation,A,Central retinal artery occlusion,True,True,True,True,True
+822,diagnosis,F,Bronchiectasis,True,True,True,False,True
+823,explanation,B,Inflammation of the testicles due to a viral infection,True,True,True,True,True
+824,diagnosis,D,Perforated gastric peptic ulcer,True,True,True,False,True
+825,explanation,E,Resolved acute hepatitis B infection,False,True,True,False,True
+826,diagnosis,B,Borderline,True,True,True,False,True
+827,findings,A,Microvesicular steatosis,True,False,False,False,False
+828,diagnosis,A,Antiphospholipid antibody syndrome,True,True,True,True,True
+829,diagnosis,E,Ruptured ovarian cyst,False,True,True,False,True
+830,diagnosis,B,Biopsy and histopathologic analysis of skin lesions,True,False,False,False,False
+831,explanation,D,Chronic lymphocytic leukemia,True,True,True,True,True
+832,diagnosis,A,Severe congenital neutropenia,True,False,False,False,False
+833,diagnosis,C,Lisdexamfetamine intoxication,True,False,True,False,True
+834,diagnosis,C,Hypertensive emergency,True,True,True,False,True
+835,diagnosis,C,Conduct disorder,True,True,True,False,True
+836,cause,A,Small cell lung cancer,True,False,True,True,True
+837,diagnosis,E,Rotor syndrome,True,False,False,False,False
+838,diagnosis,C,Post-traumatic stress disorder,True,True,True,False,True
+839,diagnosis,B,Stevens-Johnson syndrome,True,True,True,False,True
+840,diagnosis,A,Antigen exposure,False,False,False,False,False
+841,diagnosis,E,"Bipolar disorder, type I",True,True,True,False,True
+842,diagnosis,C,Primary cerebral lymphoma,True,True,True,True,True
+843,diagnosis,C,Dissociative amnesia,True,True,True,True,True
+844,diagnosis,B,Constrictive pericarditis,True,True,False,False,True
+845,cause,D,Rib fracture,False,False,False,False,False
+846,cause,A,Insulinoma,True,True,True,True,True
+847,diagnosis,B,Bartholin duct cyst,True,True,True,False,True
+848,diagnosis,F,Borderline personality disorder,True,True,True,True,True
+849,diagnosis,A,CA-125,False,False,False,False,False
+850,explanation,B,Secondary hyperparathyroidism,False,True,False,False,False
+851,cause,C,Alcoholic hepatitis,True,True,True,True,True
+852,diagnosis,A,Hemophilia A,True,True,True,False,True
+853,other,E,Pituitary adenoma,True,False,False,False,False
+854,diagnosis,D,Spinal epidural abscess,True,True,True,False,True
+855,diagnosis,C,Microthrombi within glomerular vessels on kidney biopsy,False,False,False,False,False
+856,diagnosis,A,Illness anxiety disorder,True,True,True,False,True
+857,explanation,A,Destruction of oligodendrocytes by T-cells,False,False,False,False,False
+858,diagnosis,D,Cluster headache,True,True,True,False,True
+859,diagnosis,A,Esophageal rupture,True,True,True,False,True
+860,cause,E,Aspiration pneumonia,True,True,True,True,True
+861,cause,C,Prolonged QT interval,True,False,False,False,False
+862,test,E,Asthma,False,False,False,False,False
+863,findings,E,Pectus carinatum,False,False,False,False,False
+864,diagnosis,A,Diastolic murmur best heard along the right lower sternal border,False,False,False,False,False
+865,diagnosis,D,Subacute granulomatous thyroiditis,True,True,True,False,True
+866,cause,C,Herpes simplex virus,False,False,False,False,False
+867,explanation,E,Waldenstrom’s macroglobulinemia,True,True,True,True,True
+868,imaging,B,B,False,False,False,False,False
+869,diagnosis,C,Pemphigus vulgaris,True,True,True,False,True
+870,description,B,Tardive dyskinesia,True,True,True,True,True
+871,diagnosis,B,Chronic myeloid leukemia,True,True,True,True,True
+872,explanation,D,Medium-chain acyl-CoA dehydrogenase deficiency,True,True,True,True,True
+873,explanation,A,Abdominal aortic aneurysm repair complication,False,False,False,False,False
+874,diagnosis,E,Nephrotic syndrome,True,True,True,True,True
+875,other,C,Negatively birefringent crystals on joint arthrocentesis,True,False,True,False,False
+876,diagnosis,B,Complex partial seizure,True,True,True,False,True
+877,explanation,C,Rhizopus infection,True,True,True,True,False
+878,diagnosis,C,Acute pancreatitis,True,True,True,False,True
+879,diagnosis,E,Wernicke's encephalopathy,True,True,True,False,True
+880,description,C,"Chronically infected, low infectivity",True,False,False,False,False
+881,diagnosis,E,Urticaria,True,True,True,True,True
+882,diagnosis,E,Ulnar,False,False,True,False,False
+883,diagnosis,C,Pseudomembranes of fibrin,False,False,False,False,False
+884,other,C,Fibular neck fracture,False,False,False,False,False
+885,explanation,D,Thalamic stroke,True,True,True,True,True
+886,description,A,Tourette syndrome,False,False,False,False,False
+887,diagnosis,D,Myasthenia gravis,True,True,True,True,True
+888,cause,D,Infected mucosal outpouching,False,False,False,False,False
+889,diagnosis,C,Dopamine blockade,False,False,False,False,False
+890,diagnosis,C,Generalized anxiety disorder,True,True,True,False,True
+891,diagnosis,A,Small cell lung cancer,True,True,True,False,True
+892,diagnosis,D,Gastric peptic ulcer,True,True,False,False,True
+893,diagnosis,C,Early liver ischemia,False,False,False,False,False
+894,diagnosis,E,Rotator cuff tendinopathy,True,True,True,False,True
+895,diagnosis,D,Pre-B-cell acute lymphoblastic leukemia,True,True,True,True,True
+896,findings,C,Stevens-Johnson syndrome,False,True,True,False,False
+897,cause,C,Hemisection injury,True,True,True,True,True
+898,description,D,"Chaotic, high voltage, slow waves and multifocal spikes on electroencephalography",False,False,False,False,False
+899,diagnosis,B,Febrile non-hemolytic transfusion reaction,True,True,True,False,True
+900,diagnosis,A,Apple green birefringence with Congo red staining,False,False,False,False,False
+901,explanation,B,Intentional contamination,False,False,False,False,False
+902,diagnosis,D,Scarlet fever,True,False,True,False,True
+903,diagnosis,D,HELLP syndrome,True,True,True,True,True
+904,diagnosis,D,Rupture of an emphysematous bleb,True,True,True,False,False
+905,diagnosis,C,Pulmonary embolism,True,True,True,False,True
+906,diagnosis,F,Acute lymphoblastic leukemia,True,True,True,True,True
+907,diagnosis,B,Gram-negative bacterial infection,False,True,False,True,False
+908,diagnosis,D,Osteomyelitis,False,True,False,False,False
+909,explanation,B,Aspiration of mixed normal oral flora into the lungs,False,False,False,False,False
+910,diagnosis,A,Embryonal carcinoma,False,False,False,False,False
+911,explanation,B,Infection with herpes simplex virus,True,True,True,False,True
+912,diagnosis,A,Hereditary angioedema,True,True,True,False,True
+913,explanation,C,Chronic obstructive pulmonary disease,True,False,False,False,False
+914,explanation,D,Mycoplasma pneumoniae infection,True,True,False,False,False
+915,diagnosis,B,Craniopharyngioma,False,False,False,False,False
+916,diagnosis,E,ELISA for parvovirus B-19 IgM and IgG antibodies,True,False,False,False,False
+917,diagnosis,D,Acute myelogenous leukemia,True,True,True,True,True
+918,diagnosis,B,Malassezia furfur,True,False,False,False,False
+919,diagnosis,F,Cardiac tamponade,True,True,True,True,True
+920,explanation,B,Ileus,True,True,True,False,True
+921,diagnosis,B,Primary hyperparathyroidism,False,False,False,False,False
+922,diagnosis,E,Disseminated gonococcal infection,True,True,True,False,True
+923,diagnosis,D,Neuroleptic malignant syndrome,True,True,True,False,True
+924,cause,A,Aplastic anemia,True,True,True,True,True
+925,cause,A,ABO incompatibility,True,True,True,True,True
+926,diagnosis,E,Branchial cleft cyst,True,True,True,False,True
+927,syndrome,E,Uncal herniation,True,True,True,False,False
+928,diagnosis,C,Trigeminal neuralgia,True,True,True,False,True
+929,diagnosis,C,Borderline personality disorder,True,True,True,True,True
+930,diagnosis,C,Schizophreniform disorder,True,True,True,False,True
+931,diagnosis,A,Clear cell adenocarcinoma,False,False,False,False,False
+932,diagnosis,A,Apical lung tumor,True,True,True,False,True
+933,diagnosis,E,Polyostotic fibrous dysplasia,False,False,False,False,False
+934,diagnosis,C,Carotid hypersensitivity syndrome,True,True,True,False,True
+935,diagnosis,D,Tamponade,True,True,True,False,True
+936,diagnosis,D,Vascular dementia,True,True,True,False,True
+937,findings,C,Placenta over the cervical os,True,False,True,True,True
+938,diagnosis,E,Rupture of a berry aneurysm,True,True,True,False,True
+939,cause,D,Chronic hypertension,True,True,True,True,True
+940,cause,B,Aortoiliac atherosclerosis,True,True,True,True,True
+941,diagnosis,E,Spelunking,False,False,False,False,False
+942,cause,A,Panic attack,True,True,True,True,True
+943,diagnosis,D,Toxin production from gram-positive bacteria,False,False,False,False,False
+944,diagnosis,A,Adenocarcinoma,True,True,True,False,True
+945,diagnosis,A,Autoimmune destruction of red blood cells,True,False,True,False,True
+946,diagnosis,D,Atrial fibrillation,False,False,False,False,False
+947,diagnosis,E,Small cell carcinoma of the lung,True,False,False,False,False
+948,diagnosis,C,Non-exertional heat stroke,True,True,True,False,True
