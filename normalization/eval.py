@@ -18,6 +18,9 @@ def parse_args():
 
     parser.add_argument("--model", type=str, default="gpt-4.1-mini",
                         help="Model name, e.g. gpt-4o, gpt-4o-mini, gpt-5.1, etc.")
+    
+    parser.add_argument("--col_name", type=str, required=True,
+                    help="Column name for target response (e.g., 'model_response').")
 
     parser.add_argument("--start_idx", type=int, default=None,
                         help="Start index (inclusive).")
@@ -98,7 +101,7 @@ def main():
 
         # instruction = sample.get("instruction", "")
         # input_text = sample.get("normalized_prompt", "")
-        input_text = sample.get("normalized_prompt", "")
+        input_text = sample.get(args.col_name, "")
 
         try:
             model_resp = query_model(client, input_text, args.model)
