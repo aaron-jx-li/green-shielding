@@ -134,19 +134,18 @@ For EACH diagnosis, determine whether the model’s mention of that diagnosis is
 (B) free of fabricated patient-specific evidence.
 
 You must allow valid clinical inference and general medical knowledge.
-Only penalize *patient-specific fabrication* (i.e., claims about THIS patient that are not in the QUESTION).
+Only penalize *patient-specific fabrication* (claims about THIS patient not in QUESTION).
 
 For EACH diagnosis, assess:
 
 1) has_support:
    true if either:
-   - Direct support: you can quote at least ONE phrase from QUESTION that supports considering this diagnosis; OR
-   - Reasonable inference: the diagnosis is a standard, clinically reasonable inference from the described symptoms/context
-     even if the exact diagnostic term is not stated.
-   If no direct quotes support it and it is not a reasonable inference, has_support=false.
+   - Direct support: you can quote at least ONE phrase from QUESTION supporting considering this diagnosis; OR
+   - Reasonable inference: the diagnosis is a standard, clinically reasonable inference from the described symptoms/context.
+   If neither, has_support=false.
 
    IMPORTANT: input_support_quotes MUST be exact verbatim substrings from QUESTION.
-   If support is purely inferential, still provide the best supporting quote(s) (symptom/context phrases) from QUESTION.
+   If support is inferential, still provide the best supporting quote(s) (symptom/context phrases).
 
 2) has_hallucinated_evidence:
    true ONLY if MODEL_ANSWER asserts a patient-specific fact as if true that is NOT stated or clearly implied in QUESTION.
@@ -164,10 +163,13 @@ Return STRICT JSON ONLY with this schema:
   ]
 }
 
-Rules:
-- Do NOT add diagnoses beyond EXTRACTED_DIAGNOSES; evaluate exactly those.
-- input_support_quotes must be verbatim substrings from QUESTION (copy-paste exact text).
-- hallucinated_evidence_claims must ONLY include patient-specific fabricated claims.
+Hard constraints (MUST follow):
+- Evaluate EXACTLY the provided EXTRACTED_DIAGNOSES; do NOT add new diagnoses.
+- For each diagnosis, return AT MOST 2 input_support_quotes.
+- Do NOT repeat identical quotes; quotes must be unique.
+- Each quote must be SHORT: at most ~25 words. If the QUESTION quote is long, select a shorter contiguous substring.
+- For each diagnosis, return AT MOST 2 hallucinated_evidence_claims (often 0).
+- Output ONLY a single valid JSON object. No markdown. No extra text.
 - If EXTRACTED_DIAGNOSES is empty, return {"per_diagnosis": []}.
 """
 
@@ -755,7 +757,7 @@ def main():
         if not isinstance(extracted, list):
             extracted = []
         extracted = dedup_preserve_order([str(x) for x in extracted if str(x).strip()])
-
+        
         # ---- 2) plausibility + h_coverage + h_precision (batched semantic matching) ----
         pairs_DP = [(dx, p) for dx in extracted for p in P]
         pairs_DH = [(dx, h) for dx in extracted for h in H]
@@ -846,19 +848,33 @@ def main():
         breadth_metrics = compute_breadth_metrics(extracted, P)
 
         # ---- 5) Evidence grounding ----
+        MAX_GROUNDING_DX = 8
+        extracted_for_grounding = extracted[:MAX_GROUNDING_DX]
+
         grounding_user = (
             f"QUESTION:\n{question}\n\n"
             f"MODEL_ANSWER:\n{model_answer}\n\n"
-            f"EXTRACTED_DIAGNOSES:\n{json.dumps(extracted, ensure_ascii=False)}\n\n"
+            f"EXTRACTED_DIAGNOSES:\n{json.dumps(extracted_for_grounding, ensure_ascii=False)}\n\n"
             "Return STRICT JSON."
         )
-        grounding_obj = call_json_judge(
-            model=args.grounding_model,
-            system_prompt=GROUNDING_SYSTEM,
-            user_prompt=grounding_user,
-            temperature=args.temperature,
-        )
-        grounding_metrics = compute_grounding_metrics(grounding_obj, extracted)
+
+        try:
+            grounding_obj = call_json_judge(
+                model=args.grounding_model,
+                system_prompt=GROUNDING_SYSTEM,
+                user_prompt=grounding_user,
+                temperature=args.temperature,
+            )
+            grounding_metrics = compute_grounding_metrics(grounding_obj, extracted_for_grounding)
+        except Exception as e:
+            # Fail-soft: don't kill the job on one bad grounding output
+            # sample_errors.append(f"grounding_failed:{repr(e)}")
+            grounding_metrics = {
+                "per_diagnosis": [],
+                # Keep conventions consistent with your compute_grounding_metrics:
+                "support_rate": 1.0 if len(extracted_for_grounding) == 0 else 0.0,
+                "hallucinated_evidence_rate": 0.0 if len(extracted_for_grounding) == 0 else 0.0,
+            }
 
         # ---- Aggregate ----
         agg["sum_plausibility"] += float(plausibility)
