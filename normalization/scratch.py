@@ -1,35 +1,59 @@
-import numpy as np
-import pandas as pd
 import json
+import re
+from tqdm import tqdm
 
-# with open("./results/HCM-9k/eval_converted_gpt-4.1-mini_1.json", "r") as f:
-#     data = json.load(f)
-#     # data = data["per_sample"]
+def normalize_text(s: str) -> str:
+    """Normalize text to improve matching robustness."""
+    if s is None:
+        return ""
+    s = s.lower().strip()
+    s = re.sub(r"\s+", " ", s)
+    return s
 
-# with open("./results/HCM-9k/out_converted_gpt-4.1-mini.json", "r") as f:
-#     data_out = json.load(f)
+# ---- paths ----
+BIG_FILE = "./results/HCM_ref-9k/converted_gpt-4.1-mini.json"         # contains "input", "output", "model_response"
+SMALL_FILE = "./results/HCM-3k/responses_gpt-4.1-mini.json"     # contains "raw_input", "original_output"
+OUT_FILE = "./results/HCM-3k/responses_gpt-4.1-mini.json"
 
-# with open("./results/HCM-9k/judge_sets_gpt-4.1.json", "r") as f:
-#     data = json.load(f)
+# ---- load files ----
+with open(BIG_FILE, "r") as f:
+    big_data = json.load(f)
 
-# total_p = 0
-# total_h = 0
-# for i, item in enumerate(data):
-#     dx = item["judge_dx_space"]
-#     total_p += len(dx["plausible_set"])
-#     total_h += len(dx["highly_likely_set"])
-# print("avg plausible diagnoses:", total_p / len(data))
-# print("avg highly likely diagnoses:", total_h / len(data))
+with open(SMALL_FILE, "r") as f:
+    small_data = json.load(f)
 
-with open("./data/HCM-9k_explicit.json", "r") as f:
-    data = json.load(f)
-print(len(data))
-high_conf = [
-    x for x in data
-    if x.get("_explicit_dx_ask", {}).get("confidence") == 5
-]
+# ---- build lookup from big file ----
+lookup = {}
+for item in big_data:
+    key = (
+        normalize_text(item.get("raw_input", "")),
+        normalize_text(item.get("original_output", "")),
+    )
+    lookup[key] = item.get("model_response")
 
-print("Confidence = 5:", len(high_conf))
+# ---- attach model_response to small file ----
+num_matched = 0
+num_missing = 0
 
-with open("./data/HCM-9k_explicit_conf5.json", "w") as f:
-    json.dump(high_conf, f, indent=2, ensure_ascii=False)
+for item in tqdm(small_data):
+    key = (
+        normalize_text(item.get("raw_input", "")),
+        normalize_text(item.get("original_output", "")),
+    )
+    model_resp = lookup.get(key)
+
+    if model_resp is not None:
+        item["model_response_converted"] = model_resp
+        num_matched += 1
+    else:
+        item["model_response_converted"] = None  # or leave it out if you prefer
+        num_missing += 1
+
+# ---- save result ----
+with open(OUT_FILE, "w") as f:
+    json.dump(small_data, f, indent=2)
+
+print(f"Done.")
+print(f"Matched: {num_matched}")
+print(f"Missing: {num_missing}")
+print(f"Output written to: {OUT_FILE}")
