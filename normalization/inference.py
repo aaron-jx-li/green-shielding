@@ -20,7 +20,7 @@ def parse_args():
                         help="Model name, e.g. gpt-4o, gpt-4o-mini, gpt-5.1, etc.")
     
     parser.add_argument("--col_name", type=str, required=True,
-                    help="Column name for target response (e.g., 'model_response').")
+                    help="Column name for input text.")
 
     parser.add_argument("--start_idx", type=int, default=None,
                         help="Start index (inclusive).")
