@@ -1,0 +1,426 @@
+/* UC Berkeley Color Palette */
+:root {
+    --berkeley-blue: #003262;
+    --berkeley-gold: #FDB515;
+    --berkeley-orange: #F4801A;
+    --berkeley-light-blue: #00A598;
+    --berkeley-dark-blue: #1B4D3E;
+    --berkeley-gray: #767676;
+    --berkeley-light-gray: #F5F5F5;
+    --white: #FFFFFF;
+    --black: #000000;
+    --success-green: #28a745;
+    --warning-orange: #ffc107;
+    --danger-red: #dc3545;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--berkeley-light-gray);
+    color: #2c2c2c;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--berkeley-blue), var(--berkeley-dark-blue));
+    color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.subtitle-small {
+    font-size: 0.95rem;
+    color: #666666;
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+.progress-bar {
+    background-color: var(--white);
+    border-radius: 25px;
+    height: 30px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+    background: linear-gradient(90deg, var(--berkeley-gold), var(--berkeley-orange));
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 25px;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    color: var(--berkeley-blue);
+    font-size: 0.9rem;
+}
+
+.annotation-card {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.card-header {
+    border-bottom: 3px solid var(--berkeley-gold);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.card-header h2 {
+    color: var(--berkeley-blue);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.content-section {
+    margin-bottom: 30px;
+}
+
+.content-section h3 {
+    color: var(--berkeley-blue);
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.content-section h3::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--berkeley-gold);
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.content-box {
+    background: var(--berkeley-light-gray);
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    padding: 24px;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-height: 400px;
+    overflow-y: auto;
+    transition: border-color 0.3s ease;
+    color: #2c2c2c;
+}
+
+.content-box:hover {
+    border-color: var(--berkeley-light-blue);
+}
+
+/* Custom scrollbar for content boxes */
+.content-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.content-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.content-box::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border-radius: 10px;
+}
+
+.content-box::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+.question-box {
+    background: #F8F9FA;
+    border-left: 4px solid var(--berkeley-blue);
+}
+
+.annotation-section {
+    background: var(--berkeley-light-gray);
+    padding: 28px;
+    border-radius: 10px;
+    margin: 30px 0;
+}
+
+.annotation-section h3 {
+    margin-bottom: 20px;
+    color: var(--berkeley-blue);
+}
+
+.comment-textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #d0d0d0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.3s ease;
+    background: var(--white);
+}
+
+.comment-textarea:focus {
+    outline: none;
+    border-color: var(--berkeley-light-blue);
+    box-shadow: 0 0 0 3px rgba(0, 165, 152, 0.1);
+}
+
+.comment-textarea::placeholder {
+    color: #999;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 18px;
+    background: var(--white);
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-option:hover {
+    border-color: var(--berkeley-light-blue);
+    background: #f8f9fa;
+}
+
+.checkbox-option:has(input[type="checkbox"]:checked) {
+    border-color: var(--berkeley-blue);
+    background: #f0f7ff;
+    box-shadow: 0 0 0 3px rgba(0, 50, 98, 0.1);
+}
+
+.checkbox-option input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--berkeley-gray);
+    border-radius: 4px;
+    margin-right: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.checkbox-option input[type="checkbox"]:checked + .checkbox-custom {
+    border-color: var(--berkeley-blue);
+    background: var(--berkeley-blue);
+}
+
+.checkbox-option input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.checkbox-label {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #2c2c2c;
+    line-height: 1.6;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+.help-text {
+    text-align: left;
+    margin-top: 15px;
+    color: #666666;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--berkeley-blue), var(--berkeley-dark-blue));
+    color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 50, 98, 0.3);
+}
+
+.summary-section {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.summary-section h2 {
+    color: var(--berkeley-blue);
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-item {
+    background: var(--berkeley-light-gray);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border-left: 5px solid var(--berkeley-gold);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--berkeley-gray);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--berkeley-blue);
+}
+
+.completion-message {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--berkeley-gray);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .annotation-card {
+        padding: 20px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .summary-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .content-box {
+        padding: 18px;
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+    
+    .checkbox-option {
+        padding: 14px;
+    }
+    
+    .checkbox-label {
+        font-size: 1rem;
+    }
+}
+
