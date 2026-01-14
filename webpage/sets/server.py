@@ -36,10 +36,15 @@ DATA_DIR = os.path.join(SETS_DIR, "annotation_manager", "data")
 DATA_PATH = os.environ.get("DATA_PATH",os.path.join(DATA_DIR, "sampled_data_HCM-3k.json"),)
 ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(DATA_DIR, "annotations.json"),)
 
-
-# Global data
 questions_data = None
 annotations = {}
+
+APP_VERSION = "v2-show-token-page-2026-01-14"
+app.logger.warning("BOOT %s file=%s", APP_VERSION, __file__)
+
+@app.route("/version")
+def version():
+    return jsonify({"version": APP_VERSION, "file": __file__})
 
 @app.route('/authorize')
 def authorize():
