@@ -31,9 +31,11 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 FOLDER_ID = os.getenv("FOLDER_ID")
 
 # Configuration
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.environ.get("DATA_PATH",os.path.join(BASE_DIR, "annotation_manager", "data", "sampled_data_HCM-3k.json"),)
-ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(BASE_DIR, "annotation_manager", "data", "annotations.json"),)
+SETS_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(SETS_DIR, "annotation_manager", "data")
+DATA_PATH = os.environ.get("DATA_PATH",os.path.join(DATA_DIR, "sampled_data_HCM-3k.json"),)
+ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(DATA_DIR, "annotations.json"),)
+
 
 # Global data
 questions_data = None
@@ -183,11 +185,11 @@ def get_stats():
 
 @app.route('/')
 def serve_index():
-    return send_from_directory(os.path.join(BASE_DIR, "annotation_manager"), 'index.html')
+    return send_from_directory(SETS_DIR, 'index.html')
 
 @app.route('/<path:filename>')
 def serve_static(filename):
-    return send_from_directory(os.path.join(BASE_DIR, "annotation_manager"), filename)
+    return send_from_directory(SETS_DIR, filename)
 
 @app.route('/get_next_question', methods=['GET'])
 def get_next_question():
