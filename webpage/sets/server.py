@@ -9,8 +9,26 @@ import json
 import os
 from datetime import datetime
 
+from flask import redirect
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+from google.auth.transport.requests import Request
+
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+
 app = Flask(__name__)
 CORS(app)
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+CLIENT_SECRET_JSON = os.getenv("GOOGLE_CLIENT_SECRET_JSON")
+TOKEN_JSON = os.getenv("GOOGLE_TOKEN_JSON")
+SCOPES = os.getenv("SCOPES", "https://www.googleapis.com/auth/drive.file").split()
+REDIRECT_URI = os.getenv("REDIRECT_URI")
+FOLDER_ID = os.getenv("FOLDER_ID")
 
 # Configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,6 +38,94 @@ ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(BASE_DIR, "dat
 # Global data
 questions_data = None
 annotations = {}
+
+@app.route('/authorize')
+def authorize():
+    if not CLIENT_SECRET_JSON:
+        return jsonify({'error': 'Missing GOOGLE_CLIENT_SECRET_JSON'}), 400
+
+    if not REDIRECT_URI:
+        return jsonify({'error': 'Missing REDIRECT_URI'}), 400
+
+    flow = Flow.from_client_config(
+        json.loads(CLIENT_SECRET_JSON),
+        scopes=SCOPES,
+        redirect_uri=REDIRECT_URI
+    )
+    auth_url, _ = flow.authorization_url(prompt='consent')
+    return redirect(auth_url)
+
+@app.route('/oauth2callback')
+def oauth2callback():
+    if not CLIENT_SECRET_JSON:
+        return "❌ Missing client secret.", 400
+
+    flow = Flow.from_client_config(
+        json.loads(CLIENT_SECRET_JSON),
+        scopes=SCOPES,
+        redirect_uri=REDIRECT_URI
+    )
+    flow.fetch_token(authorization_response=request.url)
+    creds = flow.credentials
+
+    print("✅ OAuth complete! Copy this token and add it to Render as GOOGLE_TOKEN_JSON:\n", flush=True)
+    print(creds.to_json(), flush=True)
+
+    return (
+        "✅ Authentication successful! Check your Render logs and copy the token JSON into your Render environment as GOOGLE_TOKEN_JSON."
+    )
+
+def get_drive_service():
+    token_json = os.getenv("GOOGLE_TOKEN_JSON")
+    if not token_json:
+        raise Exception("❌ No token found. Run /authorize first.")
+
+    creds = Credentials.from_authorized_user_info(json.loads(token_json), SCOPES)
+
+    if creds and creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        print("🔄 Access token refreshed successfully.", flush=True)
+
+        # Optional but recommended: print the updated token so you can copy it back into Render env
+        print("🔁 Updated token JSON (copy to GOOGLE_TOKEN_JSON):", flush=True)
+        print(creds.to_json(), flush=True)
+
+    return build('drive', 'v3', credentials=creds)
+
+
+def upload_annotations_to_drive(local_path: str):
+    """
+    Upload/update annotations.json in the Drive folder FOLDER_ID.
+    Uses the same pattern as your CSV uploader: update if exists, else create.
+    """
+    if not FOLDER_ID:
+        raise Exception("❌ Missing FOLDER_ID env var")
+
+    service = get_drive_service()
+    file_name = os.path.basename(local_path)
+    query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
+
+    existing_files = service.files().list(q=query, fields="files(id, name)").execute().get('files', [])
+    media = MediaFileUpload(local_path, mimetype="application/json", resumable=True)
+
+    if existing_files:
+        file_id = existing_files[0]['id']
+        updated_file = service.files().update(
+            fileId=file_id,
+            media_body=media,
+            fields='id, name, webViewLink'
+        ).execute()
+        print(f"🔄 Updated Drive annotations file: {updated_file.get('webViewLink')}")
+        return updated_file.get("webViewLink")
+    else:
+        file_metadata = {'name': file_name, 'parents': [FOLDER_ID]}
+        new_file = service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id, name, webViewLink'
+        ).execute()
+        print(f"✅ Uploaded new Drive annotations file: {new_file.get('webViewLink')}")
+        return new_file.get("webViewLink")
 
 def load_data():
     """Load questions data from JSON file."""
@@ -41,9 +147,17 @@ def load_annotations():
     return annotations
 
 def save_annotations(annotations_dict):
-    """Save annotations to JSON file."""
+    os.makedirs(os.path.dirname(ANNOTATIONS_PATH), exist_ok=True)
     with open(ANNOTATIONS_PATH, 'w') as f:
         json.dump(annotations_dict, f, indent=2)
+
+    try:
+        link = upload_annotations_to_drive(ANNOTATIONS_PATH)
+        return link
+    except Exception as e:
+        print(f"⚠️ Google Drive upload skipped due to error: {e}")
+        return None
+
 
 def get_next_unannotated_question():
     """Get the next unannotated question."""
@@ -125,7 +239,7 @@ def save_annotation():
         
         annotations_dict = load_annotations()
         annotations_dict[question_index] = annotation
-        save_annotations(annotations_dict)
+        drive_link = save_annotations(annotations_dict)
         
         # Get next question
         question, idx = get_next_unannotated_question()
