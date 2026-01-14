@@ -32,8 +32,8 @@ FOLDER_ID = os.getenv("FOLDER_ID")
 
 # Configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.environ.get("DATA_PATH",os.path.join(BASE_DIR, "data", "sampled_data_HCM-3k.json"),)
-ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(BASE_DIR, "data", "annotations.json"),)
+DATA_PATH = os.environ.get("DATA_PATH",os.path.join(BASE_DIR, "annotation_manager", "data", "sampled_data_HCM-3k.json"),)
+ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(BASE_DIR, "annotation_manager", "data", "annotations.json"),)
 
 # Global data
 questions_data = None
