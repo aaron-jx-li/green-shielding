@@ -1,0 +1,230 @@
+[
+  {
+    "index": 0,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Hi my name is Wendy I ve been having an issue for the last couple of months or so I been having severe pain in my lower back around the front into the groin area and its radiating down my thigh and so on I am currently a cancer patient nobody seems to be able to tell me what it could be the pain is so bad that it brings tears to my eyes would you possibly know what it could be or might be",
+    "normalized_prompt": "A cancer patient has been experiencing severe lower back pain radiating to the groin area and down the thigh for the past couple of months. The pain is intense and debilitating. What is the most likely diagnosis?",
+    "original_output": "HelloThanks for query. You have not mentioned in your query details regarding cancer you are suffering from. The pain in back radiating down to thigh can be mostly due to metastasis in the spines or in to lymph nodes, You need to consult your treating oncologist and get evaluated by doing C. T scan of abdomen and pelvis and Bone scan. Further treatment will depend upon result of these tests and final diagnosis. Chat Doctor. ",
+    "reference_diagnosis": "Possible metastatic cancer to spine or lymph nodes",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": true,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 1,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "i had surgery done 5 months ago for scar tissue and adhesion removal. my gynecologist just found a cyst on my right ovary. im still having problems, when my husband and i have sex i get severe cervical pain and afterward i get abdominal cramps severe enough i get light headed, also i get abdominal pain and rectal pain before and during a bowel movement, i also get abdominal pain during urination. im 26 years old. what could it be?",
+    "normalized_prompt": "A 26-year-old female with a history of surgery five months ago for scar tissue and adhesion removal presents with a newly identified cyst on the right ovary. She reports severe cervical pain during intercourse, followed by abdominal cramps causing lightheadedness. She also experiences abdominal and rectal pain before and during bowel movements, as well as abdominal pain during urination. What is the most likely diagnosis?",
+    "original_output": "Hi. Thanks for your query and an elucidated history. Understood the history well. You have an obvious reason for pain - the adhesions and scar must have reformed. But the history of Dyspareunia, meaning painful sex indicated the is some active inflammatory process still going on in the pelvis called PID-Pelvic Inflammatory Disease. Cystitis and Procto-colitis are the additional problems causing the pain in abdomen and rectum before and during bowel movements as also during urination. Ovarian cyst can cause problem only if it enlarges fast or gets twisted. I would advise you the following::-Contrast enhanced CT scan of the abdomen.-Enteroclysis-Colonoscopy-exploratory Laparoscopy or Laparotomy which will be of diagnostic and therapeutic value. A proper course of an antibiotic, metronidazole, probiotic may help a bit or more.",
+    "reference_diagnosis": "Pelvic Inflammatory Disease (PID), possible recurrent adhesions, cystitis, proctocolitis, ovarian cyst",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": true
+    }
+  },
+  {
+    "index": 2,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Almost everytime I eat, it burns when I swallow. Not in my throat but in my chest. It burns all the way down. It helps a lil if I drink water after I swallow. I wake up a lot in the middle of the night with heartburn so I chew some tums and it helps for the most part. Why is it so painful when I eat?",
+    "normalized_prompt": "The patient experiences burning pain during swallowing almost every time they eat, localized to the chest rather than the throat. Drinking water after swallowing provides slight relief. The patient frequently wakes up at night with heartburn, which is mostly relieved by chewing antacid tablets. What is the most likely diagnosis?",
+    "original_output": "Thanks for your question on Chat Doctor. I can understand your concern. In my opinion, you are mostly having HERD (gastroesophageal reflux disease). It is due to laxity of gastroesophageal sphincter. Because of this the acid of the stomach tends to come up in the esophagus and cause burning in chest. So follow these steps for better symptomatic relief. 1. Avoid stress and tension. 2. Avoid hot and spicy food. Avoid junk food. Avoid large meals, instead take frequent small meals. 3. Take proton pump inhibitors and prokinetic Chat Doctor.  4. Keep 2 - 3 pillows under head in the bed to prevent reflux. 5. Quit smoking and alcohol if you have these habits. Lose weight if you are obese. Don't worry, you will be alright with all these. Hope I have solved your query. I will be happy to help you further. Wish you good health. Thanks.",
+    "reference_diagnosis": "gastroesophageal reflux disease (GERD)",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 3,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Dear doctor, i am 33 male recently i have undergone pre employment medical check up and it was found that i have sgpt- 194 except this all test are absolutely normal test includes 1) CBC2. ESR and liver test 3. Urine Routine 4. Blood Group & Rh Factor 5. X-ray (Chest)6. General Physical Examination7. Fasting Blood Sugar &Post Prandial Blood Sugar8. Total Cholesterol9. ECG10. Serum Creatininenow they have advised me to got my ultrasound done full abdomen. i have got it done today and every thing is normal and they found mild fatty liver. Another thing i want to share that i was suffering from loose motions and was on Ofloxacin-200mg with ornidazole500mg B.D dosage (oflox OZ )medication for 2days and continued ofloxacin-200 B.D dosage (oflox) for another 3days as was suffering cold and cough also.now i need to go to gastro doctor to get the ultrasound reports checked. Just want to know what could be the reason for this elevated SGPT and will i get the clearance for joining new company.what should i do to lower my SGPT levels?? and what diet i should follow i am not a heavy drinker just take drinks occasionally and i am not fond of junk food as well.",
+    "normalized_prompt": "A 33-year-old male underwent a pre-employment medical checkup which revealed an elevated SGPT level of 194 U/L. All other tests, including CBC, ESR, liver function tests apart from SGPT, urine routine, blood group and Rh factor, chest X-ray, general physical examination, fasting and postprandial blood sugar, total cholesterol, ECG, and serum creatinine, were normal. A full abdominal ultrasound showed mild fatty liver with no other abnormalities. The patient had a recent history of loose stools treated with Ofloxacin and Ornidazole for two days, followed by Ofloxacin alone for three days due to concurrent cold and cough. He reports occasional alcohol intake and avoiding junk food. What is the most likely diagnosis?",
+    "original_output": "Hello, I can understand your concern for abnormal blood report.1) Your symptom of loose motion might be due to indigestion. There is no role of antibiotic in this. Instead, you should take intestinal digestive enzyme supplementation.2) Elevated SGPT level indicate either liver function is weak or liver has too much load to work. Fatty liver is condition in which excessive fat get deposited in liver tissue and affect liver function. This is the reason for elevated SGPT level in your case.3) Fatty liver is due to high level of fat in blood stream secondary to lipid (fat)-rich diet. This might lead to elevated cholesterol level. Thus, it is recommended for you to undergo lipid profile test.4) Mild fatty liver is reversible condition. You should do - regular exercise, intermittent fasting (weekly once), high protein diet, low fat-diet, use of omega-3 fatty acid containing oil in food preparation, avoidance of alcohol intake. Your SGPT level can come to normal range with these measure in 15-20 days. Hope I answered your query. If you have any further question, I would be happy to help you. Have a nice day!",
+    "reference_diagnosis": "mild fatty liver (hepatic steatosis) causing elevated SGPT",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": true
+    }
+  },
+  {
+    "index": 4,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "My younger brother liver & spleen got enlarged. Hepatitis B&C found in blood. Mild ascitis & SOL on both lube of liver found. His age is 15. Weight is 28 kg. He is having serious less appetite. I am attaching the all the reports. Please advice us how to proceed and the exact condition of the patient.Here two doctors said he will need a full liver transplantation...",
+    "normalized_prompt": "A 15-year-old male with a weight of 28 kg presents with hepatosplenomegaly, confirmed hepatitis B and C infections, mild ascites, and space-occupying lesions in both lobes of the liver. The patient has significant anorexia. Two physicians have recommended liver transplantation. What is the most likely diagnosis?",
+    "original_output": "Hi thanks for contacting Chat Doctor ... Your brother have both hepatitis b and c positive.... Your brother might have chronic liver affection with it can be cirrhosis liver associated... Morever you are mentioning space occupying lesion in liver... It should be investigated for malignancy as chance of development of hepatocellular carcinoma more if both B and C hepatitis present... For that contrast enhanced CT scan with AFP estimation can be done... If needed for confirmation USG guided biopsy might be needed.... Ultimate treatment for chronic liver problem is liver transplantation... Your report attached cant seen here in public forum questions... For more opinion you can consult gastroenterologist .... You can take follow up advise by using premium questions...Meanwhile, take low fat diet... Fruits taken more... Green leafy vegetables useful.... Take early in morning grinned spinach and carrot juice.... Hope you concern solved.... Take care.... Chat Doctor. ",
+    "reference_diagnosis": "Chronic liver disease (likely cirrhosis) with hepatitis B and C co-infection, possible hepatocellular carcinoma (due to SOLs)",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": true
+    }
+  },
+  {
+    "index": 5,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Hi Over the past 2 days I have had a sore jaw on the right side only. Doesn t feel sore on the outside of my face, but extremely tender on the tendon that attaches jaw together. Inside of cheek also appears swollen. Right side of tongue feels strange, and slightly sore to swallow also. I m 40 but my wisdom teeth never came in, could this be a cause?",
+    "normalized_prompt": "A 40-year-old presents with a 2-day history of right-sided jaw soreness localized to the tendon attachment, without external facial soreness. The inside of the right cheek appears swollen. The patient also reports an unusual sensation on the right side of the tongue and mild soreness while swallowing. The patient has no history of wisdom teeth eruption. What is the most likely diagnosis?",
+    "original_output": "Hello, I can understand your concern. Usually, wisdom teetChatDoctore in mouth at the age of 18 to 25 years. However, as you have never had them in mouth, it is possible that they might be impacted or locked in the jaw. As right side of jaw is causing you pain, let us focus on that only. Due to absence of physical space to come out in mouth or due to its improper position, it might be possible that the wisdom tooth of that side was locked in the jaw all this time and now might be impinging on the muscle of the mastication or nerve that supplies tongue causing you the pain and discomfort you are experiencing. It is also a possibility that a tooth might be decayed on the side of the jaw that is causing you problems, has developed an abscess that is causing these symptoms. In both cases, you need to visit a dentist to get an oral examination to find out if any tooth is decayed and taking x-ray of the wisdom tooth area to diagnose wisdom tooth related problem. By the time you ET an appointment of the dentist, Ibuprofen 400 mg thrice a day will help you in getting relief from pain. Please refrain from hot water gargles or heat compression as if the pain would be abscess related, it would worsen. I hope this information helps you. Thank you for choosing Chat Doctor. I wish you feel better soon. Best,",
+    "reference_diagnosis": "impacted or infected wisdom tooth vs dental abscess",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 6,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40 AND JUST RECENTLY I HAD DIFFICULTIES ORGANSIZING MY THOUGHTS AND THEN TRYINGTO SAYING WHAT WAS IN MY BRAIN HAPPENED APRIL 15 AND THEN THE NEXT DAY WHEN I ANSWERED THE PHONE WERE I VOLUNTEERED IT HAPPENED AGAIN; I COULD NOT SAY GOOD AFTERNOON SHIRLEY SPEAKING HOW MAY I HELP YOU. ANY SUGGESTIONS WHAT I WAS EXPERIENCING?",
+    "normalized_prompt": "A patient under 40 years old has a history of several transient ischemic attacks (TIAs). Recently, on April 15, the patient experienced difficulties organizing thoughts and expressing speech. The following day, while answering the phone during volunteer work, the patient was again unable to speak coherently, such as saying 'Good afternoon, Shirley speaking, how may I help you?'. What is the most likely diagnosis?",
+    "original_output": "Hi, Welcome to Chat Doctor .com I am Chat Doctor. Mariano Into Bruno Mascaras. I have gone through your query with diligence and would like you to know that I am here to help you. Q1 : ANY SUGGESTIONS WHAT I WAS EXPERIENCING? A1 : This is probably Multi Infarct DementiaFurther Course of Treatment depends on Clinical Examination, Funds Examination, MUSE, Radiological Evaluation. Please Consult a neurosurgeon in person Hope you found the answer helpful. If you need any clarification / have doubts / have additional questions / have follow-up questions, then please do not hesitate in asking again. I will be happy to answer your questions. In the future, for continuity of care, I encourage you to contact me directly in Chat Doctor at http://bit.ly/ask",
+    "reference_diagnosis": "Multi Infarct Dementia",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 7,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "My son is 1 yr 8 months old...he is not walking on his own...so dr suggested MRI n MRI report shows .ventricular system appears mildly prominent,normal in shape position and signal morphology,cisternal and sulcal spaces are mildly prominent,small faint hyperintense areas noted in bilateral periventricular frontal and Pareto occipital regions.rests things are normal....pls tell me wat does it means",
+    "normalized_prompt": "A 1 year 8 month old child is not yet walking independently. An MRI was performed which showed a mildly prominent ventricular system with normal shape, position, and signal morphology. Cisternal and sulcal spaces are mildly prominent. Small faint hyperintense areas are noted in the bilateral periventricular frontal and parieto-occipital regions. Other findings are normal. What is the most likely diagnosis?",
+    "original_output": "Hi...though I do not have the images of the MRI before me right now, by what you quote, I feel it should be - Periventricular Leukoplakia - a condition which occurs in prematurely or underweight born babies. Their mentation and IQ will be perfect, but they will have problems with their legs and walking. Usually there won't be any problem with the hands. This condition is called - Spastic Diplopia and is amenable for physiotherapy. Please do not worry as the kid will get better with physiotherapy. Regards - ",
+    "reference_diagnosis": "Periventricular leukomalacia (PVL) with spastic diplegia",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": true
+    }
+  },
+  {
+    "index": 8,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "At lest once or twice a week my arms chest feel hot and tingling ...times I get just swollen arms and tingling on one side of my face....what causes this ..thanks....I have been on depression medication and blood pressure meds..Never been sick ....used to workout but I am a product of the recession so stress is a big part of my lifethanks",
+    "normalized_prompt": "The patient experiences episodes occurring once or twice weekly characterized by heat and tingling sensations in the arms and chest. Occasionally, the patient also reports swelling of the arms and tingling on one side of the face. The patient has a history of depression and hypertension for which they are on medication. The patient reports significant stress but no prior significant illnesses. What is the most likely diagnosis?",
+    "original_output": "Hello, welcome to Chat Doctor. Your symptoms are related to stress and depression. Depression can manifest not only with psychological symptoms but with a variety of physical symptoms also like: Tingling, numbness, hot and cold sensations, palpitation, tremors (shakiness) etc. In history, you mentioned that, you are already receiving treatment for depression. Your current symptom may be related to residual depression. It is better to get re-evaluated by your psychiatrist to investigate and treat these symptoms effectively. Same time do some relaxation exercise like daily brisk walk, yoga and breathing exercise, which will help you in fast recovery. Wish you good health and all the best.  Chat Doctor. 99doctor.com",
+    "reference_diagnosis": "somatic symptoms related to depression and stress",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": true,
+      "medical_evidence_integration": true
+    }
+  },
+  {
+    "index": 8,
+    "variant": "exclude_emotional_distress_framing",
+    "excluded_factors": [
+      "emotional_distress_framing"
+    ],
+    "raw_input": "At lest once or twice a week my arms chest feel hot and tingling ...times I get just swollen arms and tingling on one side of my face....what causes this ..thanks....I have been on depression medication and blood pressure meds..Never been sick ....used to workout but I am a product of the recession so stress is a big part of my lifethanks",
+    "normalized_prompt": "The patient experiences episodes at least once or twice weekly of heat and tingling sensations in the arms and chest. Occasionally, there is swelling in the arms and tingling on one side of the face. The patient has a history of depression and hypertension, currently treated with medications for both conditions. What is the most likely diagnosis?",
+    "original_output": "Hello, welcome to Chat Doctor. Your symptoms are related to stress and depression. Depression can manifest not only with psychological symptoms but with a variety of physical symptoms also like: Tingling, numbness, hot and cold sensations, palpitation, tremors (shakiness) etc. In history, you mentioned that, you are already receiving treatment for depression. Your current symptom may be related to residual depression. It is better to get re-evaluated by your psychiatrist to investigate and treat these symptoms effectively. Same time do some relaxation exercise like daily brisk walk, yoga and breathing exercise, which will help you in fast recovery. Wish you good health and all the best.  Chat Doctor. 99doctor.com",
+    "reference_diagnosis": "somatic symptoms related to depression and stress",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 8,
+    "variant": "exclude_medical_evidence_integration",
+    "excluded_factors": [
+      "medical_evidence_integration"
+    ],
+    "raw_input": "At lest once or twice a week my arms chest feel hot and tingling ...times I get just swollen arms and tingling on one side of my face....what causes this ..thanks....I have been on depression medication and blood pressure meds..Never been sick ....used to workout but I am a product of the recession so stress is a big part of my lifethanks",
+    "normalized_prompt": "A patient reports experiencing episodes occurring at least once or twice weekly characterized by heat and tingling sensations in the arms and chest. Occasionally, they experience swelling of the arms and tingling on one side of the face. The patient has a history of depression and hypertension, managed with medication, but no history of other illnesses. The patient reports significant stress and a previous history of regular exercise. What is the most likely diagnosis?",
+    "original_output": "Hello, welcome to Chat Doctor. Your symptoms are related to stress and depression. Depression can manifest not only with psychological symptoms but with a variety of physical symptoms also like: Tingling, numbness, hot and cold sensations, palpitation, tremors (shakiness) etc. In history, you mentioned that, you are already receiving treatment for depression. Your current symptom may be related to residual depression. It is better to get re-evaluated by your psychiatrist to investigate and treat these symptoms effectively. Same time do some relaxation exercise like daily brisk walk, yoga and breathing exercise, which will help you in fast recovery. Wish you good health and all the best.  Chat Doctor. 99doctor.com",
+    "reference_diagnosis": "somatic symptoms related to depression and stress",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 9,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Hi. I have a history of kidney stones and I recently just passed another stone back in December. I woke up today, though, in terrible pain. I feel like Im going to vomit, like something tight is gagging me around my neck. Im very hot. There is blood in my stool and I dont think Im going to leave the bathroom any time soon. Could this be another kidney stone? Or is the blood in my stool from something else? Your response is very important to me. Please and thank you!",
+    "normalized_prompt": "A patient with a history of kidney stones recently passed a stone in December. The patient woke up with severe pain, nausea, a sensation of tightness around the neck, and feeling very hot. There is blood in the stool, and the patient is currently unable to leave the bathroom. What is the most likely diagnosis?",
+    "original_output": "Hi, Renal calculus when passes through ureteric wall it irritates it n have severe pain in flank which can radiate to groin thigh umbilicus scrotum /labia major associated with nausea vomiting and other urinary symptoms including hematuria. It never causes blood in stool which can be due to pathology in GIT.  So visit a gastrosurgeon for bleeding PR and Urologist for your Renal calculus. Hope this ll help Thanks n regards",
+    "reference_diagnosis": "Gastrointestinal bleeding (not due to kidney stone); history of renal calculus",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": true,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 10,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "I have noticed that I ve been getting these sore reddish spots with a white ring around them on my tounge.the spot on my tounge is reddish with a white ring around it and the other 3 are bigger patches on the back of my tounge but there not red,they do have a white ring around them nd they look as if I been eating to much sour stuff which I have not.the only one that is slightly painful is the reddish one on the tip of my tounge,what could this be and should I be worried? They come and go",
+    "normalized_prompt": "A patient presents with recurrent sore reddish spots with a white ring on the tongue. One spot on the tip of the tongue is reddish, slightly painful, and accompanied by three larger patches on the back of the tongue that are not red but have a white ring. The patient denies recent consumption of sour foods. These lesions appear intermittently. What is the most likely diagnosis?",
+    "original_output": "Hello there, You may have a manifestation of a micronutrient deficiency. You should have a multivitamin once a day for the next 1 week preferably one with vitamin b-12(cyanocobalamine) and then assess whether your spots go down. If they don't the pleasing visit a doctor who would do tests to evaluate any underlying deficiency. Also adding probiotics to your diet like yogurt would help. Thank you for your query, Chat Doctor. ",
+    "reference_diagnosis": "micronutrient deficiency (possible B12 deficiency)",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 11,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Hello, I recently developed a very itchy penis which when I itch, leads to red patchs which sometimes become red and glossy. It is very irritable and causes pain when i have intercourse. I also have developed itchy thighs.. It started just at the top and has now developed over most of my thighs. The itching comes and goes and shows in small patches , not lumps but itchy red spots. i am worried that it is an std as i have had a lot of unprotected sex recently (lesson learnt) but the symptoms don t relate to any std so i m puzzled!? i also have what i thought was joggers nipple? very itchy nipple and also my face sometimes has dry patches on the eyelids and near the hair receding line? It has been going on for the last 3 months and as i m still in China and not a native speaker, i can t really find any treatment or diagnosis. please help?",
+    "normalized_prompt": "A male patient presents with a 3-month history of intense pruritus localized initially to the glans penis, which upon scratching results in erythematous patches that sometimes become glossy. The pruritus extends to the proximal thighs, manifesting as intermittent small, itchy, red patches without nodules. The patient experiences pain during intercourse associated with the penile symptoms. Additionally, there is intense itching and erythema involving the nipples bilaterally, described as similar to 'jogger's nipple.' The patient also reports intermittent dry patches on the facial eyelids and along the hairline. The patient has a recent history of multiple episodes of unprotected sexual intercourse but notes that the symptoms do not correspond with typical sexually transmitted infections. The patient is currently residing abroad with language barriers limiting access to diagnosis and treatment. What is the most likely diagnosis?",
+    "original_output": "HIT hank for asking to ChatDoctorI can understand this, these are two different conditions and that might not be due to unsafe intercourse, but this could be some allergic rash might have developed at the same time in two different areas, just wait till few more days the chances of getting alright on its own is likely, if this does not go away, then you can use \"Tab Levocetrizine 10 mg three times in day\" hope this information helps you, have a nice day.",
+    "reference_diagnosis": "allergic rash (dermatitis)",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": true,
+      "medical_evidence_integration": false
+    }
+  },
+  {
+    "index": 12,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Hi, I was just at the dentist and they discovered a black area on the left lower jaw area below my teeth and they called me back and said I should go get a CT scan. I am 23 years old and otherwise healthy, is cancer the only thing this could be? I had a root canal re done last year on that same side but this black area isnt underneath that tooth it is along the other ones next to it.",
+    "normalized_prompt": "A 23-year-old otherwise healthy individual was found to have a black area on the left lower jaw below the teeth during a dental examination. The area is located near teeth adjacent to, but not beneath, a tooth that had a root canal redone the previous year. The dentist recommended a CT scan for further evaluation. What is the most likely diagnosis?",
+    "original_output": "Hi and welcome to Chat Doctor. Thank you for your quarry. Cancer is the less common thing that could be. Tooth tumors are rare especially in your age, but it must be ruled out of course. It can be any benign mass, abscess, tooth tissue, neuroma, or calcification. CT would show exact size and signs of infiltration but i don't think it would be serious. Even if this is, it can be surgical managed. Wish you good health.",
+    "reference_diagnosis": "benign mass, abscess, tooth tissue, neuroma, calcification (malignancy less likely but must be ruled out)",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": true
+    }
+  },
+  {
+    "index": 13,
+    "variant": "baseline",
+    "excluded_factors": [],
+    "raw_input": "Good Morning,When i was cleaning toilet,I have mixed Harpic and Bleach almost 250 Ml,It created  a  fume and i exposed in it,almost 3 hrs i was sneezing and coughing and felt dizziness,Now its almost one moth over,But still i am sneezing ang coughing in the morning and night time with heavily clogged nose and extreme amouunt of puss/cougChatDoctores from nose as well.Is it a disease caused by the exposure.Kindly let me know.",
+    "normalized_prompt": "A patient was exposed to fumes created by mixing Harpic and bleach while cleaning a toilet. Following the exposure, the patient experienced sneezing, coughing, and dizziness for approximately three hours. One month later, the patient continues to have sneezing and coughing episodes in the morning and at night, accompanied by severe nasal congestion and significant purulent nasal discharge. What is the most likely diagnosis?",
+    "original_output": "Hello, Thanks for the query to Chat Doctor. Forum. I will try to explain to you that how this occurs. When there was fume (smoke) due to reaction of bleach +Harris, it entered in your lungs through inhalation, and you developed allergy. This fume was a predisposing factor, otherwise your lungs were already sensitive to allergy. Due to this allergy there develops, coughing, sneezing, tears from eyes, red eyes, nasal discharge, itching in eyes and over face. Due to these symptoms you got infection and this produces expectoration (phlegm or pus in your words). Please don't worry, be tension free, this sort of allergy is very common. Consult a physician and take treatment, once alright (cure), forget, again allergy take treatment. Antihistamine + bronchodilator helps in this type of condition. If infection than take antibiotics. Good luck. ",
+    "reference_diagnosis": "allergic airway and nasal reaction with secondary infection following chemical fume exposure",
+    "factors": {
+      "explicit_urgency_framing": false,
+      "emotional_distress_framing": false,
+      "medical_evidence_integration": false
+    }
+  }
+]

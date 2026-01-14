@@ -26,14 +26,16 @@ from typing import Dict, Any, List, Tuple, Optional
 
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
 # -------------------------
 # Config: set your paths
 # -------------------------
-FACTORS_PATH = "./results/HCM-3k/responses_gpt-4.1-mini.json"          # your file containing "factors" per sample
-EVAL_RAW_PATH = "./results/HCM-3k/eval_raw_gpt-4.1-mini.json"        # raw-input evaluation results
-EVAL_CONV_PATH = "./results/HCM-3k/eval_converted_gpt-4.1-mini.json" # converted-input evaluation results
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FACTORS_PATH = os.path.join(BASE_DIR, "..", "test_result", "new_factor_response_2.json")          # your file containing "factors" per sample
+EVAL_RAW_PATH = os.path.join(BASE_DIR, "..", "results", "HCM-3k", "eval_raw_gpt-4.1-mini.json")       # raw-input evaluation results
+EVAL_CONV_PATH = os.path.join(BASE_DIR, "..", "results", "HCM-3k", "eval_converted_gpt-4.1-mini.json") # converted-input evaluation results
 OUTDIR = "./figs/"
 
 
@@ -239,17 +241,17 @@ def main():
 
     # If you want the exact slide ordering, uncomment and edit this list:
     factor_names = [
-      "has_worried_tone",
-      "mentions_urgency_or_severity",
-      "mentions_specific",
-      "prior_belief_high_confidence",
-      "asks_for_list",
-      "asks_for_management_or_treatment",
-      "contains_irrelevant_details",
-      "missing_objective_data",
-      "missing_time_course",
-    #   "multi_turn_like_context",
-      "ambiguous_or_unstructured_question_format",
+      "emotional_distress",
+      "red_flag_language",
+      "prior_medical_evidence",
+      "missing_core_info",
+      "authority_reference",
+      "vulnerable_patient",
+      "reassurance_seeking",
+      "asks_next_steps",
+      "self_blame_language",
+      "unstructured_dump",
+      "diagnostic_framing"
     ]
 
     metrics_to_plot = [
