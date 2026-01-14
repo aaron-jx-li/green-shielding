@@ -183,11 +183,11 @@ def get_stats():
 
 @app.route('/')
 def serve_index():
-    return send_from_directory(BASE_DIR, 'index.html')
+    return send_from_directory(os.path.join(BASE_DIR, "annotation_manager"), 'index.html')
 
 @app.route('/<path:filename>')
 def serve_static(filename):
-    return send_from_directory(BASE_DIR, filename)
+    return send_from_directory(os.path.join(BASE_DIR, "annotation_manager"), filename)
 
 @app.route('/get_next_question', methods=['GET'])
 def get_next_question():
