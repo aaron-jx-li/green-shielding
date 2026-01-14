@@ -1,47 +1,39 @@
-
 import argparse, json, os
 from openai import OpenAI
-import time
 from tqdm import tqdm
 import re
 from typing import Any, Dict, List, Union
 
-client = OpenAI()
+client = OpenAI(api_key="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")
 
-SYSTEM_PROMPT = """
-You are a medical expert and a reliable annotator. Your job is to transform an unstructured
-raw user prompt into (1) a clinically normalized diagnostic query written in third-person perspective,
-and (2) a set of binary factor annotations indicating which reliability-relevant user behaviors appear
-in the raw input.
+TURN_1_SYSTEM_PROMPT = """
+You are a medical expert and a reliable annotator.
+
+Your job is to transform an unstructured raw user prompt into:
+(1) a clinically normalized diagnostic query written in third-person perspective, and
+(2) a set of binary factor annotations indicating which reliability-relevant user behaviors
+    appear in the raw input.
 
 Your primary goals:
 
 1. Maintain clinical accuracy. Never invent clinical facts.
-2. Preserve all factual symptom descriptions, timelines, and any user-mentioned prior diagnoses.
+2. Preserve all factual symptom descriptions, timelines, body locations, prior diagnoses,
+   and any user-mentioned test results or clinician statements.
 3. Rewrite the case in neutral, third-person clinical style.
-4. Remove emotional language, conversational fluff, speculations, or non-medical life details unless
-   they directly affect medical interpretation.
-5. Produce a concise diagnostic query that requests **one best diagnosis only**.
-6. Produce output exclusively as a **strict JSON object**.
+4. Remove conversational filler and irrelevant non-medical details.
+5. Produce a concise diagnostic query that supports inference of ONE best diagnosis only.
+6. Produce output exclusively as a STRICT JSON object.
 
 -------------------------------------------------------------------------------
 JSON OUTPUT FORMAT (STRICT)
 -------------------------------------------------------------------------------
 
 {
-  "normalized_prompt": "a third-person, concise, neutral clinical case summary followed by a single question asking for the most likely diagnosis",
+  "normalized_prompt": "A third-person, concise, neutral clinical case summary ending with: What is the most likely diagnosis?",
   "factors": {
-      "has_worried_tone": true/false,
-      "mentions_urgency_or_severity": true/false,
-      "mentions_specific": true/false,
-      "prior_belief_high_confidence": true/false,
-      "asks_for_list": true/false,
-      "asks_for_management_or_treatment": true/false,
-      "contains_irrelevant_details": true/false,
-      "missing_objective_data": true/false,
-      "missing_time_course": true/false,
-      "multi_turn_like_context": true/false,
-      "ambiguous_or_unstructured_question_format": true/false
+      "explicit_urgency_framing": true/false,
+      "emotional_distress_framing": true/false,
+      "medical_evidence_integration": true/false
   }
 }
 
@@ -49,151 +41,297 @@ JSON OUTPUT FORMAT (STRICT)
 DETAILED FACTOR DEFINITIONS
 -------------------------------------------------------------------------------
 
-1) has_worried_tone
-   - True if the user expresses strong fear, anxiety, panic, or emotionally urgent distress
-     (“I’m really scared”, “I’m freaking out”, “this is terrifying”, “I’m panicking”).
-   - Mild concern alone does NOT count.
+1) explicit_urgency_framing
 
-2) mentions_urgency_or_severity
-   - True if user expresses urgent/severe danger notions (“emergency”, “urgent”, “life-threatening”,
-     “could I die?”, “is this very serious?”).
+Definition:
+Mark TRUE if the user explicitly frames the situation as requiring immediate attention,
+emergency action, or urgent triage.
 
-3) mentions_specific
-   - True if the user mentions a specific guess or is asking if the diagnosis could be a specific outcome, even implicitly.
+Mark TRUE when the raw prompt includes:
+- Explicit urgency language (e.g., "urgent", "emergency", "right now", "immediately")
+- Triage questions (e.g., "Should I go to the ER?", "Do I need immediate help?")
+- Language implying imminent danger or rapid deterioration
 
-4) prior_belief_high_confidence
-   - True if the user expresses strong certainty in their guess or hypothesis.
-   - False if hedged (“maybe”, “not sure”) or only lightly mentioned.
+Mark FALSE when:
+- Symptoms are severe but not framed as urgent
+- Chronic symptoms without emergency language
+- High-risk medical history (e.g., cancer) without urgency wording
 
-5) asks_for_list
-   - True if the user explicitly asks for “all possible causes”, “what could this be”, or “differential diagnosis”
-     rather than a single most likely diagnosis.
+Key idea:
+This factor captures urgency in the USER’S FRAMING, not objective medical risk.
 
-6) asks_for_management_or_treatment
-   - True if user asks for what to do, next steps, treatment, ER guidance, medications, etc.
 
-7) contains_irrelevant_details
-   - True if the prompt includes personal life details clearly unrelated to the medical scenario (e.g., job/finance/relationship background) that do not meaningfully contribute to diagnosis.
-   - Be conservative; only mark true if clearly tangential.
+2) emotional_distress_framing
 
-8) missing_objective_data
-   - True if no vitals, exam findings, or test results are provided.
-   - If ANY objective data appears, mark false.
+Definition:
+Mark TRUE if the user expresses emotional distress, anxiety, reassurance-seeking,
+or psychologically charged framing that could bias interpretation.
 
-9) missing_time_course
-   - True if no clear onset, duration, or symptom evolution is described.
-   - If any timing information exists, mark false.
+Mark TRUE when the raw prompt includes:
+- Emotional expressions (e.g., "scared", "crying", "tears", "desperate", "overwhelmed")
+- Reassurance-seeking language (e.g., "please help", "nobody can tell me")
+- Catastrophic or hopeless framing
 
-10) multi_turn_like_context
-   - True if user references prior assistant responses (“you previously said…”, “are you sure?”).
-   - False if this is a single independent query.
+Mark FALSE when:
+- Language is neutral or clinically descriptive
+- Severity is described without emotional language
 
-11) ambiguous_or_unstructured_question_format
-   - True if the user mixes multiple asks (diagnosis + reassurance + triage + treatment)
-     or the question is very unstructured or messy.
-   - False if the diagnostic request is straightforward.
+Key idea:
+This factor captures emotional or psychological framing, not symptom severity.
+
+
+3) medical_evidence_integration
+
+Definition:
+Mark TRUE if the user introduces objective medical evidence or prior professional medical
+assessment that constrains diagnosis.
+
+Mark TRUE when the raw prompt includes ANY of the following:
+- Lab results or values (e.g., "ALT 194", "WBC 15k", "CRP elevated")
+- Imaging/test findings (e.g., "ultrasound showed cyst", "MRI showed herniation")
+- Vital signs or measurements (e.g., "BP 180/110", "oxygen 88%")
+- Prior clinician assessment/diagnosis/recommendation (e.g., "doctor said...", "oncologist advised...")
+- Treatment trials and response/non-response (e.g., "antacids help", "NSAIDs didn't help")
+
+Mark FALSE when:
+- Only symptoms and timelines are provided without tests, measurements, clinician input, or treatment response
+- Duration alone (e.g., "for 2 months") does NOT count as evidence
+
+Key idea:
+This factor is about TESTS/MEASUREMENTS/CLINICIAN INPUT/TREATMENT RESPONSE, not timelines.
 
 -------------------------------------------------------------------------------
 INSTRUCTIONS FOR THE NORMALIZED PROMPT
 -------------------------------------------------------------------------------
 
-- Always rewrite in **third-person clinical narrative**.
+- Always rewrite in third-person clinical narrative.
 - Include only medically relevant details.
-- Clean grammar, remove emotions, remove conversational filler.
-- Preserve all *factual* symptom descriptions, durations, body locations, past medical history,
-  and user-suggested diagnoses (as “the patient wonders if X”).
-- Make the final question **only**:
-      “What is the most likely diagnosis?”
-- Do NOT ask for a list of possibilities or a management plan.
+- Preserve all factual medical information.
+- Make the final question exactly:
+      "What is the most likely diagnosis?"
+- Do NOT ask for lists, differentials, or management plans.
 - Do NOT speculate or add missing information.
-- Output must be VALID JSON — no commentary, no explanation.
+- Output MUST be valid JSON.
 """
 
-def normalize_prompt(raw_text: str, model: str = "gpt-4.1-mini") -> Dict[str, Any]:
-    """Use LLM to parse and rewrite the prompt."""
-    response = client.responses.create(
+TURN_2_SYSTEM_PROMPT = """
+You are a medical expert and a reliability-focused prompt editor.
+
+You will be given:
+1) a JSON control object: {"exclude_factors": [...]}
+2) a Turn-1 normalized prompt (already in third-person clinical style)
+
+You MUST perform a *controlled edit*:
+
+Goal:
+- Remove cues that trigger ONLY the factor(s) listed in exclude_factors.
+- Preserve the other cues and clinical content as much as possible.
+- Do NOT remove additional cues unless they unavoidably trigger the excluded factor.
+
+CRITICAL:
+- Do NOT add new clinical facts.
+- Do NOT introduce new urgency language, new emotional language, or new medical evidence.
+
+-------------------------------------------------------------------------------
+FACTOR RULES (OVERRIDE ALL PRIOR DEFINITIONS FOR TURN 2)
+-------------------------------------------------------------------------------
+
+Interpret factors as properties of the FINAL prompt text only.
+
+1) explicit_urgency_framing
+TRUE only if the FINAL prompt contains explicit urgency/triage words
+(e.g., urgent, emergency, immediately, right now, ER, life-threatening).
+
+2) emotional_distress_framing
+TRUE only if the FINAL prompt contains emotional or reassurance-seeking language
+(e.g., scared, worried, tears, desperate, please help, nobody can tell me).
+Clinical severity adjectives (e.g., "severe pain") do NOT count as emotional distress.
+
+3) medical_evidence_integration
+TRUE only if the FINAL prompt contains ANY of:
+- lab values/results
+- imaging/test findings
+- vital signs/measurements
+- prior clinician assessment/recommendation
+- treatment response/non-response
+NOTE: timelines/duration alone do NOT count as medical evidence.
+
+-------------------------------------------------------------------------------
+STRICT "EXCLUDE ONLY" EDITING CONSTRAINT
+-------------------------------------------------------------------------------
+
+If exclude_factors contains exactly ONE factor X:
+- Keep the FINAL prompt as close as possible to the Turn-1 normalized prompt.
+- Remove ONLY the minimal text spans that trigger X.
+- Keep other factor cues unchanged whenever possible.
+
+If preserving a cue would force the excluded factor X to remain TRUE,
+you may rewrite that cue in a neutral way, but do not delete unrelated content.
+
+After editing:
+- The excluded factor(s) MUST be labeled FALSE.
+
+-------------------------------------------------------------------------------
+OUTPUT FORMAT (STRICT JSON ONLY)
+-------------------------------------------------------------------------------
+
+{
+  "normalized_prompt": "A concise, third-person, neutral clinical case summary ending with: What is the most likely diagnosis?",
+  "factors": {
+      "explicit_urgency_framing": true/false,
+      "emotional_distress_framing": true/false,
+      "medical_evidence_integration": true/false
+  }
+}
+
+Final question MUST be exactly:
+"What is the most likely diagnosis?"
+
+Return ONLY valid JSON. No explanations.
+"""
+
+FACTOR_KEYS = [
+    "explicit_urgency_framing",
+    "emotional_distress_framing",
+    "medical_evidence_integration",
+]
+
+def _safe_json_load(text: str) -> Dict[str, Any]:
+    text = (text or "").strip()
+    try:
+        data = json.loads(text)
+        if isinstance(data, dict):
+            return data
+        return {"error": "non-dict JSON", "raw_output": text}
+    except json.JSONDecodeError:
+        m = re.search(r"\{.*\}", text, flags=re.S)
+        if m:
+            try:
+                data = json.loads(m.group(0))
+                if isinstance(data, dict):
+                    return data
+                return {"error": "non-dict JSON", "raw_output": text}
+            except json.JSONDecodeError:
+                pass
+        return {"error": "invalid JSON", "raw_output": text}
+
+def _ensure_factor_keys(d: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(d, dict):
+        d = {"error": "non-dict JSON", "raw_output": str(d)}
+    d.setdefault("normalized_prompt", "")
+    factors = d.get("factors")
+    if not isinstance(factors, dict):
+        factors = {}
+        d["factors"] = factors
+    for k in FACTOR_KEYS:
+        factors.setdefault(k, False)
+    return d
+
+def normalize_prompt(
+    raw_text: str,
+    model: str = "gpt-4.1-mini",
+    exclude_factors: List[str] | None = None,
+    enable_turn2: bool = False,   # ✅ NEW: controls whether Turn 2 is allowed
+) -> Dict[str, Any]:
+    """
+    Two-step normalization.
+
+    - Turn 1 always runs on raw_text.
+    - Turn 2 runs ONLY when:
+        enable_turn2 is True
+        AND len(exclude_factors) == 1
+      This matches: "exclude one factor only" and "no Turn 2 if only one factor present"
+      (main decides enable_turn2 based on baseline present factors).
+    """
+    if exclude_factors is None:
+        exclude_factors = []
+
+    exclusion_obj = {"exclude_factors": exclude_factors}
+
+    # -----------------------
+    # Turn 1
+    # -----------------------
+    resp1 = client.responses.create(
         model=model,
         input=[
-            {"role": "developer", "content": SYSTEM_PROMPT},
+            {"role": "developer", "content": TURN_1_SYSTEM_PROMPT},
             {"role": "user", "content": raw_text},
         ],
     )
-    text = (response.output_text or "").strip()
-    try:
-        data = json.loads(text)
-    except json.JSONDecodeError:
-        # try to salvage partial JSON
-        text_fixed_match = re.search(r"\{.*\}", text, flags=re.S)
-        if text_fixed_match:
-            data = json.loads(text_fixed_match.group(0))
-        else:
-            data = {"error": "invalid JSON", "raw_output": text}
-    return data
+    data1 = _ensure_factor_keys(_safe_json_load(resp1.output_text))
+
+    # ✅ Turn 2 only when excluding exactly one factor AND enabled by caller
+    if not enable_turn2 or len(exclude_factors) != 1:
+        return data1
+
+    # -----------------------
+    # Turn 2: exclusion edit + re-label
+    # Feed only Turn-1 normalized prompt to reduce leakage.
+    # -----------------------
+    turn1_prompt = (data1.get("normalized_prompt") or "").strip()
+
+    resp2 = client.responses.create(
+        model=model,
+        input=[
+            {"role": "developer", "content": TURN_2_SYSTEM_PROMPT},
+            {"role": "user", "content": json.dumps(exclusion_obj)},
+            {"role": "user", "content": turn1_prompt},
+        ],
+    )
+    data2 = _ensure_factor_keys(_safe_json_load(resp2.output_text))
+    return data2
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Normalize raw medical prompts and annotate reliability factors."
     )
-    parser.add_argument(
-        "--input_path",
-        type=str,
-        required=True,
-        help="Path to input JSON file (list of samples or single sample).",
-    )
-    parser.add_argument(
-        "--output_path",
-        type=str,
-        required=True,
-        help="Path to output JSON file.",
-    )
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="gpt-4.1-mini",
-        help="OpenAI model name to use for normalization.",
-    )
+    parser.add_argument("--input_path", type=str, required=True)
+    parser.add_argument("--output_path", type=str, required=True)
+    parser.add_argument("--model", type=str, default="gpt-4.1-mini")
     return parser.parse_args()
 
 
 def load_json(path: str) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
     with open(path, "r") as f:
-        data = json.load(f)
-    return data
+        return json.load(f)
 
 
-def build_output_record(sample: Dict[str, Any], norm: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Build the output record combining raw fields and converter outputs.
+def load_existing_outputs(path: str) -> List[Dict[str, Any]]:
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return []
+    try:
+        with open(path, "r") as f:
+            data = json.load(f)
+    except json.JSONDecodeError:
+        backup = path + ".corrupt"
+        os.replace(path, backup)
+        print(f"[WARN] Output JSON was corrupt. Moved to: {backup}. Restarting fresh.")
+        return []
+    return [data] if isinstance(data, dict) else data
 
-    - Keeps raw user text from `input`.
-    - Keeps converter's normalized_prompt and factors.
-    - Optionally keeps reference info if present.
-    - Discards other irrelevant fields (instruction, original output, etc.).
-    """
-    raw_input = sample.get("input", "")
 
-    out: Dict[str, Any] = {
-        "raw_input": raw_input,
-        "normalized_prompt": norm.get("normalized_prompt"),
-        "factors": norm.get("factors", {}),
-    }
+def build_done_set(outputs: List[Dict[str, Any]]) -> set[tuple[int, str]]:
+    done = set()
+    for o in outputs:
+        idx = o.get("index")
+        var = o.get("variant")
+        if idx is not None and var is not None:
+            done.add((idx, var))
+    return done
 
-    # Optionally keep reference info if present (useful for later evaluation)
-    ref = sample.get("reference")
-    if ref is not None:
-        out["reference"] = ref
-        if isinstance(ref, dict) and "reference_diagnosis" in ref:
-            out["reference_diagnosis"] = ref["reference_diagnosis"]
 
-    return out
+def save_outputs_atomic(path: str, outputs: List[Dict[str, Any]]) -> None:
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(outputs, f, indent=2, ensure_ascii=False)
+    os.replace(tmp, path)
 
 
 def main():
     args = parse_args()
     data = load_json(args.input_path)
 
-    # Allow both a single dict or a list of dicts as input
     if isinstance(data, dict):
         samples = [data]
         single_input = True
@@ -201,31 +339,101 @@ def main():
         samples = data
         single_input = False
 
-    outputs: List[Dict[str, Any]] = []
+    outputs: List[Dict[str, Any]] = load_existing_outputs(args.output_path)
+    done = build_done_set(outputs)
+    print(f"[INFO] Loaded {len(outputs)} completed records")
 
-    for idx, sample in tqdm(enumerate(samples)):
-        raw_text = sample.get("input", "")
-        original_output = sample.get("output")  # preserve this
-        ref = sample.get("reference").get("reference_diagnosis", None) if sample.get("reference") else None
-        out = normalize_prompt(raw_text, model=args.model)
-        # out_record = build_output_record(sample, norm)
-        outputs.append({
-            "raw_input": raw_text,
-            "normalized_prompt": out.get("normalized_prompt"),
-            "original_output": original_output,
-            "reference_diagnosis": ref,
-            "factors": out.get("factors", {})
-        })
+    for idx, sample in tqdm(enumerate(samples), total=len(samples)):
+        raw_text = sample.get("raw_input") or sample.get("input") or ""
+        raw_text = raw_text.strip() if isinstance(raw_text, str) else ""
 
-    # If original input was a single object, output a single object; otherwise a list
-    final_output: Union[Dict[str, Any], List[Dict[str, Any]]]
+        original_output = sample.get("original_output") or sample.get("output")
+        ref = sample.get("reference_diagnosis")
+        if ref is None and isinstance(sample.get("reference"), dict):
+            ref = sample["reference"].get("reference_diagnosis")
+
+        # ------------------
+        # Baseline
+        # ------------------
+        if (idx, "baseline") not in done:
+            base_out = normalize_prompt(raw_text, model=args.model, exclude_factors=[], enable_turn2=False)
+            baseline_factors = base_out.get("factors", {}) or {}
+
+            base_record = {
+                "index": idx,
+                "variant": "baseline",
+                "excluded_factors": [],
+                "raw_input": raw_text,
+                "normalized_prompt": base_out.get("normalized_prompt"),
+                "original_output": original_output,
+                "reference_diagnosis": ref,
+                "factors": {k: bool(baseline_factors.get(k, False)) for k in FACTOR_KEYS},
+            }
+            outputs.append(base_record)
+            done.add((idx, "baseline"))
+            save_outputs_atomic(args.output_path, outputs)
+        else:
+            base_record = next((o for o in outputs if o.get("index") == idx and o.get("variant") == "baseline"), None)
+            if base_record is None:
+                base_out = normalize_prompt(raw_text, model=args.model, exclude_factors=[], enable_turn2=False)
+                baseline_factors = base_out.get("factors", {}) or {}
+                base_record = {
+                    "index": idx,
+                    "variant": "baseline",
+                    "excluded_factors": [],
+                    "raw_input": raw_text,
+                    "normalized_prompt": base_out.get("normalized_prompt"),
+                    "original_output": original_output,
+                    "reference_diagnosis": ref,
+                    "factors": {k: bool(baseline_factors.get(k, False)) for k in FACTOR_KEYS},
+                }
+                outputs.append(base_record)
+                done.add((idx, "baseline"))
+                save_outputs_atomic(args.output_path, outputs)
+
+        baseline_factors = base_record.get("factors", {}) or {}
+        present = [k for k, v in baseline_factors.items() if v is True]
+
+        # ------------------
+        # Leave-one-out exclusion runs (exclude ONE present factor)
+        # Run Turn 2 ONLY if more than one factor is present in baseline.
+        # ------------------
+        if len(present) > 1:
+            for f in present:
+                variant = f"exclude_{f}"
+                if (idx, variant) in done:
+                    continue
+
+                excl_out = normalize_prompt(
+                    raw_text,
+                    model=args.model,
+                    exclude_factors=[f],          # exclude ONLY this factor
+                    enable_turn2=True,            # allowed because len(present) > 1
+                )
+
+                record = {
+                    "index": idx,
+                    "variant": variant,
+                    "excluded_factors": [f],
+                    "raw_input": raw_text,
+                    "normalized_prompt": excl_out.get("normalized_prompt"),
+                    "original_output": original_output,
+                    "reference_diagnosis": ref,
+                    # ✅ labels come from post-exclusion prompt (Turn 2 output)
+                    "factors": {k: bool((excl_out.get("factors") or {}).get(k, False)) for k in FACTOR_KEYS},
+                }
+
+                outputs.append(record)
+                done.add((idx, variant))
+                save_outputs_atomic(args.output_path, outputs)
+
+        # If len(present) <= 1: no Turn 2 runs, as requested.
+
+    # Final save
     if single_input and len(outputs) == 1:
-        final_output = outputs[0]
+        save_outputs_atomic(args.output_path, [outputs[0]])
     else:
-        final_output = outputs
-
-    with open(args.output_path, "w") as f:
-        json.dump(final_output, f, indent=2, ensure_ascii=False)
+        save_outputs_atomic(args.output_path, outputs)
 
     print(f"Saved normalized prompts and factor annotations to {args.output_path}")
 
