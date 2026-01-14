@@ -70,12 +70,20 @@ def oauth2callback():
     flow.fetch_token(authorization_response=request.url)
     creds = flow.credentials
 
-    print("✅ OAuth complete! Copy this token and add it to Render as GOOGLE_TOKEN_JSON:\n", flush=True)
-    print(creds.to_json(), flush=True)
+    token_json = creds.to_json()
 
-    return (
-        "✅ Authentication successful! Check your Render logs and copy the token JSON into your Render environment as GOOGLE_TOKEN_JSON."
-    )
+    # Still print for logs (optional)
+    app.logger.warning("OAUTH TOKEN JSON: %s", token_json)
+
+    # Show it on the page so you can copy it
+    return f"""
+    <h2>✅ Authentication successful</h2>
+    <p>Copy the token JSON below into Render env var <b>GOOGLE_TOKEN_JSON</b>, then redeploy.</p>
+    <pre style="white-space: pre-wrap; word-break: break-word; padding: 12px; background: #f5f5f5; border: 1px solid #ddd;">
+{token_json}
+    </pre>
+    """
+
 
 def get_drive_service():
     token_json = os.getenv("GOOGLE_TOKEN_JSON")
