@@ -39,7 +39,8 @@
             </div>
 
             <div class="annotation-section">
-                <h3>Question 2: What plausible diagnosis is missing?</h3>
+                <h3>Question 2: What plausible diagnosis is/are missing?</h3>
+                <p class="help-text" style="margin-bottom: 15px;">Separate by commas and leave blank if none</p>
                 <textarea 
                     id="missingPlausible" 
                     class="comment-textarea" 
@@ -56,7 +57,7 @@
             </div>
 
             <div class="annotation-section">
-                <h3>Question 4: What highly likely diagnosis is missing?</h3>
+                <h3>Question 4: What highly likely diagnosis is/are missing?</h3>
                 <p class="help-text" style="margin-bottom: 15px;">Separate by commas and leave blank if none</p>
                 <textarea 
                     id="missingHighlyLikely" 
@@ -64,6 +65,14 @@
                     placeholder="Enter missing highly likely diagnosis (leave blank if none)..."
                     rows="2"
                 ></textarea>
+            </div>
+
+            <div class="annotation-section">
+                <h3>Question 5: Match Extracted Diagnoses to Plausible Diagnoses</h3>
+                <p class="help-text" style="margin-bottom: 15px;">Check the boxes to indicate which extracted diagnoses match each plausible diagnosis. Each extracted diagnosis (columns) can match multiple plausible diagnoses (rows).</p>
+                <div class="table-container" id="matchingTableContainer">
+                    <!-- Table will be inserted here -->
+                </div>
             </div>
 
             <div class="button-group">
