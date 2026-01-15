@@ -78,6 +78,77 @@ class DiagnosisAnnotationApp {
         // Clear text inputs
         document.getElementById('missingPlausible').value = '';
         document.getElementById('missingHighlyLikely').value = '';
+
+        // Update Question 5: Matching table
+        this.updateMatchingTable();
+    }
+
+    updateMatchingTable() {
+        const container = document.getElementById('matchingTableContainer');
+        container.innerHTML = '';
+
+        if (!this.currentQuestion.dx_set || !this.currentQuestion.plausible_set) {
+            container.innerHTML = '<p>No data available for matching table.</p>';
+            return;
+        }
+
+        const dxSet = this.currentQuestion.dx_set;
+        const plausibleSet = this.currentQuestion.plausible_set;
+
+        // Create table
+        const table = document.createElement('table');
+        table.className = 'matching-table';
+
+        // Create header row
+        const headerRow = document.createElement('tr');
+        
+        // Corner cell (empty)
+        const cornerHeader = document.createElement('th');
+        cornerHeader.className = 'corner-header';
+        cornerHeader.textContent = '';
+        headerRow.appendChild(cornerHeader);
+
+        // Column headers (dx_set entries)
+        dxSet.forEach(dx => {
+            const th = document.createElement('th');
+            th.textContent = this.escapeHtml(dx);
+            th.title = this.escapeHtml(dx);
+            headerRow.appendChild(th);
+        });
+
+        table.appendChild(headerRow);
+
+        // Create data rows (plausible_set entries)
+        plausibleSet.forEach(plausible => {
+            const row = document.createElement('tr');
+            
+            // Row header (plausible diagnosis)
+            const rowHeader = document.createElement('th');
+            rowHeader.className = 'row-header';
+            rowHeader.innerHTML = `<span class="row-header-text">${this.escapeHtml(plausible)}</span>`;
+            rowHeader.title = this.escapeHtml(plausible);
+            row.appendChild(rowHeader);
+
+            // Checkbox cells for each dx_set entry
+            dxSet.forEach(dx => {
+                const cell = document.createElement('td');
+                cell.className = 'table-checkbox-cell';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'table-checkbox';
+                checkbox.name = `match_${this.escapeHtml(plausible)}_${this.escapeHtml(dx)}`;
+                checkbox.dataset.plausible = this.escapeHtml(plausible);
+                checkbox.dataset.dx = this.escapeHtml(dx);
+                
+                cell.appendChild(checkbox);
+                row.appendChild(cell);
+            });
+
+            table.appendChild(row);
+        });
+
+        container.appendChild(table);
     }
 
     escapeHtml(text) {
@@ -109,6 +180,20 @@ class DiagnosisAnnotationApp {
             .map(cb => cb.value);
         const missingHighlyLikely = document.getElementById('missingHighlyLikely').value.trim();
         
+        // Collect matching table data
+        const dxPlausibleMatches = {};
+        const allCheckboxes = document.querySelectorAll('.table-checkbox');
+        allCheckboxes.forEach(checkbox => {
+            const plausible = checkbox.dataset.plausible;
+            const dx = checkbox.dataset.dx;
+            const isMatched = checkbox.checked;
+            
+            if (!dxPlausibleMatches[dx]) {
+                dxPlausibleMatches[dx] = {};
+            }
+            dxPlausibleMatches[dx][plausible] = isMatched;
+        });
+        
         try {
             const nextBtn = document.getElementById('nextBtn');
             nextBtn.disabled = true;
@@ -124,7 +209,8 @@ class DiagnosisAnnotationApp {
                     not_plausible: notPlausible,
                     missing_plausible: missingPlausible,
                     not_highly_likely: notHighlyLikely,
-                    missing_highly_likely: missingHighlyLikely
+                    missing_highly_likely: missingHighlyLikely,
+                    dx_plausible_matches: dxPlausibleMatches
                 })
             });
             

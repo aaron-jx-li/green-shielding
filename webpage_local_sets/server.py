@@ -89,7 +89,7 @@ def get_next_question():
                 'completed': True,
                 'stats': stats
             })
-        
+        dx_set = question['metrics']['extracted_diagnoses']
         stats = get_stats()
         return jsonify({
             'success': True,
@@ -98,7 +98,8 @@ def get_next_question():
                 'index': question['index'],
                 'input': question['input'],
                 'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set']
+                'highly_likely_set': question['judge_dx_space']['highly_likely_set'],
+                'dx_set': dx_set
             },
             'stats': stats
         })
@@ -115,12 +116,38 @@ def save_annotation():
             return jsonify({'error': 'No index provided'}), 400
         
         question_index = str(data['index'])
+        
+        # Process dx_plausible_matches into a list of all pairs with match status
+        dx_plausible_matches_raw = data.get('dx_plausible_matches', {})
+        dx_plausible_pairs = []
+        
+        # Get all unique dx_set and plausible_set from the current question
+        # We need to load the question to get the full sets
+        questions = load_data()
+        current_question = next((q for q in questions if str(q['index']) == question_index), None)
+        
+        if current_question:
+            dx_set = current_question['metrics']['extracted_diagnoses']
+            plausible_set = current_question['judge_dx_space']['plausible_set']
+            
+            # Create pairs for all combinations
+            for dx in dx_set:
+                for plausible in plausible_set:
+                    # Check if this pair was matched (default to False if not in matches)
+                    is_matched = dx_plausible_matches_raw.get(dx, {}).get(plausible, False)
+                    dx_plausible_pairs.append({
+                        'dx': dx,
+                        'plausible': plausible,
+                        'matched': is_matched
+                    })
+        
         annotation = {
             'index': question_index,
             'not_plausible': data.get('not_plausible', []),
             'missing_plausible': data.get('missing_plausible', ''),
             'not_highly_likely': data.get('not_highly_likely', []),
             'missing_highly_likely': data.get('missing_highly_likely', ''),
+            'dx_plausible_pairs': dx_plausible_pairs,
             'timestamp': datetime.now().isoformat()
         }
         
@@ -140,6 +167,7 @@ def save_annotation():
             })
         
         stats = get_stats()
+        dx_set = question['metrics']['extracted_diagnoses']
         return jsonify({
             'success': True,
             'completed': False,
@@ -147,7 +175,8 @@ def save_annotation():
                 'index': question['index'],
                 'input': question['input'],
                 'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set']
+                'highly_likely_set': question['judge_dx_space']['highly_likely_set'],
+                'dx_set': dx_set
             },
             'stats': stats
         })
