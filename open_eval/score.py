@@ -40,6 +40,15 @@ def percentile(sorted_vals: List[float], q: float) -> float:
     frac = pos - lo
     return float(sorted_vals[lo] * (1 - frac) + sorted_vals[hi] * frac)
 
+def split_indices(n: int, test_ratio: float, seed: int) -> Tuple[List[int], List[int]]:
+    idx = list(range(n))
+    rng = random.Random(seed)
+    rng.shuffle(idx)
+    n_test = int(round(n * test_ratio))
+    test_idx = idx[:n_test]
+    train_idx = idx[n_test:]
+    return train_idx, test_idx
+
 # ---------------- Raw feature extraction ----------------
 
 def extract_raw_features(sample) -> Tuple[float, float, float]:
@@ -148,6 +157,64 @@ def add_scores(data, w, norm):
     data["summary"]["das_mean"] = total / n if n else None
     return data
 
+# ---------------- Generalization check (additional; does not change main pipeline) ----------------
+
+def eval_pairwise(samples, w, norm, margin=0.1) -> Dict[str, float]:
+    n_pairs = 0
+    n_correct = 0
+    n_margin_correct = 0
+    hinge_sum = 0.0
+
+    for s in samples:
+        f_pos = extract_features(s, norm)
+        das_pos = dot(w, f_pos)
+        for f_neg in make_negatives(f_pos, norm):
+            das_neg = dot(w, f_neg)
+            n_pairs += 1
+            if das_pos < das_neg:
+                n_correct += 1
+            if das_pos + margin <= das_neg:
+                n_margin_correct += 1
+            hinge_sum += max(0.0, margin + das_pos - das_neg)
+
+    return {
+        "n_pairs": float(n_pairs),
+        "pair_acc": n_correct / n_pairs if n_pairs else None,
+        "pair_margin_acc": n_margin_correct / n_pairs if n_pairs else None,
+        "mean_hinge": hinge_sum / n_pairs if n_pairs else None,
+    }
+
+def generalization_check(doctor_samples, seed: int, test_ratio: float,
+                         margin: float, lr: float, l2: float, iters: int) -> Dict[str, Any]:
+    train_idx, test_idx = split_indices(len(doctor_samples), test_ratio, seed)
+    train = [doctor_samples[i] for i in train_idx]
+    test = [doctor_samples[i] for i in test_idx]
+
+    # IMPORTANT: for a true generalization check, build normalizer on TRAIN only
+    norm_train = build_normalizer(train)
+
+    w_train = fit_weights_pairwise(
+        train, norm_train,
+        margin=margin, lr=lr, l2=l2, iters=iters, seed=seed
+    )
+
+    train_eval = eval_pairwise(train, w_train, norm_train, margin=margin)
+    test_eval = eval_pairwise(test, w_train, norm_train, margin=margin)
+
+    return {
+        "seed": seed,
+        "test_ratio": test_ratio,
+        "margin": margin,
+        "lr": lr,
+        "l2": l2,
+        "iters": iters,
+        "train_size": len(train),
+        "test_size": len(test),
+        "weights_fit_on_train": {"lambda": w_train[0], "mu": w_train[1], "nu": w_train[2]},
+        "normalizer_fit_on_train": norm_train,
+        "train_eval": train_eval,
+        "test_eval": test_eval,
+    }
 # ---------------- Main ----------------
 
 def main():
@@ -157,6 +224,20 @@ def main():
     ap.add_argument("--norm_eval", required=True)
     ap.add_argument("--out_prefix", default="das_scored")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--save", action="store_true", help="If set, save learned weights, normalizer, and scored JSON files.")
+
+    # knobs for training
+    ap.add_argument("--margin", type=float, default=0.1)
+    ap.add_argument("--lr", type=float, default=0.05)
+    ap.add_argument("--l2", type=float, default=1e-3)
+    ap.add_argument("--iters", type=int, default=4000)
+
+    # generalization check flags (OFF by default)
+    ap.add_argument("--gen_check", action="store_true",
+                    help="If set, run an additional train/test generalization check on doctor responses.")
+    ap.add_argument("--test_ratio", type=float, default=0.2,
+                    help="Doctor test split ratio for --gen_check.")
+
     args = ap.parse_args()
 
     doctor = load_json(args.doctor_eval)
@@ -164,25 +245,41 @@ def main():
     normed = load_json(args.norm_eval)
 
     norm_stats = build_normalizer(doctor["per_sample"])
-    save_json(norm_stats, f"{args.out_prefix}_normalizer.json")
 
     w = fit_weights_pairwise(doctor["per_sample"], norm_stats, seed=args.seed)
-    save_json({"lambda": w[0], "mu": w[1], "nu": w[2], "normalizer": norm_stats},
-              f"{args.out_prefix}_weights.json")
 
     doctor = add_scores(doctor, w, norm_stats)
     raw = add_scores(raw, w, norm_stats)
     normed = add_scores(normed, w, norm_stats)
-
-    save_json(doctor, f"{args.out_prefix}_doctor.json")
-    save_json(raw, f"{args.out_prefix}_raw.json")
-    save_json(normed, f"{args.out_prefix}_norm.json")
+    if args.save:
+        save_json(norm_stats, f"{args.out_prefix}_normalizer.json")
+        save_json({"lambda": w[0], "mu": w[1], "nu": w[2], "normalizer": norm_stats}, f"{args.out_prefix}_weights.json")
+        save_json(doctor, f"{args.out_prefix}_doctor.json")
+        save_json(raw, f"{args.out_prefix}_raw.json")
+        save_json(normed, f"{args.out_prefix}_norm.json")
 
     print("Learned weights:", w)
     print("Mean DAS:")
     print("  Doctor:", doctor["summary"]["das_mean"])
     print("  Raw:", raw["summary"]["das_mean"])
     print("  Norm:", normed["summary"]["das_mean"])
+
+    # -------- additional generalization check (optional) --------
+    if args.gen_check:
+        gen = generalization_check(
+            doctor_samples=doctor["per_sample"],
+            seed=args.seed,
+            test_ratio=args.test_ratio,
+            margin=args.margin,
+            lr=args.lr,
+            l2=args.l2,
+            iters=args.iters
+        )
+        print("\nGeneralization check (doctor train/test):")
+        print("  Train size:", gen["train_size"], "Test size:", gen["test_size"])
+        print("  Weights (fit on train):", gen["weights_fit_on_train"])
+        print("  Train pairwise:", gen["train_eval"])
+        print("  Test  pairwise:", gen["test_eval"])
 
 if __name__ == "__main__":
     main()

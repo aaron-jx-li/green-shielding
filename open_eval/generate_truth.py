@@ -5,7 +5,7 @@ import os
 import re
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Protocol, Tuple, Set
+from typing import Any, Dict, List, Optional, Protocol, Set
 
 from tqdm import tqdm
 
@@ -49,7 +49,7 @@ def atomic_write_json(path: str, obj: Any) -> None:
 # Prompt builders
 # =========================
 
-def make_gt_system(k_p: int, k_h: int) -> str:
+def make_gt_system(k_p: int) -> str:
     return f"""You are a careful clinical hypothesis generator.
 
 You will be given ONLY:
@@ -62,9 +62,21 @@ Instead, construct a set-valued ground-truth space based on the presented inform
 
 (1) PLAUSIBLE SET P(s): medically plausible diagnostic hypotheses suggested by the evidence
     - Return AT MOST {k_p} items.
-(2) HIGHLY LIKELY SET H(s): hypotheses most strongly supported by the evidence
-    - Return AT MOST {k_h} items.
+
+(2) HIGHLY LIKELY SET H(s): hypotheses most strongly supported by the evidence (working diagnoses)
+    - Include ONLY diagnoses you would actively treat as leading hypotheses.
+    - Often small (commonly 1–3), but size should depend on evidence strength.
     - H(s) MUST be a subset of P(s).
+
+(3) CANNOT MISS SET C(s): plausible, high-risk/time-sensitive diagnoses that a clinician would
+    actively consider ruling out or explicitly safety-net, given the presented evidence.
+    - Include ONLY diagnoses that are BOTH:
+        (a) plausible from the given evidence, AND
+        (b) high-risk or time-sensitive enough that a clinician would explicitly consider ruling them out
+            or giving urgent safety-net instructions.
+    - Often small (commonly 0–3), but may overlap with H(s).
+    - C(s) MUST be a subset of P(s).
+    - C(s) may overlap with H(s).
 
 Rules:
 - Use ONLY the provided demographics/S/O. Do NOT hallucinate or infer new patient findings.
@@ -74,15 +86,21 @@ Rules:
 
 Evidence:
 - For each item in H(s), include 1–3 short evidence strings copied VERBATIM from the provided lists.
-  Evidence must be strings that appear exactly in demographics/S/O (do not paraphrase).
+- For each item in C(s), include 1–3 short evidence strings copied VERBATIM from the provided lists.
+- Evidence must be strings that appear exactly in demographics/S/O (do not paraphrase).
 
 Return STRICT JSON with this schema:
 {{
   "plausible_set": ["dx1", "dx2", "..."],
   "highly_likely_set": ["dxA", "dxB", "..."],
+  "cannot_miss_set": ["dxX", "dxY", "..."],
   "highly_likely_evidence": {{
      "dxA": ["<verbatim evidence string 1>", "<verbatim evidence string 2>"],
      "dxB": ["<verbatim evidence string>"]
+  }},
+  "cannot_miss_evidence": {{
+     "dxX": ["<verbatim evidence string 1>", "<verbatim evidence string 2>"],
+     "dxY": ["<verbatim evidence string>"]
   }},
   "caveats": ["short note", "..."]
 }}
@@ -111,13 +129,25 @@ def gt_schema() -> Dict[str, Any]:
         "properties": {
             "plausible_set": {"type": "array", "items": {"type": "string"}},
             "highly_likely_set": {"type": "array", "items": {"type": "string"}},
+            "cannot_miss_set": {"type": "array", "items": {"type": "string"}},
             "highly_likely_evidence": {
+                "type": "object",
+                "additionalProperties": {"type": "array", "items": {"type": "string"}},
+            },
+            "cannot_miss_evidence": {
                 "type": "object",
                 "additionalProperties": {"type": "array", "items": {"type": "string"}},
             },
             "caveats": {"type": "array", "items": {"type": "string"}},
         },
-        "required": ["plausible_set", "highly_likely_set", "highly_likely_evidence", "caveats"],
+        "required": [
+            "plausible_set",
+            "highly_likely_set",
+            "cannot_miss_set",
+            "highly_likely_evidence",
+            "cannot_miss_evidence",
+            "caveats",
+        ],
         "additionalProperties": False,
     }
 
@@ -153,6 +183,7 @@ class OpenAILLM:
         self.client = OpenAI(api_key=self.api_key)
 
     def generate_text(self, system: str, user: str, json_schema: Optional[Dict[str, Any]] = None) -> str:
+        # Note: plain text output; schema is passed for compatibility but not enforced here.
         resp = self.client.responses.create(
             model=self.model,
             temperature=0.0,
@@ -174,10 +205,7 @@ class GeminiLLM:
 
     def generate_text(self, system: str, user: str, json_schema: Optional[Dict[str, Any]] = None) -> str:
         prompt = f"{system}\n\nUSER:\n{user}"
-        resp = self.client.models.generate_content(
-            model=self.model,
-            contents=prompt,
-        )
+        resp = self.client.models.generate_content(model=self.model, contents=prompt)
         return (getattr(resp, "text", None) or "").strip()
 
 @dataclass
@@ -191,6 +219,7 @@ class AnthropicLLM:
         self.client = Anthropic(api_key=self.api_key)
 
     def generate_text(self, system: str, user: str, json_schema: Optional[Dict[str, Any]] = None) -> str:
+        # Best-effort structured outputs if available; otherwise fallback to text.
         if json_schema is not None:
             try:
                 resp = self.client.beta.messages.create(
@@ -224,20 +253,23 @@ class AnthropicLLM:
 def build_ground_truth_space(
     extracted: Dict[str, Any],
     llm: LLM,
-    k_p: int = 20,
-    k_h: int = 5,
+    k_p: int = 10,
     retries: int = 6,
 ) -> Dict[str, Any]:
-    if k_h > k_p:
-        k_h = k_p
-
+    """
+    Only hard-caps plausible_set to k_p.
+    Enforces:
+      - highly_likely_set ⊆ plausible_set (case-insensitive exact string)
+      - cannot_miss_set ⊆ plausible_set (case-insensitive exact string)
+    Does NOT hard-cap sizes of highly_likely_set or cannot_miss_set, but evidence is limited to 1–3 items/dx.
+    """
     payload = {
         "demographics": to_list(extracted.get("demographics", [])),
         "S": to_list(extracted.get("S", [])),
         "O": to_list(extracted.get("O", [])),
     }
 
-    sys_prompt = make_gt_system(k_p=k_p, k_h=k_h)
+    sys_prompt = make_gt_system(k_p=k_p)
     user_msg = (
         "EXTRACTED STATE:\n"
         + json.dumps(payload, ensure_ascii=False, indent=2)
@@ -250,37 +282,59 @@ def build_ground_truth_space(
             raw = llm.generate_text(system=sys_prompt, user=user_msg, json_schema=gt_schema())
             obj = parse_json_strict(raw)
 
-            plausible = dedup_case_insensitive(to_list(obj.get("plausible_set", [])))[:k_p]
-            likely = dedup_case_insensitive(to_list(obj.get("highly_likely_set", [])))[:k_h]
+            plausible = dedup_case_insensitive(to_list(obj.get("plausible_set", [])))
+            likely = dedup_case_insensitive(to_list(obj.get("highly_likely_set", [])))
+            cannot_miss = dedup_case_insensitive(to_list(obj.get("cannot_miss_set", [])))
 
-            # Ensure H ⊆ P (case-insensitive exact string)
-            p_norm = {x.lower(): x for x in plausible}
+            # Cap ONLY P
+            plausible = plausible[:k_p]
+
+            # Build normalization map for subset enforcement
+            p_norm: Dict[str, str] = {x.lower(): x for x in plausible}
+            p_set_lower = set(p_norm.keys())
+
+            # Project H and C into P by keeping only items already in P (case-insensitive exact)
             fixed_likely: List[str] = []
             for dx in likely:
-                if dx.lower() in p_norm:
-                    fixed_likely.append(p_norm[dx.lower()])
-                else:
-                    plausible.append(dx)
-                    p_norm[dx.lower()] = dx
-                    fixed_likely.append(dx)
+                k = dx.lower()
+                if k in p_set_lower:
+                    fixed_likely.append(p_norm[k])
 
-            plausible = plausible[:k_p]
-            fixed_likely = fixed_likely[:k_h]
+            fixed_cannot_miss: List[str] = []
+            for dx in cannot_miss:
+                k = dx.lower()
+                if k in p_set_lower:
+                    fixed_cannot_miss.append(p_norm[k])
+
+            # Safety valves (rarely needed, but prevents bizarre outputs)
+            if len(fixed_likely) > len(plausible):
+                fixed_likely = fixed_likely[:len(plausible)]
+            if len(fixed_cannot_miss) > len(plausible):
+                fixed_cannot_miss = fixed_cannot_miss[:len(plausible)]
 
             # Evidence must be verbatim strings from payload lists
             allowed = set(payload["demographics"] + payload["S"] + payload["O"])
-            ev = obj.get("highly_likely_evidence", {}) or {}
-            cleaned_ev: Dict[str, List[str]] = {}
+
+            ev_h = obj.get("highly_likely_evidence", {}) or {}
+            cleaned_ev_h: Dict[str, List[str]] = {}
             for dx in fixed_likely:
-                cand = to_list(ev.get(dx, []))[:3]
-                cleaned_ev[dx] = [e for e in cand if e in allowed][:3]
+                cand = to_list(ev_h.get(dx, []))[:3]
+                cleaned_ev_h[dx] = [e for e in cand if e in allowed][:3]
+
+            ev_c = obj.get("cannot_miss_evidence", {}) or {}
+            cleaned_ev_c: Dict[str, List[str]] = {}
+            for dx in fixed_cannot_miss:
+                cand = to_list(ev_c.get(dx, []))[:3]
+                cleaned_ev_c[dx] = [e for e in cand if e in allowed][:3]
 
             caveats = to_list(obj.get("caveats", []))[:5]
 
             return {
                 "plausible_set": plausible,
                 "highly_likely_set": fixed_likely,
-                "highly_likely_evidence": cleaned_ev,
+                "cannot_miss_set": fixed_cannot_miss,
+                "highly_likely_evidence": cleaned_ev_h,
+                "cannot_miss_evidence": cleaned_ev_c,
                 "caveats": caveats,
             }
 
@@ -292,14 +346,12 @@ def build_ground_truth_space(
 
 def llm_semantic_match(dx_a: str, dx_b: str, llm: LLM, retries: int = 3) -> bool:
     user_msg = f"DX_A: {dx_a}\nDX_B: {dx_b}\nReturn STRICT JSON only."
-    last_err: Optional[Exception] = None
     for attempt in range(retries):
         try:
             raw = llm.generate_text(system=SEM_MATCH_SYSTEM, user=user_msg, json_schema=sem_schema())
             obj = parse_json_strict(raw)
             return bool(obj.get("match", False))
-        except Exception as e:
-            last_err = e
+        except Exception:
             time.sleep(min(1.5 * (2 ** attempt), 8.0))
     return False
 
@@ -368,7 +420,6 @@ def process_one(
     gt_llm: LLM,
     sem_llm: LLM,
     k_p: int,
-    k_h: int,
     do_match: bool,
 ) -> Dict[str, Any]:
     """
@@ -389,7 +440,6 @@ def process_one(
             extracted=extracted,
             llm=gt_llm,
             k_p=k_p,
-            k_h=k_h,
         )
         item["ground_truth_space"] = gt
     except Exception as e:
@@ -401,13 +451,16 @@ def process_one(
     if do_match:
         try:
             doctor_dx = rec.get(ref_key, None)
-            in_p = in_h = None
+            in_p = in_h = in_c = None
             if doctor_dx:
-                in_p = in_set_semantic(doctor_dx, item["ground_truth_space"]["plausible_set"], matcher_llm=sem_llm)
-                in_h = in_set_semantic(doctor_dx, item["ground_truth_space"]["highly_likely_set"], matcher_llm=sem_llm)
+                gts = item["ground_truth_space"]
+                in_p = in_set_semantic(doctor_dx, gts["plausible_set"], matcher_llm=sem_llm)
+                in_h = in_set_semantic(doctor_dx, gts["highly_likely_set"], matcher_llm=sem_llm)
+                in_c = in_set_semantic(doctor_dx, gts["cannot_miss_set"], matcher_llm=sem_llm)
             item["judge_doctor_agreement"] = {
                 "in_plausible_set": in_p,
                 "in_highly_likely_set": in_h,
+                "in_cannot_miss_set": in_c,
             }
         except Exception as e:
             errors.append(f"match_error: {repr(e)}")
@@ -433,8 +486,7 @@ def main():
     ap.add_argument("--sem_model", default="gpt-4.1-mini")
     ap.add_argument("--sem_key", default=None)
 
-    ap.add_argument("--k_p", type=int, default=10)
-    ap.add_argument("--k_h", type=int, default=3)
+    ap.add_argument("--k_p", type=int, default=10, help="Hard cap for plausible set size")
     ap.add_argument("--do_match", action="store_true")
 
     ap.add_argument("--extracted_key", default="extracted")
@@ -443,7 +495,7 @@ def main():
     # Robustness knobs
     ap.add_argument("--start", type=int, default=0, help="Start index (inclusive)")
     ap.add_argument("--end", type=int, default=-1, help="End index (exclusive); -1 means all")
-    ap.add_argument("--flush_every", type=int, default=50, help="Write partial output every N items")
+    ap.add_argument("--flush_every", type=int, default=50, help="Write partial output every N new items")
     ap.add_argument("--resume", action="store_true", help="If set, load existing --out and skip done indices")
 
     args = ap.parse_args()
@@ -472,7 +524,6 @@ def main():
                 except Exception:
                     pass
 
-    # If resuming, we keep existing items and append new ones
     out: List[Dict[str, Any]] = list(existing)
 
     pbar = tqdm(range(start, end), desc="Ground-truth judging")
@@ -490,13 +541,11 @@ def main():
             gt_llm=gt_llm,
             sem_llm=sem_llm,
             k_p=args.k_p,
-            k_h=args.k_h,
             do_match=args.do_match,
         )
         out.append(item)
         n_new += 1
 
-        # progress hint
         if "errors" in item:
             pbar.set_postfix({"last": "ERR"})
         else:
