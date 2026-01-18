@@ -7,14 +7,20 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
 import os
+import random
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
 # Configuration
-DATA_PATH = "/Users/sancheznicolas/Documents/Research/GreenTeam/green_shielding3/green-shielding/webpage_local_sets/annotation_manager/data/sampled_data_HCM-3k.json"
-ANNOTATIONS_PATH = "/Users/sancheznicolas/Documents/Research/GreenTeam/green_shielding3/green-shielding/webpage_local_sets/annotation_manager/data/annotations.json"
+DATA_PATH = "annotation_manager/data/sampled_data_HCM-3k.json"
+ANNOTATIONS_PATH = "annotation_manager/data/annotations.json"
+ASSIGNMENTS_PATH = "annotation_manager/data/user_assignments.json"
+
+# Multi-user configuration
+USERS = ['Dr. Kornblith', 'Dr. Bains']
+USERS_PER_QUESTION = 2  # Number of users assigned to each question
 
 # Global data
 questions_data = None
@@ -44,22 +50,84 @@ def save_annotations(annotations_dict):
     with open(ANNOTATIONS_PATH, 'w') as f:
         json.dump(annotations_dict, f, indent=2)
 
-def get_next_unannotated_question():
-    """Get the next unannotated question."""
-    questions = load_data()
-    annotations = load_annotations()
-    
-    for i, question in enumerate(questions):
-        if str(question['index']) not in annotations:
-            return question, i
-    return None, None
+def load_assignments():
+    """Load question-to-users assignments."""
+    if os.path.exists(ASSIGNMENTS_PATH):
+        with open(ASSIGNMENTS_PATH, 'r') as f:
+            return json.load(f)
+    return {}
 
-def get_stats():
-    """Get annotation statistics."""
+def save_assignments(assignments_dict):
+    """Save question-to-users assignments."""
+    with open(ASSIGNMENTS_PATH, 'w') as f:
+        json.dump(assignments_dict, f, indent=2)
+
+def initialize_assignments():
+    """Initialize question assignments by randomly assigning each question to N users."""
+    questions = load_data()
+    assignments = load_assignments()
+    
+    # Check if assignments already exist for all questions
+    question_indices = [str(q['index']) for q in questions]
+    existing_indices = set(assignments.keys())
+    new_indices = set(question_indices) - existing_indices
+    
+    if not new_indices:
+        # All questions already assigned
+        return assignments
+    
+    # For each unassigned question, randomly select N users
+    for q_idx in new_indices:
+        num_users = min(USERS_PER_QUESTION, len(USERS))
+        assigned_users = random.sample(USERS, num_users)
+        assignments[q_idx] = assigned_users
+    
+    save_assignments(assignments)
+    return assignments
+
+def get_user_next_question(user_id):
+    """Get the next unannotated question for a specific user."""
     questions = load_data()
     annotations = load_annotations()
-    total = len(questions)
-    annotated = len(annotations)
+    assignments = load_assignments()
+    
+    # Ensure assignments are initialized
+    if not assignments:
+        assignments = initialize_assignments()
+    
+    # Find questions assigned to this user that haven't been annotated by this user
+    for question in questions:
+        q_idx = str(question['index'])
+        
+        # Check if this question is assigned to this user
+        if q_idx in assignments and user_id in assignments[q_idx]:
+            # Check if user has already annotated this question
+            if q_idx not in annotations or user_id not in annotations[q_idx]:
+                return question
+    
+    return None
+
+def get_user_stats(user_id):
+    """Get annotation statistics for a specific user."""
+    questions = load_data()
+    annotations = load_annotations()
+    assignments = load_assignments()
+    
+    # Ensure assignments are initialized
+    if not assignments:
+        assignments = initialize_assignments()
+    
+    # Count questions assigned to this user
+    total = 0
+    annotated = 0
+    
+    for question in questions:
+        q_idx = str(question['index'])
+        if q_idx in assignments and user_id in assignments[q_idx]:
+            total += 1
+            if q_idx in annotations and user_id in annotations[q_idx]:
+                annotated += 1
+    
     return {
         'total': total,
         'annotated': annotated,
@@ -76,21 +144,61 @@ def serve_static(filename):
     """Serve static files (CSS, JS)."""
     return send_from_directory('.', filename)
 
+@app.route('/users', methods=['GET'])
+def get_users():
+    """Get list of available users."""
+    return jsonify({
+        'success': True,
+        'users': USERS
+    })
+
+@app.route('/login', methods=['POST'])
+def login():
+    """Validate and set user ID."""
+    try:
+        data = request.get_json()
+        user_id = data.get('user_id') if data else None
+        
+        if not user_id:
+            return jsonify({'success': False, 'error': 'No user_id provided'}), 400
+        
+        if user_id not in USERS:
+            return jsonify({'success': False, 'error': f'Invalid user_id. Must be one of: {USERS}'}), 400
+        
+        # Initialize assignments if needed
+        initialize_assignments()
+        
+        return jsonify({
+            'success': True,
+            'user_id': user_id,
+            'users': USERS
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @app.route('/get_next_question', methods=['GET'])
 def get_next_question():
-    """Get the next unannotated question."""
+    """Get the next unannotated question for a user."""
     try:
-        question, idx = get_next_unannotated_question()
+        user_id = request.args.get('user_id')
+        
+        if not user_id:
+            return jsonify({'success': False, 'error': 'user_id parameter required'}), 400
+        
+        if user_id not in USERS:
+            return jsonify({'success': False, 'error': f'Invalid user_id. Must be one of: {USERS}'}), 400
+        
+        question = get_user_next_question(user_id)
         
         if question is None:
-            stats = get_stats()
+            stats = get_user_stats(user_id)
             return jsonify({
                 'success': True,
                 'completed': True,
                 'stats': stats
             })
-        dx_set = question['metrics']['extracted_diagnoses']
-        stats = get_stats()
+        
+        stats = get_user_stats(user_id)
         return jsonify({
             'success': True,
             'completed': False,
@@ -98,13 +206,12 @@ def get_next_question():
                 'index': question['index'],
                 'input': question['input'],
                 'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set'],
-                'dx_set': dx_set
+                'highly_likely_set': question['judge_dx_space']['highly_likely_set']
             },
             'stats': stats
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/save_annotation', methods=['POST'])
 def save_annotation():
@@ -113,61 +220,45 @@ def save_annotation():
         data = request.get_json()
         
         if not data or 'index' not in data:
-            return jsonify({'error': 'No index provided'}), 400
+            return jsonify({'success': False, 'error': 'No index provided'}), 400
+        
+        if 'user_id' not in data:
+            return jsonify({'success': False, 'error': 'No user_id provided'}), 400
+        
+        user_id = data['user_id']
+        if user_id not in USERS:
+            return jsonify({'success': False, 'error': f'Invalid user_id. Must be one of: {USERS}'}), 400
         
         question_index = str(data['index'])
-        
-        # Process dx_plausible_matches into a list of all pairs with match status
-        dx_plausible_matches_raw = data.get('dx_plausible_matches', {})
-        dx_plausible_pairs = []
-        
-        # Get all unique dx_set and plausible_set from the current question
-        # We need to load the question to get the full sets
-        questions = load_data()
-        current_question = next((q for q in questions if str(q['index']) == question_index), None)
-        
-        if current_question:
-            dx_set = current_question['metrics']['extracted_diagnoses']
-            plausible_set = current_question['judge_dx_space']['plausible_set']
-            
-            # Create pairs for all combinations
-            for dx in dx_set:
-                for plausible in plausible_set:
-                    # Check if this pair was matched (default to False if not in matches)
-                    is_matched = dx_plausible_matches_raw.get(dx, {}).get(plausible, False)
-                    dx_plausible_pairs.append({
-                        'dx': dx,
-                        'plausible': plausible,
-                        'matched': is_matched
-                    })
-        
         annotation = {
-            'index': question_index,
             'not_plausible': data.get('not_plausible', []),
             'missing_plausible': data.get('missing_plausible', ''),
             'not_highly_likely': data.get('not_highly_likely', []),
             'missing_highly_likely': data.get('missing_highly_likely', ''),
-            'dx_plausible_pairs': dx_plausible_pairs,
             'timestamp': datetime.now().isoformat()
         }
         
         annotations_dict = load_annotations()
-        annotations_dict[question_index] = annotation
+        
+        # Use nested structure: {question_index: {user_id: annotation}}
+        if question_index not in annotations_dict:
+            annotations_dict[question_index] = {}
+        
+        annotations_dict[question_index][user_id] = annotation
         save_annotations(annotations_dict)
         
-        # Get next question
-        question, idx = get_next_unannotated_question()
+        # Get next question for this user
+        question = get_user_next_question(user_id)
         
         if question is None:
-            stats = get_stats()
+            stats = get_user_stats(user_id)
             return jsonify({
                 'success': True,
                 'completed': True,
                 'stats': stats
             })
         
-        stats = get_stats()
-        dx_set = question['metrics']['extracted_diagnoses']
+        stats = get_user_stats(user_id)
         return jsonify({
             'success': True,
             'completed': False,
@@ -175,13 +266,45 @@ def save_annotation():
                 'index': question['index'],
                 'input': question['input'],
                 'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set'],
-                'dx_set': dx_set
+                'highly_likely_set': question['judge_dx_space']['highly_likely_set']
             },
             'stats': stats
         })
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/stats', methods=['GET'])
+def stats():
+    """Get user-specific statistics."""
+    try:
+        user_id = request.args.get('user_id')
+        
+        if not user_id:
+            return jsonify({'success': False, 'error': 'user_id parameter required'}), 400
+        
+        if user_id not in USERS:
+            return jsonify({'success': False, 'error': f'Invalid user_id. Must be one of: {USERS}'}), 400
+        
+        stats = get_user_stats(user_id)
+        return jsonify({
+            'success': True,
+            'stats': stats
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/initialize_assignments', methods=['POST'])
+def initialize_assignments_endpoint():
+    """Initialize question assignments (idempotent)."""
+    try:
+        assignments = initialize_assignments()
+        return jsonify({
+            'success': True,
+            'message': 'Assignments initialized',
+            'total_questions': len(assignments)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/health', methods=['GET'])
 def health_check():

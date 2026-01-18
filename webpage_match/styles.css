@@ -58,6 +58,13 @@ body {
     opacity: 0.9;
 }
 
+.user-indicator {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.95;
+    margin: 0;
+}
+
 .subtitle-small {
     font-size: 0.95rem;
     color: #666666;
@@ -176,6 +183,94 @@ body {
     border-left: 4px solid var(--berkeley-blue);
 }
 
+/* Collapsible Question Styles */
+.collapsible-question {
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.collapsible-question:hover {
+    background: #F0F4F8;
+}
+
+.collapsible-question .question-content {
+    padding-right: 40px;
+}
+
+.collapsible-question.collapsed {
+    max-height: 200px;
+}
+
+.question-preview {
+    display: block;
+    font-style: italic;
+    color: var(--berkeley-gray);
+}
+
+.question-full {
+    display: none;
+}
+
+.question-full .last-sentence {
+    font-weight: 700;
+    color: var(--berkeley-blue);
+}
+
+.collapsible-question.collapsed .question-preview {
+    display: block !important;
+}
+
+.collapsible-question.collapsed .question-full {
+    display: none !important;
+}
+
+.collapsible-question:not(.collapsed) .question-preview {
+    display: none !important;
+}
+
+.collapsible-question:not(.collapsed) .question-full {
+    display: block !important;
+}
+
+.collapse-indicator {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--berkeley-blue);
+    border-radius: 50%;
+    color: white;
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.collapsible-question:not(.collapsed) .collapse-indicator {
+    transform: rotate(180deg);
+}
+
+.toggle-hint {
+    font-size: 0.85rem;
+    color: var(--berkeley-gray);
+    font-weight: 400;
+    margin-left: 10px;
+    font-style: italic;
+}
+
+.model-response-box {
+    background: #FFF9F0;
+    border-left: 4px solid var(--berkeley-orange);
+}
+
+.ground-truth-box {
+    background: #F0F8F7;
+    border-left: 4px solid var(--berkeley-light-blue);
+}
+
 .annotation-section {
     background: var(--berkeley-light-gray);
     padding: 28px;
@@ -185,6 +280,18 @@ body {
 
 .annotation-section h3 {
     margin-bottom: 20px;
+    color: var(--berkeley-blue);
+}
+
+.comment-section {
+    background: var(--berkeley-light-gray);
+    padding: 28px;
+    border-radius: 10px;
+    margin: 30px 0;
+}
+
+.comment-section h3 {
+    margin-bottom: 15px;
     color: var(--berkeley-blue);
 }
 
@@ -210,6 +317,72 @@ body {
 
 .comment-textarea::placeholder {
     color: #999;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 18px;
+    background: var(--white);
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.radio-option:hover {
+    border-color: var(--berkeley-light-blue);
+    background: #f8f9fa;
+}
+
+.radio-option:has(input[type="radio"]:checked) {
+    border-color: var(--berkeley-blue);
+    background: #f0f7ff;
+    box-shadow: 0 0 0 3px rgba(0, 50, 98, 0.1);
+}
+
+.radio-option input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--berkeley-gray);
+    border-radius: 50%;
+    margin-right: 15px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom {
+    border-color: var(--berkeley-blue);
+    background: var(--berkeley-blue);
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--white);
+    border-radius: 50%;
+}
+
+.radio-label {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #2c2c2c;
+    line-height: 1.6;
 }
 
 /* Checkbox Styles */
@@ -288,7 +461,7 @@ body {
 }
 
 .help-text {
-    text-align: left;
+    text-align: center;
     margin-top: 15px;
     color: #666666;
     font-size: 0.95rem;
@@ -321,6 +494,26 @@ body {
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 50, 98, 0.3);
+}
+
+.btn-secondary {
+    background: var(--berkeley-gray);
+    color: var(--white);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #5a5a5a;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--success-green), #20c997);
+    color: var(--white);
+}
+
+.btn-success:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
 .summary-section {
@@ -376,6 +569,18 @@ body {
     line-height: 1.6;
 }
 
+.csv-note {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--success-green);
+    font-weight: 600;
+    margin-top: 20px;
+    padding: 15px;
+    background: #d4edda;
+    border-radius: 8px;
+    border: 2px solid var(--success-green);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -404,52 +609,6 @@ body {
     }
 }
 
-/* Login Section Styles */
-.login-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 400px;
-    margin: 40px 0;
-}
-
-.login-card {
-    background: var(--white);
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 500px;
-    width: 100%;
-}
-
-.login-card h2 {
-    color: var(--berkeley-blue);
-    font-size: 2rem;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.user-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.user-buttons .btn {
-    width: 100%;
-    padding: 16px 32px;
-    font-size: 1.1rem;
-}
-
-.user-info {
-    margin-top: 10px;
-    font-size: 0.95rem;
-    opacity: 0.9;
-    font-style: italic;
-}
-
 @media (max-width: 480px) {
     .header h1 {
         font-size: 1.5rem;
@@ -461,12 +620,73 @@ body {
         line-height: 1.7;
     }
     
-    .checkbox-option {
+    .radio-option {
         padding: 14px;
     }
     
-    .checkbox-label {
+    .radio-label {
         font-size: 1rem;
     }
 }
 
+/* Collapsible Section Styles for Triplet */
+.collapsible-section {
+    margin-bottom: 20px;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--white);
+}
+
+.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--berkeley-light-gray);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 2px solid #d0d0d0;
+}
+
+.collapsible-header:hover {
+    background: #e8e8e8;
+}
+
+.collapsible-header h3 {
+    margin: 0;
+    color: var(--berkeley-blue);
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.collapse-icon {
+    font-size: 1.2rem;
+    color: var(--berkeley-blue);
+    transition: transform 0.3s ease;
+    user-select: none;
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding: 0 20px;
+}
+
+.collapsible-content.collapsed {
+    max-height: 0;
+    padding: 0 20px;
+}
+
+.collapsible-content:not(.collapsed) {
+    max-height: 2000px;
+    transition: max-height 0.5s ease-in;
+    padding: 20px;
+}
+
+.collapsible-content .content-box {
+    margin: 0;
+    max-height: 500px;
+    overflow-y: auto;
+}

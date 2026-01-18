@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Response Annotation Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Model Response Annotation Tool</h1>
+            <p class="subtitle">Medical AI Model Evaluation Interface</p>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px;">
+                <p class="user-indicator" id="userIndicator">Loading...</p>
+                <button id="logoutBtn" style="padding: 5px 15px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 5px; color: white; cursor: pointer; font-size: 0.9rem;">Logout</button>
+            </div>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+            <span class="progress-text" id="progressText">0 / 0</span>
+        </div>
+
+        <div class="annotation-card" id="annotationCard">
+            <div class="card-header">
+                <h2>Current Question</h2>
+                <p class="subtitle-small">Select an annotation and click Next to save and continue</p>
+            </div>
+
+            <div class="content-section">
+                <h3>Question <span class="toggle-hint">(click to expand/collapse)</span></h3>
+                <div class="content-box question-box collapsible-question collapsed" id="questionText">
+                    <div class="question-content">
+                        <span class="question-preview" id="questionPreview">Loading...</span>
+                        <span class="question-full" id="questionFull">Loading...</span>
+                    </div>
+                    <div class="collapse-indicator">
+                        <span class="expand-icon">▼</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Ground Truth</h3>
+                <div class="content-box ground-truth-box" id="groundTruth">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3>Model Response</h3>
+                <div class="content-box model-response-box" id="modelResponse">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="annotation-section">
+                <h3>Your Annotation</h3>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="match" id="matchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label"> Model Response matches Ground Truth (Press 1)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="close-match" id="closeMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Model Response does not match Ground Truth exactly but is closely related (Press 2)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="vague-match" id="vagueMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Model Response only vaguely relates to the Ground Truth (Press 3)</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="annotation" value="no-match" id="noMatchRadio">
+                        <span class="radio-custom"></span>
+                        <span class="radio-label">Model Response does not match Ground Truth at all (Press 4)</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="comment-section">
+                <h3>Additional Comments (Optional)</h3>
+                <textarea 
+                    id="commentBox" 
+                    class="comment-textarea" 
+                    placeholder="Enter any additional notes or observations about this annotation..."
+                    rows="3"
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" id="nextBtn" disabled>Next</button>
+            </div>
+            <p class="help-text">Keyboard shortcuts: 1 = Accurate Match, 2 = Close Match, 3 = Vague Match, 4 = No Match, Enter/→ = Next</p>
+        </div>
+
+        <div class="summary-section" id="summarySection" style="display: none;">
+            <h2>🎉 Annotation Complete!</h2>
+            <p class="completion-message">All questions have been annotated. Results have been saved to the CSV file in real-time.</p>
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total Cases:</span>
+                    <span class="stat-value" id="totalCases">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Annotated:</span>
+                    <span class="stat-value" id="annotatedCases">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Accurate Matches:</span>
+                    <span class="stat-value" id="matchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Close Matches:</span>
+                    <span class="stat-value" id="closeMatchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Vague Matches:</span>
+                    <span class="stat-value" id="vagueMatchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">No Matches:</span>
+                    <span class="stat-value" id="noMatchCount">0</span>
+                </div>
+            </div>
+            <p class="csv-note">✅ All annotations have been saved to the CSV file.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
