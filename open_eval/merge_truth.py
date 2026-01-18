@@ -6,7 +6,7 @@ import re
 import time
 import math
 import hashlib
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 
 from tqdm import tqdm
 from openai import OpenAI
@@ -22,7 +22,9 @@ You will be given:
 - vote_threshold: an integer
 - P_lists: list[list[str]]  (one list per model)
 - H_lists: list[list[str]]  (one list per model)
+- C_lists: list[list[str]]  (one list per model)  # C = cannot-miss
 - H_evidence_maps: list[dict[str, list[str]]] (one per model; evidence strings for each dx in that model's H)
+- C_evidence_maps: list[dict[str, list[str]]] (one per model; evidence strings for each dx in that model's C)
 
 Task:
 1) For PLAUSIBLE diagnoses:
@@ -41,26 +43,38 @@ Task:
      - if tie, prefer buckets with stronger consensus across models,
      - if still tie, prefer more specific / clinically decisive diagnoses.
 
-3) Enforce H ⊆ P by bucket identity:
-   - If a kept H bucket is not present among kept P buckets, add its canonical name to plausible_set.
+3) Repeat the same for CANNOT MISS diagnoses (C_lists),
+   BUT keep this set SMALL and safety-focused (typically 0–3).
+   If more than 3 buckets satisfy the vote_threshold:
+     - prefer buckets with higher support,
+     - if tie, prefer diagnoses that are more urgent / time-sensitive / high-risk to miss.
 
-4) Evidence aggregation:
+4) Enforce subset constraints by bucket identity:
+   - H ⊆ P: If a kept H bucket is not present among kept P buckets, add its canonical name to plausible_set.
+   - C ⊆ P: If a kept C bucket is not present among kept P buckets, add its canonical name to plausible_set.
+
+5) Evidence aggregation:
    - For each kept H canonical diagnosis, return up to 3 evidence strings.
-   - Evidence strings must come from the provided H_evidence_maps values (do NOT invent evidence).
+   - For each kept C canonical diagnosis, return up to 3 evidence strings.
+   - Evidence strings must come from the provided *_evidence_maps values (do NOT invent evidence).
    - Prefer evidence strings supported by multiple models; otherwise choose concise ones.
 
 Hard constraints:
 - Do NOT invent diagnoses not present in any input list.
 - Do NOT return more than 3 items in highly_likely_set.
+- Do NOT return more than 3 items in cannot_miss_set.
 - Return STRICT JSON only.
 - Use the schema exactly:
 {
   "plausible_set": [ ...canonical dx... ],
   "highly_likely_set": [ ...canonical dx... ],
+  "cannot_miss_set": [ ...canonical dx... ],
   "highly_likely_evidence": { "<canonical dx>": ["e1","e2",...], ... },
+  "cannot_miss_evidence": { "<canonical dx>": ["e1","e2",...], ... },
   "support": {
     "plausible_set": { "<canonical dx>": [model_ids...], ... },
-    "highly_likely_set": { "<canonical dx>": [model_ids...], ... }
+    "highly_likely_set": { "<canonical dx>": [model_ids...], ... },
+    "cannot_miss_set": { "<canonical dx>": [model_ids...], ... }
   }
 }
 """
@@ -112,7 +126,6 @@ def dedup_preserve(xs: List[str]) -> List[str]:
     return out
 
 def get_idx(rec: Dict[str, Any], fallback: int) -> int:
-    # allow either explicit __idx or fallback to list index
     if isinstance(rec, dict) and "__idx" in rec:
         try:
             return int(rec["__idx"])
@@ -134,7 +147,6 @@ def index_records(recs: List[Dict[str, Any]]) -> Dict[int, Dict[str, Any]]:
     return out
 
 def stable_signature(obj: Any) -> str:
-    # stable hash for caching per-record aggregation call
     blob = json.dumps(obj, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
@@ -188,13 +200,17 @@ class Aggregator:
         vote_threshold: int,
         P_lists: List[List[str]],
         H_lists: List[List[str]],
+        C_lists: List[List[str]],
         H_evidence_maps: List[Dict[str, List[str]]],
+        C_evidence_maps: List[Dict[str, List[str]]],
     ) -> Dict[str, Any]:
         payload = {
             "vote_threshold": int(vote_threshold),
             "P_lists": P_lists,
             "H_lists": H_lists,
+            "C_lists": C_lists,
             "H_evidence_maps": H_evidence_maps,
+            "C_evidence_maps": C_evidence_maps,
         }
         sig = stable_signature(payload)
         if sig in self.cache:
@@ -215,26 +231,32 @@ class Aggregator:
                 )
                 out = parse_json_strict(resp.output_text)
 
-                # minimal sanitation
-                # plausible = dedup_preserve(to_list(out.get("plausible_set", [])))
-                # likely = dedup_preserve(to_list(out.get("highly_likely_set", [])))
                 plausible = dedup_preserve(to_list(out.get("plausible_set", [])))
                 likely = dedup_preserve(to_list(out.get("highly_likely_set", [])))[:3]
-                ev = out.get("highly_likely_evidence", {}) or {}
-                if not isinstance(ev, dict):
-                    ev = {}
+                cannot_miss = dedup_preserve(to_list(out.get("cannot_miss_set", [])))[:3]
 
-                # ensure H evidence values are lists of strings
-                # ev_clean: Dict[str, List[str]] = {}
-                # for dx in likely:
-                #     ev_clean[dx] = dedup_preserve(to_list(ev.get(dx, [])))[:3]
-                ev_clean: Dict[str, List[str]] = {}
+                ev_h = out.get("highly_likely_evidence", {}) or {}
+                if not isinstance(ev_h, dict):
+                    ev_h = {}
+                ev_c = out.get("cannot_miss_evidence", {}) or {}
+                if not isinstance(ev_c, dict):
+                    ev_c = {}
+
+                ev_h_clean: Dict[str, List[str]] = {}
                 for dx in likely:
-                    ev_clean[dx] = dedup_preserve(to_list(ev.get(dx, [])))[:3]
+                    ev_h_clean[dx] = dedup_preserve(to_list(ev_h.get(dx, [])))[:3]
 
-                # ensure H ⊆ P (string-level, since model already enforced bucket identity)
+                ev_c_clean: Dict[str, List[str]] = {}
+                for dx in cannot_miss:
+                    ev_c_clean[dx] = dedup_preserve(to_list(ev_c.get(dx, [])))[:3]
+
+                # ensure H ⊆ P and C ⊆ P
                 p_lower = {x.lower() for x in plausible}
                 for dx in likely:
+                    if dx.lower() not in p_lower:
+                        plausible.append(dx)
+                        p_lower.add(dx.lower())
+                for dx in cannot_miss:
                     if dx.lower() not in p_lower:
                         plausible.append(dx)
                         p_lower.add(dx.lower())
@@ -246,7 +268,9 @@ class Aggregator:
                 final = {
                     "plausible_set": plausible,
                     "highly_likely_set": likely,
-                    "highly_likely_evidence": ev_clean,
+                    "cannot_miss_set": cannot_miss,
+                    "highly_likely_evidence": ev_h_clean,
+                    "cannot_miss_evidence": ev_c_clean,
                     "support": support,
                 }
 
@@ -284,7 +308,6 @@ def merge_n_models_fast(
 
         recs = [m.get(idx) for m in indexed]
 
-        # baseline fields (copy everything except per-model gt/errors)
         base: Dict[str, Any] = {"__idx": idx}
         base_src = recs[keep_fields_from] if 0 <= keep_fields_from < K else None
         if not isinstance(base_src, dict):
@@ -293,43 +316,49 @@ def merge_n_models_fast(
         if isinstance(base_src, dict):
             base.update({k: v for k, v in base_src.items() if k not in ("ground_truth_space", "errors")})
 
-        # collect P/H and evidence per model
         P_lists: List[List[str]] = []
         H_lists: List[List[str]] = []
+        C_lists: List[List[str]] = []
         H_evidence_maps: List[Dict[str, List[str]]] = []
+        C_evidence_maps: List[Dict[str, List[str]]] = []
 
         for r in recs:
             gt = safe_get_gt(r)
             P_lists.append(dedup_preserve(to_list(gt.get("plausible_set"))))
             H_lists.append(dedup_preserve(to_list(gt.get("highly_likely_set"))))
-            ev = gt.get("highly_likely_evidence", {}) or {}
-            H_evidence_maps.append(ev if isinstance(ev, dict) else {})
+            C_lists.append(dedup_preserve(to_list(gt.get("cannot_miss_set"))))
+
+            ev_h = gt.get("highly_likely_evidence", {}) or {}
+            H_evidence_maps.append(ev_h if isinstance(ev_h, dict) else {})
+
+            ev_c = gt.get("cannot_miss_evidence", {}) or {}
+            C_evidence_maps.append(ev_c if isinstance(ev_c, dict) else {})
 
         try:
             merged_gt = aggregator.aggregate(
                 vote_threshold=vote_threshold,
                 P_lists=P_lists,
                 H_lists=H_lists,
+                C_lists=C_lists,
                 H_evidence_maps=H_evidence_maps,
+                C_evidence_maps=C_evidence_maps,
             )
 
             base["ground_truth_space_majority"] = {
                 "plausible_set": merged_gt["plausible_set"],
                 "highly_likely_set": merged_gt["highly_likely_set"],
+                "cannot_miss_set": merged_gt["cannot_miss_set"],
                 "highly_likely_evidence": merged_gt["highly_likely_evidence"],
+                "cannot_miss_evidence": merged_gt["cannot_miss_evidence"],
             }
-            # base["majority_meta"] = {
-            #     "vote_threshold": vote_threshold,
-            #     "num_models": K,
-            #     "support": merged_gt.get("support", {}),
-            # }
 
         except Exception as e:
-            # fail-soft per record
             base["ground_truth_space_majority"] = {
                 "plausible_set": [],
                 "highly_likely_set": [],
+                "cannot_miss_set": [],
                 "highly_likely_evidence": {},
+                "cannot_miss_evidence": {},
             }
             base["errors"] = [f"merge_error: {repr(e)}"]
 
@@ -358,7 +387,7 @@ def main():
     ap.add_argument(
         "--vote_threshold",
         type=int,
-        default=0,
+        default=2,
         help="Dx kept if supported by >= this many models. Default: majority ceil(N/2).",
     )
     ap.add_argument(
