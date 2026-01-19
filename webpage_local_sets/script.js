@@ -191,9 +191,24 @@ class DiagnosisAnnotationApp {
             notHighlyLikelyGroup.appendChild(label);
         });
 
+        // Update Question 5: Not cannot miss checkboxes
+        const notCannotMissGroup = document.getElementById('notCannotMissGroup');
+        notCannotMissGroup.innerHTML = '';
+        this.currentQuestion.cannot_miss_set.forEach((diagnosis, idx) => {
+            const label = document.createElement('label');
+            label.className = 'checkbox-option';
+            label.innerHTML = `
+                <input type="checkbox" name="not_cannot_miss" value="${this.escapeHtml(diagnosis)}">
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-label">${this.escapeHtml(diagnosis)}</span>
+            `;
+            notCannotMissGroup.appendChild(label);
+        });
+
         // Clear text inputs
         document.getElementById('missingPlausible').value = '';
         document.getElementById('missingHighlyLikely').value = '';
+        document.getElementById('missingCannotMiss').value = '';
     }
 
     escapeHtml(text) {
@@ -226,6 +241,9 @@ class DiagnosisAnnotationApp {
         const notHighlyLikely = Array.from(document.querySelectorAll('input[name="not_highly_likely"]:checked'))
             .map(cb => cb.value);
         const missingHighlyLikely = document.getElementById('missingHighlyLikely').value.trim();
+        const notCannotMiss = Array.from(document.querySelectorAll('input[name="not_cannot_miss"]:checked'))
+            .map(cb => cb.value);
+        const missingCannotMiss = document.getElementById('missingCannotMiss').value.trim();
         
         try {
             const nextBtn = document.getElementById('nextBtn');
@@ -239,11 +257,13 @@ class DiagnosisAnnotationApp {
                 },
                 body: JSON.stringify({
                     user_id: this.currentUserId,
-                    index: this.currentQuestion.index,
+                    __idx: this.currentQuestion.index,
                     not_plausible: notPlausible,
                     missing_plausible: missingPlausible,
                     not_highly_likely: notHighlyLikely,
-                    missing_highly_likely: missingHighlyLikely
+                    missing_highly_likely: missingHighlyLikely,
+                    not_cannot_miss: notCannotMiss,
+                    missing_cannot_miss: missingCannotMiss
                 })
             });
             

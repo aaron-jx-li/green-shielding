@@ -68,7 +68,7 @@ def initialize_assignments():
     assignments = load_assignments()
     
     # Check if assignments already exist for all questions
-    question_indices = [str(q['index']) for q in questions]
+    question_indices = [str(q['__idx']) for q in questions]
     existing_indices = set(assignments.keys())
     new_indices = set(question_indices) - existing_indices
     
@@ -97,7 +97,7 @@ def get_user_next_question(user_id):
     
     # Find questions assigned to this user that haven't been annotated by this user
     for question in questions:
-        q_idx = str(question['index'])
+        q_idx = str(question['__idx'])
         
         # Check if this question is assigned to this user
         if q_idx in assignments and user_id in assignments[q_idx]:
@@ -122,7 +122,7 @@ def get_user_stats(user_id):
     annotated = 0
     
     for question in questions:
-        q_idx = str(question['index'])
+        q_idx = str(question['__idx'])
         if q_idx in assignments and user_id in assignments[q_idx]:
             total += 1
             if q_idx in annotations and user_id in annotations[q_idx]:
@@ -203,10 +203,11 @@ def get_next_question():
             'success': True,
             'completed': False,
             'question': {
-                'index': question['index'],
-                'input': question['input'],
-                'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set']
+                'index': question['__idx'],
+                'input': question['raw_input'],
+                'plausible_set': question['ground_truth_space_majority']['plausible_set'],
+                'highly_likely_set': question['ground_truth_space_majority']['highly_likely_set'],
+                'cannot_miss_set': question['ground_truth_space_majority']['cannot_miss_set']
             },
             'stats': stats
         })
@@ -219,7 +220,7 @@ def save_annotation():
     try:
         data = request.get_json()
         
-        if not data or 'index' not in data:
+        if not data or '__idx' not in data:
             return jsonify({'success': False, 'error': 'No index provided'}), 400
         
         if 'user_id' not in data:
@@ -229,12 +230,14 @@ def save_annotation():
         if user_id not in USERS:
             return jsonify({'success': False, 'error': f'Invalid user_id. Must be one of: {USERS}'}), 400
         
-        question_index = str(data['index'])
+        question_index = str(data['__idx'])
         annotation = {
             'not_plausible': data.get('not_plausible', []),
             'missing_plausible': data.get('missing_plausible', ''),
             'not_highly_likely': data.get('not_highly_likely', []),
             'missing_highly_likely': data.get('missing_highly_likely', ''),
+            'not_cannot_miss': data.get('not_cannot_miss', []),
+            'missing_cannot_miss': data.get('missing_cannot_miss', ''),
             'timestamp': datetime.now().isoformat()
         }
         
@@ -263,10 +266,11 @@ def save_annotation():
             'success': True,
             'completed': False,
             'question': {
-                'index': question['index'],
-                'input': question['input'],
-                'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set']
+                'index': question['__idx'],
+                'input': question['raw_input'],
+                'plausible_set': question['ground_truth_space_majority']['plausible_set'],
+                'highly_likely_set': question['ground_truth_space_majority']['highly_likely_set'],
+                'cannot_miss_set': question['ground_truth_space_majority']['cannot_miss_set']
             },
             'stats': stats
         })
