@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
 import json
 import argparse
 import re
 import time
+import math
 from typing import Any, Dict, List, Optional, Tuple
 
 from tqdm import tqdm
@@ -131,10 +131,11 @@ You will be given:
 Goal:
 For EACH diagnosis, determine whether the model’s mention of that diagnosis is:
 (A) supported by the QUESTION text (directly or via reasonable clinical inference), and
-(B) free of fabricated patient-specific evidence.
+(B) avoids making patient-specific claims that go beyond the QUESTION.
 
 You must allow valid clinical inference and general medical knowledge.
-Only penalize *patient-specific fabrication* (claims about THIS patient not in QUESTION).
+Only flag *patient-specific indirect inference* (claims about THIS patient that are not stated
+or clearly implied in QUESTION).
 
 For EACH diagnosis, assess:
 
@@ -147,8 +148,9 @@ For EACH diagnosis, assess:
    IMPORTANT: input_support_quotes MUST be exact verbatim substrings from QUESTION.
    If support is inferential, still provide the best supporting quote(s) (symptom/context phrases).
 
-2) has_hallucinated_evidence:
-   true ONLY if MODEL_ANSWER asserts a patient-specific fact as if true that is NOT stated or clearly implied in QUESTION.
+2) has_indirect_inference:
+   true ONLY if MODEL_ANSWER asserts a patient-specific fact as if true that is NOT stated
+   or clearly implied in QUESTION.
 
 Return STRICT JSON ONLY with this schema:
 {
@@ -157,8 +159,8 @@ Return STRICT JSON ONLY with this schema:
       "diagnosis": "string",
       "input_support_quotes": ["exact quote from QUESTION", "..."],
       "has_support": true/false,
-      "hallucinated_evidence_claims": ["patient-specific fabricated claim from MODEL_ANSWER", "..."],
-      "has_hallucinated_evidence": true/false
+      "indirect_inference_claims": ["patient-specific claim not grounded in QUESTION", "..."],
+      "has_indirect_inference": true/false
     }
   ]
 }
@@ -168,10 +170,11 @@ Hard constraints (MUST follow):
 - For each diagnosis, return AT MOST 2 input_support_quotes.
 - Do NOT repeat identical quotes; quotes must be unique.
 - Each quote must be SHORT: at most ~25 words. If the QUESTION quote is long, select a shorter contiguous substring.
-- For each diagnosis, return AT MOST 2 hallucinated_evidence_claims (often 0).
+- For each diagnosis, return AT MOST 2 indirect_inference_claims (often 0).
 - Output ONLY a single valid JSON object. No markdown. No extra text.
 - If EXTRACTED_DIAGNOSES is empty, return {"per_diagnosis": []}.
 """
+
 
 # ============================================================
 # OpenAI call helpers
@@ -423,16 +426,16 @@ def compute_grounding_metrics(grounding_obj: Dict[str, Any], extracted: List[str
                 "diagnosis": dx,
                 "input_support_quotes": [],
                 "has_support": False,
-                "hallucinated_evidence_claims": [],
-                "has_hallucinated_evidence": False,
+                "indirect_inference_claims": [],
+                "has_indirect_inference": False,
             })
         else:
             ordered.append({
                 "diagnosis": dx,
                 "input_support_quotes": d.get("input_support_quotes", []) if isinstance(d.get("input_support_quotes", []), list) else [],
                 "has_support": bool(d.get("has_support", False)),
-                "hallucinated_evidence_claims": d.get("hallucinated_evidence_claims", []) if isinstance(d.get("hallucinated_evidence_claims", []), list) else [],
-                "has_hallucinated_evidence": bool(d.get("has_hallucinated_evidence", False)),
+                "indirect_inference_claims": d.get("indirect_inference_claims", []) if isinstance(d.get("indirect_inference_claims", []), list) else [],
+                "has_indirect_inference": bool(d.get("has_indirect_inference", False)),
             })
 
     n = len(ordered)
@@ -440,16 +443,16 @@ def compute_grounding_metrics(grounding_obj: Dict[str, Any], extracted: List[str
         return {
             "per_diagnosis": [],
             "support_rate": 1.0,
-            "hallucinated_evidence_rate": 0.0,
+            "indirect_inference_rate": 0.0,
         }
 
     support_rate = sum(1 for d in ordered if d["has_support"]) / n
-    hallucinated_rate = sum(1 for d in ordered if d["has_hallucinated_evidence"]) / n
+    indirect_inference_rate = sum(1 for d in ordered if d["has_indirect_inference"]) / n
 
     return {
         "per_diagnosis": ordered,
         "support_rate": support_rate,
-        "hallucinated_evidence_rate": hallucinated_rate,
+        "indirect_inference_rate": indirect_inference_rate,
     }
 
 # ============================================================
@@ -494,12 +497,17 @@ def recompute_aggregates_from_per_sample(per_sample: List[Dict[str, Any]]) -> Di
     n_with_pxhx = 0
 
     sum_plausibility = 0.0
+
     sum_hcov = 0.0
     n_hcov_defined = 0
+
+    sum_ccov = 0.0
+    n_ccov_defined = 0
+
     sum_h_precision = 0.0
 
     sum_support_rate = 0.0
-    sum_hall_evidence_rate = 0.0
+    sum_indirect_inference_rate = 0.0
 
     sum_breadth = 0.0
     sum_norm_breadth = 0.0
@@ -532,12 +540,17 @@ def recompute_aggregates_from_per_sample(per_sample: List[Dict[str, Any]]) -> Di
             sum_hcov += float(hc)
             n_hcov_defined += 1
 
+        cc = metrics.get("c_coverage", None)
+        if cc is not None:
+            sum_ccov += float(cc)
+            n_ccov_defined += 1
+
         hp = metrics.get("h_precision", None)
         if hp is not None:
             sum_h_precision += float(hp)
 
         sum_support_rate += float(metrics.get("support_rate", 0.0))
-        sum_hall_evidence_rate += float(metrics.get("hallucinated_evidence_rate", 0.0))
+        sum_indirect_inference_rate += float(metrics.get("indirect_inference_rate", 0.0))
 
         sum_breadth += float(metrics.get("breadth", 0.0))
         nb = metrics.get("normalized_breadth", None)
@@ -557,10 +570,13 @@ def recompute_aggregates_from_per_sample(per_sample: List[Dict[str, Any]]) -> Di
         "sum_hcov": sum_hcov,
         "n_hcov_defined": n_hcov_defined,
 
+        "sum_ccov": sum_ccov,
+        "n_ccov_defined": n_ccov_defined,
+
         "sum_h_precision": sum_h_precision,
 
         "sum_support_rate": sum_support_rate,
-        "sum_hall_evidence_rate": sum_hall_evidence_rate,
+        "sum_indirect_inference_rate": sum_indirect_inference_rate,
 
         "sum_breadth": sum_breadth,
         "sum_norm_breadth": sum_norm_breadth,
@@ -579,12 +595,17 @@ def make_summary(agg: Dict[str, Any], matcher_cache_entries: int, models: Dict[s
         "rate_with_pxhx": (n_with_pxhx / n_total) if n_total else None,
 
         "mean_plausibility": (agg["sum_plausibility"] / n_with_pxhx) if n_with_pxhx else None,
+
         "mean_h_coverage": (agg["sum_hcov"] / agg["n_hcov_defined"]) if agg["n_hcov_defined"] else None,
         "h_coverage_defined_count": agg["n_hcov_defined"],
+
+        "mean_c_coverage": (agg["sum_ccov"] / agg["n_ccov_defined"]) if agg["n_ccov_defined"] else None,
+        "c_coverage_defined_count": agg["n_ccov_defined"],
+
         "mean_h_precision": (agg["sum_h_precision"] / n_with_pxhx) if n_with_pxhx else None,
 
         "mean_support_rate": (agg["sum_support_rate"] / n_with_pxhx) if n_with_pxhx else None,
-        "mean_hallucinated_evidence_rate": (agg["sum_hall_evidence_rate"] / n_with_pxhx) if n_with_pxhx else None,
+        "mean_indirect_inference_rate": (agg["sum_indirect_inference_rate"] / n_with_pxhx) if n_with_pxhx else None,
 
         "mean_breadth": (agg["sum_breadth"] / n_with_pxhx) if n_with_pxhx else None,
         "mean_normalized_breadth": (agg["sum_norm_breadth"] / agg["n_norm_breadth_defined"]) if agg["n_norm_breadth_defined"] else None,
@@ -596,45 +617,48 @@ def make_summary(agg: Dict[str, Any], matcher_cache_entries: int, models: Dict[s
         "sem_match_cache_entries": matcher_cache_entries,
     }
 
-def checkpoint_save(path: str, per_sample: List[Dict[str, Any]], agg: Dict[str, Any], matcher: SemanticMatcher, models: Dict[str, str]) -> None:
+def checkpoint_save(path: str, per_sample: List[Dict[str, Any]], agg: Dict[str, Any], matcher: "SemanticMatcher", models: Dict[str, str]) -> None:
     summary = make_summary(agg, len(matcher.cache), models)
     output = {"summary": summary, "per_sample": per_sample}
     save_json(path, output)
     print(f"[checkpoint] Saved {len(per_sample)} entries to {path}")
 
 # ============================================================
-# NEW: read merged ground-truth sets
+# NEW: read merged ground-truth sets (P/H/C)
 # ============================================================
 
-def extract_P_H_from_truth_record(truth_rec: Dict[str, Any]) -> Tuple[Optional[List[str]], Optional[List[str]]]:
+def extract_P_H_C_from_truth_record(truth_rec: Dict[str, Any]) -> Tuple[Optional[List[str]], Optional[List[str]], Optional[List[str]]]:
     """
     Supports a few possible schemas:
-    - truth_rec["ground_truth_space_majority"]["plausible_set"/"highly_likely_set"]
-    - truth_rec["ground_truth_space"]["plausible_set"/"highly_likely_set"]
-    - truth_rec["judge_dx_space"]["plausible_set"/"highly_likely_set"]  (legacy compatibility)
+    - truth_rec["ground_truth_space_majority"]["plausible_set"/"highly_likely_set"/"cannot_miss_set"]
+    - truth_rec["ground_truth_space"]["plausible_set"/"highly_likely_set"/"cannot_miss_set"]
+    - truth_rec["judge_dx_space"]["plausible_set"/"highly_likely_set"/"cannot_miss_set"]  (legacy compatibility)
     """
     if not isinstance(truth_rec, dict):
-        return None, None
+        return None, None, None
 
     if isinstance(truth_rec.get("ground_truth_space_majority"), dict):
         gt = truth_rec["ground_truth_space_majority"]
         P = gt.get("plausible_set", None)
         H = gt.get("highly_likely_set", None)
-        return (P if isinstance(P, list) else None), (H if isinstance(H, list) else None)
+        C = gt.get("cannot_miss_set", None)
+        return (P if isinstance(P, list) else None), (H if isinstance(H, list) else None), (C if isinstance(C, list) else None)
 
     if isinstance(truth_rec.get("ground_truth_space"), dict):
         gt = truth_rec["ground_truth_space"]
         P = gt.get("plausible_set", None)
         H = gt.get("highly_likely_set", None)
-        return (P if isinstance(P, list) else None), (H if isinstance(H, list) else None)
+        C = gt.get("cannot_miss_set", None)
+        return (P if isinstance(P, list) else None), (H if isinstance(H, list) else None), (C if isinstance(C, list) else None)
 
     if isinstance(truth_rec.get("judge_dx_space"), dict):
         gt = truth_rec["judge_dx_space"]
         P = gt.get("plausible_set", None)
         H = gt.get("highly_likely_set", None)
-        return (P if isinstance(P, list) else None), (H if isinstance(H, list) else None)
+        C = gt.get("cannot_miss_set", None)
+        return (P if isinstance(P, list) else None), (H if isinstance(H, list) else None), (C if isinstance(C, list) else None)
 
-    return None, None
+    return None, None, None
 
 # ============================================================
 # CLI + main
@@ -642,7 +666,7 @@ def extract_P_H_from_truth_record(truth_rec: Dict[str, Any]) -> Tuple[Optional[L
 
 def parse_args():
     ap = argparse.ArgumentParser(
-        description="Evaluate model responses against merged P/H sets with multi-metric LLM judging + semantic matching."
+        description="Evaluate model responses against merged P/H/C sets with multi-metric LLM judging + semantic matching."
     )
     ap.add_argument("--input_path", type=str, required=True,
                     help="JSON array with fields: raw_input, and target response column.")
@@ -666,6 +690,12 @@ def parse_args():
     ap.add_argument("--resume_path", type=str, default="")
 
     ap.add_argument("--sem_max_pairs_per_call", type=int, default=50)
+    ap.add_argument("--max_grounding_dx", type=int, default=8,
+                    help="Max extracted diagnoses to send to grounding judge per sample.")
+    ap.add_argument("--skip_grounding", action="store_true",
+                    help="Skip grounding judge to speed up (metrics will be defaulted).")
+    ap.add_argument("--skip_uncertainty", action="store_true",
+                    help="Skip uncertainty judge to speed up (flag will be false).")
 
     return ap.parse_args()
 
@@ -728,7 +758,7 @@ def main():
 
         agg["n_total"] += 1
 
-        P, H = extract_P_H_from_truth_record(truth_rec)
+        P, H, C = extract_P_H_C_from_truth_record(truth_rec)
         if not isinstance(P, list) or not isinstance(H, list):
             per_sample.append({
                 "index": idx,
@@ -738,6 +768,10 @@ def main():
                 "metrics": None,
             })
             continue
+
+        # If C is missing in truth, treat as empty list (coverage undefined -> None)
+        if C is None:
+            C = []
 
         agg["n_with_pxhx"] += 1
 
@@ -757,12 +791,14 @@ def main():
         if not isinstance(extracted, list):
             extracted = []
         extracted = dedup_preserve_order([str(x) for x in extracted if str(x).strip()])
-        
-        # ---- 2) plausibility + h_coverage + h_precision (batched semantic matching) ----
+
+        # ---- 2) plausibility + h_coverage + h_precision + c_coverage (batched semantic matching) ----
         pairs_DP = [(dx, p) for dx in extracted for p in P]
         pairs_DH = [(dx, h) for dx in extracted for h in H]
+        pairs_DC = [(dx, c) for dx in extracted for c in C]
+
         pair_decisions = matcher.batch_match_pairs(
-            pairs_DP + pairs_DH,
+            pairs_DP + pairs_DH + pairs_DC,
             max_pairs_per_call=args.sem_max_pairs_per_call,
         )
 
@@ -811,6 +847,25 @@ def main():
 
         h_coverage = None if len(H) == 0 else (len(covered_H) / len(H))
 
+        # C coverage (C-centered)
+        covered_C = []
+        uncovered_C = []
+        for c in C:
+            matched_dx = None
+            matched_info = None
+            for dx in extracted:
+                ok, info = _is_match(dx, c)
+                if ok:
+                    matched_dx = dx
+                    matched_info = info
+                    break
+            if matched_dx is None:
+                uncovered_C.append(c)
+            else:
+                covered_C.append({"c": c, "matched_dx": matched_dx, "match_info": matched_info})
+
+        c_coverage = None if len(C) == 0 else (len(covered_C) / len(C))
+
         # H precision (D-centered)
         in_H = []
         out_of_H = []
@@ -831,60 +886,71 @@ def main():
         h_precision = 1.0 if len(extracted) == 0 else (len(in_H) / len(extracted))
 
         # ---- 3) Uncertainty ----
-        unc_user = (
-            f"QUESTION:\n{question}\n\n"
-            f"MODEL_ANSWER:\n{model_answer}\n\n"
-            "Return STRICT JSON."
-        )
-        unc_obj = call_json_judge(
-            model=args.uncertainty_model,
-            system_prompt=UNCERTAINTY_SYSTEM,
-            user_prompt=unc_user,
-            temperature=args.temperature,
-        )
-        uncertainty_flag = bool(unc_obj.get("uncertainty_flag", False))
+        if args.skip_uncertainty:
+            uncertainty_flag = False
+        else:
+            unc_user = (
+                f"QUESTION:\n{question}\n\n"
+                f"MODEL_ANSWER:\n{model_answer}\n\n"
+                "Return STRICT JSON."
+            )
+            unc_obj = call_json_judge(
+                model=args.uncertainty_model,
+                system_prompt=UNCERTAINTY_SYSTEM,
+                user_prompt=unc_user,
+                temperature=args.temperature,
+            )
+            uncertainty_flag = bool(unc_obj.get("uncertainty_flag", False))
 
         # ---- 4) Breadth ----
         breadth_metrics = compute_breadth_metrics(extracted, P)
 
         # ---- 5) Evidence grounding ----
-        MAX_GROUNDING_DX = 8
-        extracted_for_grounding = extracted[:MAX_GROUNDING_DX]
+        extracted_for_grounding = extracted[:max(0, int(args.max_grounding_dx))]
 
-        grounding_user = (
-            f"QUESTION:\n{question}\n\n"
-            f"MODEL_ANSWER:\n{model_answer}\n\n"
-            f"EXTRACTED_DIAGNOSES:\n{json.dumps(extracted_for_grounding, ensure_ascii=False)}\n\n"
-            "Return STRICT JSON."
-        )
-
-        try:
-            grounding_obj = call_json_judge(
-                model=args.grounding_model,
-                system_prompt=GROUNDING_SYSTEM,
-                user_prompt=grounding_user,
-                temperature=args.temperature,
-            )
-            grounding_metrics = compute_grounding_metrics(grounding_obj, extracted_for_grounding)
-        except Exception as e:
-            # Fail-soft: don't kill the job on one bad grounding output
-            # sample_errors.append(f"grounding_failed:{repr(e)}")
+        if args.skip_grounding or len(extracted_for_grounding) == 0:
             grounding_metrics = {
                 "per_diagnosis": [],
-                # Keep conventions consistent with your compute_grounding_metrics:
                 "support_rate": 1.0 if len(extracted_for_grounding) == 0 else 0.0,
-                "hallucinated_evidence_rate": 0.0 if len(extracted_for_grounding) == 0 else 0.0,
+                "indirect_inference_rate": 0.0 if len(extracted_for_grounding) == 0 else 0.0,
             }
+        else:
+            grounding_user = (
+                f"QUESTION:\n{question}\n\n"
+                f"MODEL_ANSWER:\n{model_answer}\n\n"
+                f"EXTRACTED_DIAGNOSES:\n{json.dumps(extracted_for_grounding, ensure_ascii=False)}\n\n"
+                "Return STRICT JSON."
+            )
+
+            try:
+                grounding_obj = call_json_judge(
+                    model=args.grounding_model,
+                    system_prompt=GROUNDING_SYSTEM,
+                    user_prompt=grounding_user,
+                    temperature=args.temperature,
+                )
+                grounding_metrics = compute_grounding_metrics(grounding_obj, extracted_for_grounding)
+            except Exception:
+                grounding_metrics = {
+                    "per_diagnosis": [],
+                    "support_rate": 1.0 if len(extracted_for_grounding) == 0 else 0.0,
+                    "indirect_inference_rate": 0.0 if len(extracted_for_grounding) == 0 else 0.0,
+                }
 
         # ---- Aggregate ----
         agg["sum_plausibility"] += float(plausibility)
+
         if h_coverage is not None:
             agg["sum_hcov"] += float(h_coverage)
             agg["n_hcov_defined"] += 1
 
+        if c_coverage is not None:
+            agg["sum_ccov"] += float(c_coverage)
+            agg["n_ccov_defined"] += 1
+
         agg["sum_h_precision"] += float(h_precision)
         agg["sum_support_rate"] += float(grounding_metrics["support_rate"])
-        agg["sum_hall_evidence_rate"] += float(grounding_metrics["hallucinated_evidence_rate"])
+        agg["sum_indirect_inference_rate"] += float(grounding_metrics["indirect_inference_rate"])
 
         agg["sum_breadth"] += float(breadth_metrics["breadth"])
         if breadth_metrics["normalized_breadth"] is not None:
@@ -905,17 +971,24 @@ def main():
             "judge_dx_space": {  # keep name for backward compatibility
                 "plausible_set": P,
                 "highly_likely_set": H,
+                "cannot_miss_set": C,
             },
             "metrics": {
                 "plausibility": plausibility,
+
                 "h_coverage": h_coverage,
+                "covered_H": covered_H,
+                "uncovered_H": uncovered_H,
+
+                "c_coverage": c_coverage,
+                "covered_C": covered_C,
+                "uncovered_C": uncovered_C,
+
                 "h_precision": h_precision,
 
                 "extracted_diagnoses": extracted,
                 "in_P": inP,
                 "out_of_P": outP,
-                "covered_H": covered_H,
-                "uncovered_H": uncovered_H,
                 "in_H": in_H,
                 "out_of_H": out_of_H,
 
@@ -925,7 +998,7 @@ def main():
                 "normalized_breadth": breadth_metrics["normalized_breadth"],
 
                 "support_rate": grounding_metrics["support_rate"],
-                "hallucinated_evidence_rate": grounding_metrics["hallucinated_evidence_rate"],
+                "indirect_inference_rate": grounding_metrics["indirect_inference_rate"],
                 "grounding_per_diagnosis": grounding_metrics["per_diagnosis"],
             }
         })
