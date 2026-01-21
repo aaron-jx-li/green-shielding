@@ -360,6 +360,7 @@ def get_next_question():
 
         dx_set = question["metrics"]["extracted_diagnoses"]
         judge = question.get("judge_dx_space", {}) or {}
+        gt = question.get("ground_truth_space_majority", {}) or {}
         return jsonify({
             "success": True,
             "completed": False,
@@ -368,7 +369,7 @@ def get_next_question():
                 "input": question["input"],
                 "plausible_set": judge.get("plausible_set", []),
                 "highly_likely_set": judge.get("highly_likely_set", []),
-                "cannot_miss_set": judge.get("cannot_miss_set", []),   # ✅ ADD THIS
+                "cannot_miss_set": gt.get("cannot_miss_set", []),
                 "dx_set": dx_set,
             },
             "stats": get_user_stats(user_id),
@@ -450,6 +451,7 @@ def save_annotation():
 
         dx_set_next = next_q["metrics"]["extracted_diagnoses"]
         judge_next = next_q.get("judge_dx_space", {}) or {}
+        gt_next = next_q.get("ground_truth_space_majority", {}) or {}
         return jsonify(
             {
                 "success": True,
@@ -459,7 +461,7 @@ def save_annotation():
                     "input": next_q["input"],
                     "plausible_set": judge_next.get("plausible_set", []),
                     "highly_likely_set": judge_next.get("highly_likely_set", []),
-                    "cannot_miss_set": judge_next.get("cannot_miss_set", []),  # ✅ ADD THIS
+                    "cannot_miss_set": gt_next.get("cannot_miss_set", []),
                     "dx_set": dx_set_next,
                 },
                 "stats": get_user_stats(user_id),
