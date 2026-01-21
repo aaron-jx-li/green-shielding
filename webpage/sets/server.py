@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
 Flask server for diagnosis annotation tool.
+Multi-user version with per-question assignments + per-user progress,
+while keeping Google OAuth + Drive upload.
 """
 
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 import json
 import os
+import random
 from datetime import datetime
 
-from flask import redirect
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
@@ -30,39 +32,66 @@ SCOPES = os.getenv("SCOPES", "https://www.googleapis.com/auth/drive.file").split
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 FOLDER_ID = os.getenv("FOLDER_ID")
 
-# Configuration
+# =========================
+# Configuration / Paths
+# =========================
 SETS_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(SETS_DIR, "annotation_manager", "data")
-DATA_PATH = os.environ.get("DATA_PATH",os.path.join(DATA_DIR, "sampled_data_HCM-3k.json"),)
-ANNOTATIONS_PATH = os.environ.get("ANNOTATIONS_PATH",os.path.join(DATA_DIR, "annotations.json"),)
 
+DATA_PATH = os.environ.get(
+    "DATA_PATH",
+    os.path.join(DATA_DIR, "sampled_data_HCM-3k.json"),
+)
+ANNOTATIONS_PATH = os.environ.get(
+    "ANNOTATIONS_PATH",
+    os.path.join(DATA_DIR, "annotations.json"),
+)
+ASSIGNMENTS_PATH = os.environ.get(
+    "ASSIGNMENTS_PATH",
+    os.path.join(DATA_DIR, "user_assignments.json"),
+)
+
+# =========================
+# Multi-user configuration
+# =========================
+USERS = ["Dr. Kornblith", "Dr. Bains"]
+USERS_PER_QUESTION = 2  # number of users assigned to each question
+
+# =========================
+# Globals
+# =========================
 questions_data = None
 annotations = {}
 
-APP_VERSION = "v2-show-token-page-2026-01-14"
+APP_VERSION = "v2-multiuser-assignments-2026-01-21"
 app.logger.warning("BOOT %s file=%s", APP_VERSION, __file__)
+
 
 @app.route("/version")
 def version():
     return jsonify({"version": APP_VERSION, "file": __file__})
 
-@app.route('/authorize')
+
+# =========================
+# OAuth / Drive upload
+# =========================
+@app.route("/authorize")
 def authorize():
     if not CLIENT_SECRET_JSON:
-        return jsonify({'error': 'Missing GOOGLE_CLIENT_SECRET_JSON'}), 400
-
+        return jsonify({"error": "Missing GOOGLE_CLIENT_SECRET_JSON"}), 400
     if not REDIRECT_URI:
-        return jsonify({'error': 'Missing REDIRECT_URI'}), 400
+        return jsonify({"error": "Missing REDIRECT_URI"}), 400
 
     flow = Flow.from_client_config(
         json.loads(CLIENT_SECRET_JSON),
         scopes=SCOPES,
-        redirect_uri=REDIRECT_URI
+        redirect_uri=REDIRECT_URI,
     )
-    auth_url, _ = flow.authorization_url(prompt='consent')
+    auth_url, _ = flow.authorization_url(prompt="consent")
     return redirect(auth_url)
 
-@app.route('/oauth2callback')
+
+@app.route("/oauth2callback")
 def oauth2callback():
     if not CLIENT_SECRET_JSON:
         return "❌ Missing client secret.", 400
@@ -70,7 +99,7 @@ def oauth2callback():
     flow = Flow.from_client_config(
         json.loads(CLIENT_SECRET_JSON),
         scopes=SCOPES,
-        redirect_uri=REDIRECT_URI
+        redirect_uri=REDIRECT_URI,
     )
     flow.fetch_token(authorization_response=request.url)
     creds = flow.credentials
@@ -101,17 +130,17 @@ def get_drive_service():
         creds.refresh(Request())
         print("🔄 Access token refreshed successfully.", flush=True)
 
-        # Optional but recommended: print the updated token so you can copy it back into Render env
+        # Optional: print updated token for Render env refresh
         print("🔁 Updated token JSON (copy to GOOGLE_TOKEN_JSON):", flush=True)
         print(creds.to_json(), flush=True)
 
-    return build('drive', 'v3', credentials=creds)
+    return build("drive", "v3", credentials=creds)
 
 
 def upload_annotations_to_drive(local_path: str):
     """
     Upload/update annotations.json in the Drive folder FOLDER_ID.
-    Uses the same pattern as your CSV uploader: update if exists, else create.
+    Update if exists, else create.
     """
     if not FOLDER_ID:
         raise Exception("❌ Missing FOLDER_ID env var")
@@ -120,50 +149,60 @@ def upload_annotations_to_drive(local_path: str):
     file_name = os.path.basename(local_path)
     query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
 
-    existing_files = service.files().list(q=query, fields="files(id, name)").execute().get('files', [])
+    existing_files = (
+        service.files().list(q=query, fields="files(id, name)").execute().get("files", [])
+    )
     media = MediaFileUpload(local_path, mimetype="application/json", resumable=True)
 
     if existing_files:
-        file_id = existing_files[0]['id']
-        updated_file = service.files().update(
-            fileId=file_id,
-            media_body=media,
-            fields='id, name, webViewLink'
-        ).execute()
+        file_id = existing_files[0]["id"]
+        updated_file = (
+            service.files()
+            .update(fileId=file_id, media_body=media, fields="id, name, webViewLink")
+            .execute()
+        )
         print(f"🔄 Updated Drive annotations file: {updated_file.get('webViewLink')}")
         return updated_file.get("webViewLink")
     else:
-        file_metadata = {'name': file_name, 'parents': [FOLDER_ID]}
-        new_file = service.files().create(
-            body=file_metadata,
-            media_body=media,
-            fields='id, name, webViewLink'
-        ).execute()
+        file_metadata = {"name": file_name, "parents": [FOLDER_ID]}
+        new_file = (
+            service.files()
+            .create(body=file_metadata, media_body=media, fields="id, name, webViewLink")
+            .execute()
+        )
         print(f"✅ Uploaded new Drive annotations file: {new_file.get('webViewLink')}")
         return new_file.get("webViewLink")
 
+
+# =========================
+# Data / Assignments / Annotations
+# =========================
 def load_data():
     """Load questions data from JSON file."""
     global questions_data
     if questions_data is None:
-        with open(DATA_PATH, 'r') as f:
+        with open(DATA_PATH, "r") as f:
             data = json.load(f)
-            questions_data = data['per_sample']
+            # script #2 uses data['per_sample'] -> each question has question['index'], etc.
+            questions_data = data["per_sample"]
     return questions_data
 
+
 def load_annotations():
-    """Load existing annotations."""
+    """Load existing annotations (nested per-user)."""
     global annotations
     if os.path.exists(ANNOTATIONS_PATH):
-        with open(ANNOTATIONS_PATH, 'r') as f:
+        with open(ANNOTATIONS_PATH, "r") as f:
             annotations = json.load(f)
     else:
         annotations = {}
     return annotations
 
+
 def save_annotations(annotations_dict):
+    """Save annotations to JSON + upload to Drive."""
     os.makedirs(os.path.dirname(ANNOTATIONS_PATH), exist_ok=True)
-    with open(ANNOTATIONS_PATH, 'w') as f:
+    with open(ANNOTATIONS_PATH, "w") as f:
         json.dump(annotations_dict, f, indent=2)
 
     try:
@@ -174,159 +213,298 @@ def save_annotations(annotations_dict):
         return None
 
 
-def get_next_unannotated_question():
-    """Get the next unannotated question."""
-    questions = load_data()
-    annotations = load_annotations()
-    
-    for i, question in enumerate(questions):
-        if str(question['index']) not in annotations:
-            return question, i
-    return None, None
+def load_assignments():
+    """Load question-to-users assignments."""
+    if os.path.exists(ASSIGNMENTS_PATH):
+        with open(ASSIGNMENTS_PATH, "r") as f:
+            return json.load(f)
+    return {}
 
-def get_stats():
-    """Get annotation statistics."""
-    questions = load_data()
-    annotations = load_annotations()
-    total = len(questions)
-    annotated = len(annotations)
-    return {
-        'total': total,
-        'annotated': annotated,
-        'remaining': total - annotated
-    }
 
-@app.route('/')
+def save_assignments(assignments_dict):
+    """Save question-to-users assignments."""
+    os.makedirs(os.path.dirname(ASSIGNMENTS_PATH), exist_ok=True)
+    with open(ASSIGNMENTS_PATH, "w") as f:
+        json.dump(assignments_dict, f, indent=2)
+
+
+def initialize_assignments():
+    """
+    Initialize question assignments by randomly assigning each question to N users.
+    Idempotent: only assigns previously-unseen question indices.
+    """
+    questions = load_data()
+    assignments = load_assignments()
+
+    question_indices = [str(q["index"]) for q in questions]
+    existing_indices = set(assignments.keys())
+    new_indices = set(question_indices) - existing_indices
+
+    if not new_indices:
+        return assignments
+
+    for q_idx in new_indices:
+        num_users = min(USERS_PER_QUESTION, len(USERS))
+        assignments[q_idx] = random.sample(USERS, num_users)
+
+    save_assignments(assignments)
+    return assignments
+
+
+def get_user_next_question(user_id: str):
+    """Get the next unannotated question for a specific user (assigned-to-user only)."""
+    questions = load_data()
+    annotations_dict = load_annotations()
+    assignments = load_assignments() or initialize_assignments()
+
+    for question in questions:
+        q_idx = str(question["index"])
+        if q_idx in assignments and user_id in assignments[q_idx]:
+            # nested format: annotations[q_idx][user_id] exists => user has annotated
+            if q_idx not in annotations_dict or user_id not in annotations_dict.get(q_idx, {}):
+                return question
+    return None
+
+
+def get_user_stats(user_id: str):
+    """Get annotation statistics for a specific user (assigned vs done)."""
+    questions = load_data()
+    annotations_dict = load_annotations()
+    assignments = load_assignments() or initialize_assignments()
+
+    total = 0
+    annotated = 0
+
+    for question in questions:
+        q_idx = str(question["index"])
+        if q_idx in assignments and user_id in assignments[q_idx]:
+            total += 1
+            if q_idx in annotations_dict and user_id in annotations_dict[q_idx]:
+                annotated += 1
+
+    return {"total": total, "annotated": annotated, "remaining": total - annotated}
+
+
+# =========================
+# Static serving
+# =========================
+@app.route("/")
 def serve_index():
-    return send_from_directory(SETS_DIR, 'index.html')
+    return send_from_directory(SETS_DIR, "index.html")
 
-@app.route('/<path:filename>')
+
+@app.route("/<path:filename>")
 def serve_static(filename):
     return send_from_directory(SETS_DIR, filename)
 
-@app.route('/get_next_question', methods=['GET'])
-def get_next_question():
-    """Get the next unannotated question."""
-    try:
-        question, idx = get_next_unannotated_question()
-        
-        if question is None:
-            stats = get_stats()
-            return jsonify({
-                'success': True,
-                'completed': True,
-                'stats': stats
-            })
 
-        dx_set = question['metrics']['extracted_diagnoses']
-        stats = get_stats()
-        return jsonify({
-            'success': True,
-            'completed': False,
-            'question': {
-                'index': question['index'],
-                'input': question['input'],
-                'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set'],
-                'dx_set': dx_set
-            },
-            'stats': stats
-        })
+# =========================
+# Multi-user endpoints
+# =========================
+@app.route("/users", methods=["GET"])
+def get_users():
+    return jsonify({"success": True, "users": USERS})
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    """Validate user and ensure assignments exist."""
+    try:
+        data = request.get_json() or {}
+        user_id = data.get("user_id")
+
+        if not user_id:
+            return jsonify({"success": False, "error": "No user_id provided"}), 400
+        if user_id not in USERS:
+            return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
+
+        initialize_assignments()
+
+        return jsonify({"success": True, "user_id": user_id, "users": USERS})
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route('/save_annotation', methods=['POST'])
-def save_annotation():
-    """Save annotation and get next question."""
+
+@app.route("/stats", methods=["GET"])
+def stats():
+    """Get user-specific stats."""
     try:
-        data = request.get_json()
-        
-        if not data or 'index' not in data:
-            return jsonify({'error': 'No index provided'}), 400
-        
-        question_index = str(data['index'])
-        # Process dx_plausible_matches into a list of all pairs with match status
-        dx_plausible_matches_raw = data.get('dx_plausible_matches', {})
+        user_id = request.args.get("user_id")
+        if not user_id:
+            return jsonify({"success": False, "error": "user_id parameter required"}), 400
+        if user_id not in USERS:
+            return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
+
+        s = get_user_stats(user_id)
+        return jsonify({"success": True, "stats": s})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# =========================
+# Core API (now per-user)
+# =========================
+@app.route("/get_next_question", methods=["GET"])
+def get_next_question():
+    """Get the next unannotated question for a user."""
+    try:
+        user_id = request.args.get("user_id")
+        if not user_id:
+            return jsonify({"success": False, "error": "user_id parameter required"}), 400
+        if user_id not in USERS:
+            return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
+
+        question = get_user_next_question(user_id)
+        if question is None:
+            return jsonify({"success": True, "completed": True, "stats": get_user_stats(user_id)})
+
+        dx_set = question["metrics"]["extracted_diagnoses"]
+        return jsonify(
+            {
+                "success": True,
+                "completed": False,
+                "question": {
+                    "index": question["index"],
+                    "input": question["input"],
+                    "plausible_set": question["judge_dx_space"]["plausible_set"],
+                    "highly_likely_set": question["judge_dx_space"]["highly_likely_set"],
+                    "dx_set": dx_set,
+                },
+                "stats": get_user_stats(user_id),
+            }
+        )
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/save_annotation", methods=["POST"])
+def save_annotation():
+    """Save annotation for a specific user and return next question for that user."""
+    try:
+        data = request.get_json() or {}
+
+        # Require user_id (new)
+        user_id = data.get("user_id")
+        if not user_id:
+            return jsonify({"success": False, "error": "No user_id provided"}), 400
+        if user_id not in USERS:
+            return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
+
+        # Require index (existing)
+        if "index" not in data:
+            return jsonify({"success": False, "error": "No index provided"}), 400
+
+        question_index = str(data["index"])
+
+        # Make sure assignments exist and user is actually assigned this question
+        assignments = load_assignments() or initialize_assignments()
+        if question_index not in assignments or user_id not in assignments[question_index]:
+            return jsonify(
+                {
+                    "success": False,
+                    "error": "User is not assigned to this question (or assignments not initialized).",
+                }
+            ), 403
+
+        # Build dx_plausible_pairs (same logic as your v2 script)
+        dx_plausible_matches_raw = data.get("dx_plausible_matches", {})
         dx_plausible_pairs = []
-        
-        # Get all unique dx_set and plausible_set from the current question
-        # We need to load the question to get the full sets
+
         questions = load_data()
-        current_question = next((q for q in questions if str(q['index']) == question_index), None)
-        
+        current_question = next((q for q in questions if str(q["index"]) == question_index), None)
+
         if current_question:
-            dx_set = current_question['metrics']['extracted_diagnoses']
-            plausible_set = current_question['judge_dx_space']['plausible_set']
-            
-            # Create pairs for all combinations
+            dx_set = current_question["metrics"]["extracted_diagnoses"]
+            plausible_set = current_question["judge_dx_space"]["plausible_set"]
+
             for dx in dx_set:
                 for plausible in plausible_set:
-                    # Check if this pair was matched (default to False if not in matches)
                     is_matched = dx_plausible_matches_raw.get(dx, {}).get(plausible, False)
-                    dx_plausible_pairs.append({
-                        'dx': dx,
-                        'plausible': plausible,
-                        'matched': is_matched
-                    })
-        annotation = {
-            'index': question_index,
-            'not_plausible': data.get('not_plausible', []),
-            'missing_plausible': data.get('missing_plausible', ''),
-            'not_highly_likely': data.get('not_highly_likely', []),
-            'missing_highly_likely': data.get('missing_highly_likely', ''),
-            'dx_plausible_pairs': dx_plausible_pairs,
-            'timestamp': datetime.now().isoformat()
-        }
-        
-        annotations_dict = load_annotations()
-        annotations_dict[question_index] = annotation
-        drive_link = save_annotations(annotations_dict)
-        
-        # Get next question
-        question, idx = get_next_unannotated_question()
-        
-        if question is None:
-            stats = get_stats()
-            return jsonify({
-                'success': True,
-                'completed': True,
-                'stats': stats
-            })
-        
-        stats = get_stats()
-        dx_set = question['metrics']['extracted_diagnoses']
-        return jsonify({
-            'success': True,
-            'completed': False,
-            'question': {
-                'index': question['index'],
-                'input': question['input'],
-                'plausible_set': question['judge_dx_space']['plausible_set'],
-                'highly_likely_set': question['judge_dx_space']['highly_likely_set'],
-                'dx_set': dx_set
-            },
-            'stats': stats
-        })
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+                    dx_plausible_pairs.append({"dx": dx, "plausible": plausible, "matched": is_matched})
 
-@app.route('/health', methods=['GET'])
+        # Save annotation under nested structure {question_index: {user_id: annotation}}
+        annotation = {
+            "index": question_index,
+            "user_id": user_id,
+            "not_plausible": data.get("not_plausible", []),
+            "missing_plausible": data.get("missing_plausible", ""),
+            "not_highly_likely": data.get("not_highly_likely", []),
+            "missing_highly_likely": data.get("missing_highly_likely", ""),
+            "dx_plausible_pairs": dx_plausible_pairs,
+            "timestamp": datetime.now().isoformat(),
+        }
+
+        annotations_dict = load_annotations()
+        if question_index not in annotations_dict or not isinstance(annotations_dict.get(question_index), dict):
+            annotations_dict[question_index] = {}
+        annotations_dict[question_index][user_id] = annotation
+
+        save_annotations(annotations_dict)
+
+        # Return next question for this user
+        next_q = get_user_next_question(user_id)
+        if next_q is None:
+            return jsonify({"success": True, "completed": True, "stats": get_user_stats(user_id)})
+
+        dx_set_next = next_q["metrics"]["extracted_diagnoses"]
+        return jsonify(
+            {
+                "success": True,
+                "completed": False,
+                "question": {
+                    "index": next_q["index"],
+                    "input": next_q["input"],
+                    "plausible_set": next_q["judge_dx_space"]["plausible_set"],
+                    "highly_likely_set": next_q["judge_dx_space"]["highly_likely_set"],
+                    "dx_set": dx_set_next,
+                },
+                "stats": get_user_stats(user_id),
+            }
+        )
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/initialize_assignments", methods=["POST"])
+def initialize_assignments_endpoint():
+    """Initialize question assignments (idempotent)."""
+    try:
+        assignments = initialize_assignments()
+        return jsonify(
+            {
+                "success": True,
+                "message": "Assignments initialized",
+                "total_questions": len(assignments),
+            }
+        )
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route("/health", methods=["GET"])
 def health_check():
     """Health check endpoint."""
-    return jsonify({
-        'status': 'healthy',
-        'data_path': DATA_PATH,
-        'data_exists': os.path.exists(DATA_PATH),
-        'annotations_path': ANNOTATIONS_PATH
-    })
+    return jsonify(
+        {
+            "status": "healthy",
+            "data_path": DATA_PATH,
+            "data_exists": os.path.exists(DATA_PATH),
+            "annotations_path": ANNOTATIONS_PATH,
+            "assignments_path": ASSIGNMENTS_PATH,
+            "annotations_exists": os.path.exists(ANNOTATIONS_PATH),
+            "assignments_exists": os.path.exists(ASSIGNMENTS_PATH),
+        }
+    )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     print("🚀 Starting Diagnosis Annotation Server...")
     print(f"📊 Data file: {DATA_PATH}")
     print(f"💾 Annotations file: {ANNOTATIONS_PATH}")
+    print(f"👥 Assignments file: {ASSIGNMENTS_PATH}")
     print("🌐 Server will be available at: http://localhost:5002")
-    print("\n" + "="*50)
+    print("\n" + "=" * 50)
 
     port = int(os.environ.get("PORT", 5002))
     app.run(host="0.0.0.0", port=port)
-

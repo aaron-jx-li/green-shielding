@@ -295,90 +295,6 @@ body {
     font-style: italic;
 }
 
-/* Matching Table Styles */
-.table-container {
-    overflow-x: auto;
-    margin-top: 20px;
-    background: var(--white);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.matching-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95rem;
-}
-
-.matching-table th,
-.matching-table td {
-    padding: 12px;
-    text-align: center;
-    border: 1px solid #d0d0d0;
-}
-
-.matching-table th {
-    background: var(--berkeley-blue);
-    color: var(--white);
-    font-weight: 600;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.matching-table th.row-header {
-    background: #E8F4F8;
-    color: var(--berkeley-blue);
-    text-align: left;
-    min-width: 200px;
-    max-width: 300px;
-    position: sticky;
-    left: 0;
-    z-index: 11;
-    border-right: 2px solid var(--berkeley-blue);
-}
-
-.matching-table th.corner-header {
-    background: var(--berkeley-blue);
-    color: var(--white);
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 12;
-}
-
-.matching-table td {
-    background: var(--white);
-}
-
-.matching-table tr:nth-child(even) td {
-    background: var(--berkeley-light-gray);
-}
-
-.matching-table tr:nth-child(even) th.row-header {
-    background: #F0F8FA;
-}
-
-.matching-table .table-checkbox-cell {
-    padding: 8px;
-    text-align: center;
-}
-
-.matching-table .table-checkbox {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: var(--berkeley-blue);
-}
-
-.matching-table .row-header-text {
-    font-weight: 500;
-    color: #2c2c2c;
-    text-align: left;
-    padding-left: 8px;
-}
-
 .btn {
     padding: 14px 32px;
     border: none;
@@ -488,6 +404,52 @@ body {
     }
 }
 
+/* Login Section Styles */
+.login-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    margin: 40px 0;
+}
+
+.login-card {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.login-card h2 {
+    color: var(--berkeley-blue);
+    font-size: 2rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.user-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.user-buttons .btn {
+    width: 100%;
+    padding: 16px 32px;
+    font-size: 1.1rem;
+}
+
+.user-info {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    font-style: italic;
+}
+
 @media (max-width: 480px) {
     .header h1 {
         font-size: 1.5rem;
@@ -505,24 +467,6 @@ body {
     
     .checkbox-label {
         font-size: 1rem;
-    }
-    
-    .table-container {
-        padding: 10px;
-    }
-    
-    .matching-table {
-        font-size: 0.85rem;
-    }
-    
-    .matching-table th,
-    .matching-table td {
-        padding: 8px 6px;
-    }
-    
-    .matching-table th.row-header {
-        min-width: 150px;
-        max-width: 200px;
     }
 }
 

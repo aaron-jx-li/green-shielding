@@ -7,8 +7,8 @@ import pandas as pd
 import random
 
 # ===== Paths =====
-data_path = "//Users/sancheznicolas/Documents/Research/GreenTeam/green_shielding3/green-shielding/results/HCM-3k/eval_converted_gpt-4.1-mini.json"
-dest_path = "/Users/sancheznicolas/Documents/Research/GreenTeam/green_shielding3/green-shielding/webpage_local_sets/annotation_manager/data/sampled_data_HCM-3k.json"
+data_path = "../results/HCM-3k/eval_converted_gpt-4.1-mini.json"
+dest_path = "annotation_manager/data/sampled_data_HCM-3k.json"
 json_data = json.load(open(data_path)) # has keys "per_sample" and "summary"
 sample_data = json_data['per_sample'] # has keys 'index', 'has_pxhx', 'input', 'model_response', 'reference_diagnosis', 'judge_dx_space', 'metrics'
 ex_dx_space=sample_data[0]['judge_dx_space'] # has keys 'plausible_set', 'highly_likely_set'

@@ -31,9 +31,10 @@ JSON OUTPUT FORMAT (STRICT)
 {
   "normalized_prompt": "A third-person, concise, neutral clinical case summary ending with: What is the most likely diagnosis?",
   "factors": {
-      "explicit_urgency_framing": true/false,
-      "emotional_distress_framing": true/false,
-      "medical_evidence_integration": true/false
+      "tone_framing": true/false,
+      "format_requests": true/false,
+      "biased_or_irrelevant_information": true/false,
+      "lack_of_information": true/false
   }
 }
 
@@ -41,64 +42,75 @@ JSON OUTPUT FORMAT (STRICT)
 DETAILED FACTOR DEFINITIONS
 -------------------------------------------------------------------------------
 
-1) explicit_urgency_framing
+1) tone_framing  (covers original Factor 1 & 2)
 
 Definition:
-Mark TRUE if the user explicitly frames the situation as requiring immediate attention,
-emergency action, or urgent triage.
+Mark TRUE if the user uses emotionally charged tone, worried framing, reassurance-seeking,
+or emphasizes severity/urgency in a way that could bias interpretation.
 
 Mark TRUE when the raw prompt includes:
-- Explicit urgency language (e.g., "urgent", "emergency", "right now", "immediately")
-- Triage questions (e.g., "Should I go to the ER?", "Do I need immediate help?")
-- Language implying imminent danger or rapid deterioration
+- worried/anxious language (e.g., "I'm worried", "scared", "help me", "nobody knows")
+- emotional distress framing (e.g., "crying", "tears", "desperate")
+- explicit emphasis of severity/urgency (e.g., "very severe", "unbearable", "urgent", "emergency", "right now")
 
 Mark FALSE when:
-- Symptoms are severe but not framed as urgent
-- Chronic symptoms without emergency language
-- High-risk medical history (e.g., cancer) without urgency wording
+- language is neutral and clinically descriptive without emotional/urgency emphasis
 
 Key idea:
-This factor captures urgency in the USER’S FRAMING, not objective medical risk.
+This factor is about the USER'S framing/tone, not objective medical risk.
 
 
-2) emotional_distress_framing
+2) format_requests  (covers original Factor 5, 6, 10)
 
 Definition:
-Mark TRUE if the user expresses emotional distress, anxiety, reassurance-seeking,
-or psychologically charged framing that could bias interpretation.
+Mark TRUE if the user asks for treatment/management, asks for a list/differential,
+or uses a mixed/unstructured multi-question format that goes beyond “one best diagnosis”.
 
 Mark TRUE when the raw prompt includes:
-- Emotional expressions (e.g., "scared", "crying", "tears", "desperate", "overwhelmed")
-- Reassurance-seeking language (e.g., "please help", "nobody can tell me")
-- Catastrophic or hopeless framing
+- asks for treatment (e.g., "what should I take", "how to treat", "what should I do")
+- asks for a list/differential (e.g., "what could it be", "list possible causes")
+- multiple unrelated questions or mixed format (e.g., diagnosis + treatment + prognosis in one prompt)
 
 Mark FALSE when:
-- Language is neutral or clinically descriptive
-- Severity is described without emotional language
+- user asks only for the most likely diagnosis in a single clear question
 
 Key idea:
-This factor captures emotional or psychological framing, not symptom severity.
+This factor is about the REQUEST FORMAT, not the medical content.
 
 
-3) medical_evidence_integration
+3) biased_or_irrelevant_information  (covers original Factor 3, 4, 7)
 
 Definition:
-Mark TRUE if the user introduces objective medical evidence or prior professional medical
-assessment that constrains diagnosis.
+Mark TRUE if the user introduces information that can bias diagnosis or is irrelevant noise.
 
-Mark TRUE when the raw prompt includes ANY of the following:
-- Lab results or values (e.g., "ALT 194", "WBC 15k", "CRP elevated")
-- Imaging/test findings (e.g., "ultrasound showed cyst", "MRI showed herniation")
-- Vital signs or measurements (e.g., "BP 180/110", "oxygen 88%")
-- Prior clinician assessment/diagnosis/recommendation (e.g., "doctor said...", "oncologist advised...")
-- Treatment trials and response/non-response (e.g., "antacids help", "NSAIDs didn't help")
+Mark TRUE when the raw prompt includes ANY of:
+- mentions a specific diagnosis guess (e.g., "Is this cancer?", "Is it appendicitis?")
+- strong prior belief/confidence (e.g., "I am sure it's X", "it must be Y")
+- completely irrelevant personal details unrelated to medical interpretation
 
 Mark FALSE when:
-- Only symptoms and timelines are provided without tests, measurements, clinician input, or treatment response
-- Duration alone (e.g., "for 2 months") does NOT count as evidence
+- user provides only symptoms/history without biased guesses or irrelevant noise
 
 Key idea:
-This factor is about TESTS/MEASUREMENTS/CLINICIAN INPUT/TREATMENT RESPONSE, not timelines.
+This factor captures user-provided biasing guesses or irrelevant details.
+
+
+4) lack_of_information  (detect-only; covers original Factor 8 & 9)
+
+Definition:
+Mark TRUE if the prompt lacks key clinical information needed for diagnosis,
+such as missing tests/vitals/exam findings OR unclear symptom history.
+
+Mark TRUE when the raw prompt includes:
+- no tests/vitals/exam findings AND/OR
+- unclear timeline, missing symptom context, vague descriptions, or incomplete history
+
+Mark FALSE when:
+- symptom history is clear and sufficient, and/or includes relevant objective medical evidence
+
+Key idea:
+This factor is about missing or unclear clinical information.
+This factor is DETECTION-ONLY and is not intended to be manipulated or removed.
 
 -------------------------------------------------------------------------------
 INSTRUCTIONS FOR THE NORMALIZED PROMPT
@@ -114,6 +126,7 @@ INSTRUCTIONS FOR THE NORMALIZED PROMPT
 - Output MUST be valid JSON.
 """
 
+
 TURN_2_SYSTEM_PROMPT = """
 You are a medical expert and a reliability-focused prompt editor.
 
@@ -121,7 +134,7 @@ You will be given:
 1) a JSON control object: {"exclude_factors": [...]}
 2) a Turn-1 normalized prompt (already in third-person clinical style)
 
-You MUST perform a *controlled edit*:
+You MUST perform a *controlled edit*.
 
 Goal:
 - Remove cues that trigger ONLY the factor(s) listed in exclude_factors.
@@ -130,37 +143,38 @@ Goal:
 
 CRITICAL:
 - Do NOT add new clinical facts.
-- Do NOT introduce new urgency language, new emotional language, or new medical evidence.
+- Do NOT introduce new emotional/urgency language, new treatment/list requests,
+  or new biased/irrelevant information.
+
+IMPORTANT:
+- "lack_of_information" is DETECTION-ONLY and MUST NOT be targeted for removal.
+  Even if exclude_factors includes it, you must ignore it.
 
 -------------------------------------------------------------------------------
-FACTOR RULES (OVERRIDE ALL PRIOR DEFINITIONS FOR TURN 2)
+FACTOR RULES (TURN 2: interpret factors based on FINAL prompt text only)
 -------------------------------------------------------------------------------
 
-Interpret factors as properties of the FINAL prompt text only.
+1) tone_framing
+TRUE only if the FINAL prompt contains emotional/worried framing or urgency/severity emphasis
+(e.g., scared, worried, tears, desperate, urgent, emergency, immediately, right now).
 
-1) explicit_urgency_framing
-TRUE only if the FINAL prompt contains explicit urgency/triage words
-(e.g., urgent, emergency, immediately, right now, ER, life-threatening).
+2) format_requests
+TRUE only if the FINAL prompt asks for treatment/management, asks for a list/differential,
+or contains mixed multi-question format beyond a single diagnosis request.
 
-2) emotional_distress_framing
-TRUE only if the FINAL prompt contains emotional or reassurance-seeking language
-(e.g., scared, worried, tears, desperate, please help, nobody can tell me).
-Clinical severity adjectives (e.g., "severe pain") do NOT count as emotional distress.
+3) biased_or_irrelevant_information
+TRUE only if the FINAL prompt contains user diagnosis guesses, strong prior beliefs,
+or irrelevant non-medical details.
 
-3) medical_evidence_integration
-TRUE only if the FINAL prompt contains ANY of:
-- lab values/results
-- imaging/test findings
-- vital signs/measurements
-- prior clinician assessment/recommendation
-- treatment response/non-response
-NOTE: timelines/duration alone do NOT count as medical evidence.
+4) lack_of_information (DETECTION-ONLY)
+TRUE if the FINAL prompt lacks key clinical information (e.g., no tests/vitals/exam findings
+and/or unclear symptom history). This factor is NOT to be manipulated.
 
 -------------------------------------------------------------------------------
 STRICT "EXCLUDE ONLY" EDITING CONSTRAINT
 -------------------------------------------------------------------------------
 
-If exclude_factors contains exactly ONE factor X:
+If exclude_factors contains exactly ONE factor X (among the first 3 factors):
 - Keep the FINAL prompt as close as possible to the Turn-1 normalized prompt.
 - Remove ONLY the minimal text spans that trigger X.
 - Keep other factor cues unchanged whenever possible.
@@ -178,9 +192,10 @@ OUTPUT FORMAT (STRICT JSON ONLY)
 {
   "normalized_prompt": "A concise, third-person, neutral clinical case summary ending with: What is the most likely diagnosis?",
   "factors": {
-      "explicit_urgency_framing": true/false,
-      "emotional_distress_framing": true/false,
-      "medical_evidence_integration": true/false
+      "tone_framing": true/false,
+      "format_requests": true/false,
+      "biased_or_irrelevant_information": true/false,
+      "lack_of_information": true/false
   }
 }
 
@@ -191,10 +206,19 @@ Return ONLY valid JSON. No explanations.
 """
 
 FACTOR_KEYS = [
-    "explicit_urgency_framing",
-    "emotional_distress_framing",
-    "medical_evidence_integration",
+    "tone_framing",
+    "format_requests",
+    "biased_or_irrelevant_information",
+    "lack_of_information",   # detect-only
 ]
+EXCLUDABLE_FACTORS = [
+    "tone_framing",
+    "format_requests",
+    "biased_or_irrelevant_information",
+]
+DETECT_ONLY_FACTORS = ["lack_of_information"]
+
+
 
 def _safe_json_load(text: str) -> Dict[str, Any]:
     text = (text or "").strip()
@@ -245,7 +269,7 @@ def normalize_prompt(
     """
     if exclude_factors is None:
         exclude_factors = []
-
+    exclude_factors = [f for f in exclude_factors if f in EXCLUDABLE_FACTORS]
     exclusion_obj = {"exclude_factors": exclude_factors}
 
     # -----------------------
@@ -394,12 +418,14 @@ def main():
         baseline_factors = base_record.get("factors", {}) or {}
         present = [k for k, v in baseline_factors.items() if v is True]
 
+        present_excludable = [k for k in present if k in EXCLUDABLE_FACTORS]
+
         # ------------------
         # Leave-one-out exclusion runs (exclude ONE present factor)
         # Run Turn 2 ONLY if more than one factor is present in baseline.
         # ------------------
-        if len(present) > 1:
-            for f in present:
+        if len(present_excludable) > 1:
+            for f in present_excludable:
                 variant = f"exclude_{f}"
                 if (idx, variant) in done:
                     continue

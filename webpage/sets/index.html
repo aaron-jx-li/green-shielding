@@ -11,14 +11,25 @@
         <header class="header">
             <h1>Diagnosis Annotation Tool</h1>
             <p class="subtitle">Review and annotate diagnosis sets</p>
+            <p class="user-info" id="userInfo" style="display: none;"></p>
         </header>
 
-        <div class="progress-bar">
+        <div class="login-section" id="loginSection">
+            <div class="login-card">
+                <h2>Select Your User</h2>
+                <p class="subtitle-small">Choose your user to begin annotating</p>
+                <div class="user-buttons" id="userButtons">
+                    <!-- User buttons will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar" id="progressBar" style="display: none;">
             <div class="progress-fill" id="progressFill"></div>
             <span class="progress-text" id="progressText">0 / 0</span>
         </div>
 
-        <div class="annotation-card" id="annotationCard">
+        <div class="annotation-card" id="annotationCard" style="display: none;">
             <div class="card-header">
                 <h2>Current Case</h2>
                 <p class="subtitle-small">Answer the questions below and click Next to save and continue</p>
@@ -39,8 +50,7 @@
             </div>
 
             <div class="annotation-section">
-                <h3>Question 2: What plausible diagnosis is/are missing?</h3>
-                <p class="help-text" style="margin-bottom: 15px;">Separate by commas and leave blank if none</p>
+                <h3>Question 2: What plausible diagnosis is missing?</h3>
                 <textarea 
                     id="missingPlausible" 
                     class="comment-textarea" 
@@ -57,7 +67,7 @@
             </div>
 
             <div class="annotation-section">
-                <h3>Question 4: What highly likely diagnosis is/are missing?</h3>
+                <h3>Question 4: What highly likely diagnosis is missing?</h3>
                 <p class="help-text" style="margin-bottom: 15px;">Separate by commas and leave blank if none</p>
                 <textarea 
                     id="missingHighlyLikely" 
@@ -68,11 +78,20 @@
             </div>
 
             <div class="annotation-section">
-                <h3>Question 5: Match Extracted Diagnoses to Plausible Diagnoses</h3>
-                <p class="help-text" style="margin-bottom: 15px;">Check the boxes to indicate which extracted diagnoses match each plausible diagnosis. Each extracted diagnosis (columns) can match multiple plausible diagnoses (rows).</p>
-                <div class="table-container" id="matchingTableContainer">
-                    <!-- Table will be inserted here -->
+                <h3>Question 5: Which of the following are NOT "can't miss" diagnosis?</h3>
+                <div class="checkbox-group" id="notCannotMissGroup">
+                    <!-- Checkboxes will be inserted here -->
                 </div>
+            </div>
+
+            <div class="annotation-section">
+                <h3>Question 6: What "can't miss" diagnosis is missing?</h3>
+                <textarea 
+                    id="missingCannotMiss" 
+                    class="comment-textarea" 
+                    placeholder="Enter missing 'can't miss' diagnosis (leave blank if none)..."
+                    rows="2"
+                ></textarea>
             </div>
 
             <div class="button-group">
