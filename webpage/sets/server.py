@@ -359,20 +359,20 @@ def get_next_question():
             return jsonify({"success": True, "completed": True, "stats": get_user_stats(user_id)})
 
         dx_set = question["metrics"]["extracted_diagnoses"]
-        return jsonify(
-            {
-                "success": True,
-                "completed": False,
-                "question": {
-                    "index": question["index"],
-                    "input": question["input"],
-                    "plausible_set": question["judge_dx_space"]["plausible_set"],
-                    "highly_likely_set": question["judge_dx_space"]["highly_likely_set"],
-                    "dx_set": dx_set,
-                },
-                "stats": get_user_stats(user_id),
-            }
-        )
+        judge = question.get("judge_dx_space", {}) or {}
+        return jsonify({
+            "success": True,
+            "completed": False,
+            "question": {
+                "index": question["index"],
+                "input": question["input"],
+                "plausible_set": judge.get("plausible_set", []),
+                "highly_likely_set": judge.get("highly_likely_set", []),
+                "cannot_miss_set": judge.get("cannot_miss_set", []),   # ✅ ADD THIS
+                "dx_set": dx_set,
+            },
+            "stats": get_user_stats(user_id),
+        })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -430,6 +430,8 @@ def save_annotation():
             "missing_plausible": data.get("missing_plausible", ""),
             "not_highly_likely": data.get("not_highly_likely", []),
             "missing_highly_likely": data.get("missing_highly_likely", ""),
+            "not_cannot_miss": data.get("not_cannot_miss", []),
+            "missing_cannot_miss": data.get("missing_cannot_miss", ""),
             "dx_plausible_pairs": dx_plausible_pairs,
             "timestamp": datetime.now().isoformat(),
         }
@@ -447,6 +449,7 @@ def save_annotation():
             return jsonify({"success": True, "completed": True, "stats": get_user_stats(user_id)})
 
         dx_set_next = next_q["metrics"]["extracted_diagnoses"]
+        judge_next = next_q.get("judge_dx_space", {}) or {}
         return jsonify(
             {
                 "success": True,
@@ -454,8 +457,9 @@ def save_annotation():
                 "question": {
                     "index": next_q["index"],
                     "input": next_q["input"],
-                    "plausible_set": next_q["judge_dx_space"]["plausible_set"],
-                    "highly_likely_set": next_q["judge_dx_space"]["highly_likely_set"],
+                    "plausible_set": judge_next.get("plausible_set", []),
+                    "highly_likely_set": judge_next.get("highly_likely_set", []),
+                    "cannot_miss_set": judge_next.get("cannot_miss_set", []),  # ✅ ADD THIS
                     "dx_set": dx_set_next,
                 },
                 "stats": get_user_stats(user_id),
