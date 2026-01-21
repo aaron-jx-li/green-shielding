@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AI Model Response Annotation Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 40px;
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            color: var(--berkeley-blue);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--berkeley-gray);
+            font-size: 1rem;
+        }
+
+        .user-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .user-selection p {
+            color: var(--berkeley-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .user-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .user-btn {
+            padding: 20px 30px;
+            background: var(--white);
+            color: var(--berkeley-blue);
+            border: 3px solid var(--berkeley-blue);
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .user-btn:hover {
+            background: linear-gradient(135deg, var(--berkeley-blue), var(--berkeley-dark-blue));
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 50, 98, 0.3);
+        }
+
+        .user-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>AI Model Response Annotation Tool</h1>
+            <p>Please select your user account to continue</p>
+        </div>
+
+        <div class="user-selection">
+            <p>Select User:</p>
+            <div class="user-buttons">
+                <button class="user-btn" data-username="Dr Kornblith">Dr Kornblith</button>
+                <button class="user-btn" data-username="Dr Bains">Dr Bains</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const userButtons = document.querySelectorAll('.user-btn');
+
+        // Handle user selection
+        userButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const username = btn.getAttribute('data-username');
+                
+                // Store username in localStorage
+                localStorage.setItem('annotation_username', username);
+                
+                // Redirect to main annotation page
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>
+
