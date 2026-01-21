@@ -191,18 +191,20 @@ class DiagnosisAnnotationApp {
             notHighlyLikelyGroup.appendChild(label);
         });
 
-        // Update Question 5: Not cannot miss checkboxes
+        // Update Question 5: Not cannot miss checkboxes (optional)
         const notCannotMissGroup = document.getElementById('notCannotMissGroup');
         notCannotMissGroup.innerHTML = '';
-        this.currentQuestion.cannot_miss_set.forEach((diagnosis, idx) => {
-            const label = document.createElement('label');
-            label.className = 'checkbox-option';
-            label.innerHTML = `
-                <input type="checkbox" name="not_cannot_miss" value="${this.escapeHtml(diagnosis)}">
-                <span class="checkbox-custom"></span>
-                <span class="checkbox-label">${this.escapeHtml(diagnosis)}</span>
-            `;
-            notCannotMissGroup.appendChild(label);
+
+        const cannotMissSet = this.currentQuestion.cannot_miss_set || [];
+        cannotMissSet.forEach((diagnosis, idx) => {
+        const label = document.createElement('label');
+        label.className = 'checkbox-option';
+        label.innerHTML = `
+            <input type="checkbox" name="not_cannot_miss" value="${this.escapeHtml(diagnosis)}">
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-label">${this.escapeHtml(diagnosis)}</span>
+        `;
+        notCannotMissGroup.appendChild(label);
         });
 
         // Clear text inputs
@@ -257,7 +259,7 @@ class DiagnosisAnnotationApp {
                 },
                 body: JSON.stringify({
                     user_id: this.currentUserId,
-                    __idx: this.currentQuestion.index,
+                    index: this.currentQuestion.index,
                     not_plausible: notPlausible,
                     missing_plausible: missingPlausible,
                     not_highly_likely: notHighlyLikely,
