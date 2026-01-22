@@ -236,7 +236,7 @@ def initialize_assignments():
     questions = load_data()
     assignments = load_assignments()
 
-    question_indices = [str(q["index"]) for q in questions]
+    question_indices = [str(q["__idx"]) for q in questions]
     existing_indices = set(assignments.keys())
     new_indices = set(question_indices) - existing_indices
 
@@ -255,12 +255,14 @@ def get_user_next_question(user_id: str):
     """Get the next unannotated question for a specific user (assigned-to-user only)."""
     questions = load_data()
     annotations_dict = load_annotations()
-    assignments = load_assignments() or initialize_assignments()
+    assignments = load_assignments()
+
+    if not assignments:
+        assignments = initialize_assignments()
 
     for question in questions:
-        q_idx = str(question["index"])
+        q_idx = str(question["__idx"])
         if q_idx in assignments and user_id in assignments[q_idx]:
-            # nested format: annotations[q_idx][user_id] exists => user has annotated
             if q_idx not in annotations_dict or user_id not in annotations_dict.get(q_idx, {}):
                 return question
     return None
@@ -270,13 +272,16 @@ def get_user_stats(user_id: str):
     """Get annotation statistics for a specific user (assigned vs done)."""
     questions = load_data()
     annotations_dict = load_annotations()
-    assignments = load_assignments() or initialize_assignments()
+    assignments = load_assignments()
+
+    if not assignments:
+        assignments = initialize_assignments()
 
     total = 0
     annotated = 0
 
     for question in questions:
-        q_idx = str(question["index"])
+        q_idx = str(question["__idx"])
         if q_idx in assignments and user_id in assignments[q_idx]:
             total += 1
             if q_idx in annotations_dict and user_id in annotations_dict[q_idx]:
@@ -355,25 +360,27 @@ def get_next_question():
             return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
 
         question = get_user_next_question(user_id)
-        if question is None:
-            return jsonify({"success": True, "completed": True, "stats": get_user_stats(user_id)})
 
-        dx_set = question["metrics"]["extracted_diagnoses"]
-        judge = question.get("judge_dx_space", {}) or {}
-        gt = question.get("ground_truth_space_majority", {}) or {}
-        return jsonify({
-            "success": True,
-            "completed": False,
-            "question": {
-                "index": question["index"],
-                "input": question["input"],
-                "plausible_set": judge.get("plausible_set", []),
-                "highly_likely_set": judge.get("highly_likely_set", []),
-                "cannot_miss_set": gt.get("cannot_miss_set", []),
-                "dx_set": dx_set,
-            },
-            "stats": get_user_stats(user_id),
-        })
+        if question is None:
+            return jsonify(
+                {"success": True, "completed": True, "stats": get_user_stats(user_id)}
+            )
+
+        gt = question["ground_truth_space_majority"]
+        return jsonify(
+            {
+                "success": True,
+                "completed": False,
+                "question": {
+                    "index": question["__idx"],
+                    "input": question["raw_input"],
+                    "plausible_set": gt["plausible_set"],
+                    "highly_likely_set": gt["highly_likely_set"],
+                    "cannot_miss_set": gt["cannot_miss_set"],
+                },
+                "stats": get_user_stats(user_id),
+            }
+        )
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
@@ -384,21 +391,23 @@ def save_annotation():
     try:
         data = request.get_json() or {}
 
-        # Require user_id (new)
-        user_id = data.get("user_id")
-        if not user_id:
+        # Match reference server requirements
+        if "__idx" not in data:
+            return jsonify({"success": False, "error": "No index provided"}), 400
+        if "user_id" not in data:
             return jsonify({"success": False, "error": "No user_id provided"}), 400
+
+        user_id = data["user_id"]
         if user_id not in USERS:
             return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
 
-        # Require index (existing)
-        if "index" not in data:
-            return jsonify({"success": False, "error": "No index provided"}), 400
-
-        question_index = str(data["index"])
+        question_index = str(data["__idx"])
 
         # Make sure assignments exist and user is actually assigned this question
-        assignments = load_assignments() or initialize_assignments()
+        assignments = load_assignments()
+        if not assignments:
+            assignments = initialize_assignments()
+
         if question_index not in assignments or user_id not in assignments[question_index]:
             return jsonify(
                 {
@@ -407,33 +416,14 @@ def save_annotation():
                 }
             ), 403
 
-        # Build dx_plausible_pairs (same logic as your v2 script)
-        dx_plausible_matches_raw = data.get("dx_plausible_matches", {})
-        dx_plausible_pairs = []
-
-        questions = load_data()
-        current_question = next((q for q in questions if str(q["index"]) == question_index), None)
-
-        if current_question:
-            dx_set = current_question["metrics"]["extracted_diagnoses"]
-            plausible_set = current_question["judge_dx_space"]["plausible_set"]
-
-            for dx in dx_set:
-                for plausible in plausible_set:
-                    is_matched = dx_plausible_matches_raw.get(dx, {}).get(plausible, False)
-                    dx_plausible_pairs.append({"dx": dx, "plausible": plausible, "matched": is_matched})
-
         # Save annotation under nested structure {question_index: {user_id: annotation}}
         annotation = {
-            "index": question_index,
-            "user_id": user_id,
             "not_plausible": data.get("not_plausible", []),
             "missing_plausible": data.get("missing_plausible", ""),
             "not_highly_likely": data.get("not_highly_likely", []),
             "missing_highly_likely": data.get("missing_highly_likely", ""),
             "not_cannot_miss": data.get("not_cannot_miss", []),
             "missing_cannot_miss": data.get("missing_cannot_miss", ""),
-            "dx_plausible_pairs": dx_plausible_pairs,
             "timestamp": datetime.now().isoformat(),
         }
 
@@ -442,27 +432,26 @@ def save_annotation():
             annotations_dict[question_index] = {}
         annotations_dict[question_index][user_id] = annotation
 
-        save_annotations(annotations_dict)
+        save_annotations(annotations_dict)  # (your version may also upload to Drive)
 
         # Return next question for this user
         next_q = get_user_next_question(user_id)
         if next_q is None:
-            return jsonify({"success": True, "completed": True, "stats": get_user_stats(user_id)})
+            return jsonify(
+                {"success": True, "completed": True, "stats": get_user_stats(user_id)}
+            )
 
-        dx_set_next = next_q["metrics"]["extracted_diagnoses"]
-        judge_next = next_q.get("judge_dx_space", {}) or {}
-        gt_next = next_q.get("ground_truth_space_majority", {}) or {}
+        gt_next = next_q["ground_truth_space_majority"]
         return jsonify(
             {
                 "success": True,
                 "completed": False,
                 "question": {
-                    "index": next_q["index"],
-                    "input": next_q["input"],
-                    "plausible_set": judge_next.get("plausible_set", []),
-                    "highly_likely_set": judge_next.get("highly_likely_set", []),
-                    "cannot_miss_set": gt_next.get("cannot_miss_set", []),
-                    "dx_set": dx_set_next,
+                    "index": next_q["__idx"],
+                    "input": next_q["raw_input"],
+                    "plausible_set": gt_next["plausible_set"],
+                    "highly_likely_set": gt_next["highly_likely_set"],
+                    "cannot_miss_set": gt_next["cannot_miss_set"],
                 },
                 "stats": get_user_stats(user_id),
             }

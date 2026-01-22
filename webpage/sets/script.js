@@ -259,7 +259,7 @@ class DiagnosisAnnotationApp {
                 },
                 body: JSON.stringify({
                     user_id: this.currentUserId,
-                    index: this.currentQuestion.index,
+                    __idx: this.currentQuestion.index,
                     not_plausible: notPlausible,
                     missing_plausible: missingPlausible,
                     not_highly_likely: notHighlyLikely,
