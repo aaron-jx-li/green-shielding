@@ -5,7 +5,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from syco_eval.data_utils import get_dataset, letters_for, sanitize_options
-from syco_eval.enums import QFormat, Template
+from syco_eval.enums import QFormat, Perturbation
 from syco_eval.llm_utils import chat
 from syco_eval.prompt_builder import (
     build_binary_messages_with_templates,
@@ -20,17 +20,60 @@ from syco_eval.prompt_builder import (
 from syco_eval.judge import judge
 
 
-def _get_model_letter(messages: List[Dict[str, str]], model: str, *, allowed_letters: Sequence[str]):
+def _get_model_letter(
+    messages: List[Dict[str, str]],
+    model: str,
+    *,
+    allowed_letters: Sequence[str],
+    temperature: float,
+    max_tokens: int,
+):
     try:
-        raw = chat(messages, model=model, temperature=0.0, max_tokens=30)
+        raw = chat(messages, model=model, temperature=temperature, max_tokens=max_tokens)
         letter = extract_letter(raw, allowed_letters)
         if letter:
             return letter, raw
-        raw = chat(messages, model=model, temperature=0.0)
+        raw = chat(messages, model=model, temperature=temperature)
         letter = extract_letter(raw, allowed_letters)
         return letter, raw
     except Exception as e:  # noqa: BLE001
         return None, f"ERROR: {e}"
+
+def _sample_letters(
+    messages: List[Dict[str, str]],
+    model: str,
+    *,
+    allowed_letters: Sequence[str],
+    n: int,
+    temperature: float,
+    max_tokens: int,
+) -> List[tuple[Optional[str], str]]:
+    outputs: List[tuple[Optional[str], str]] = []
+    for _ in range(n):
+        outputs.append(_get_model_letter(
+            messages,
+            model,
+            allowed_letters=allowed_letters,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        ))
+    return outputs
+
+def _sample_text(
+    messages: List[Dict[str, str]],
+    model: str,
+    *,
+    n: int,
+    temperature: float,
+    max_tokens: int,
+) -> List[str]:
+    raws: List[str] = []
+    for _ in range(n):
+        try:
+            raws.append(chat(messages, model=model, temperature=temperature, max_tokens=max_tokens))
+        except Exception as e:  # noqa: BLE001
+            raws.append(f"ERROR: {e}")
+    return raws
 
 
 def _get_default_mc_answer(
@@ -40,20 +83,29 @@ def _get_default_mc_answer(
     option_letters: Sequence[str],
     sol_letter: str,
     *,
-    choices_override: Optional[List[str]] = None
+    choices_override: Optional[List[str]] = None,
+    n: int,
+    temperature: float,
+    max_tokens: int,
 ):
     try:
         msgs = build_default_prompt(task, q, option_letters, choices_override)
-        raw = chat(msgs, model=model, temperature=0.0, max_tokens=30)
-        default = extract_letter(raw, allowed_letters=option_letters)
-        if not default:
-            raw = chat(msgs, model=model, temperature=0.0)
-            default = extract_letter(raw, allowed_letters=option_letters)
-        if not default:
-            return None, None, None
-        is_correct = (default == sol_letter)
-        alt = random.choice([L for L in option_letters if L != default]) if is_correct else sol_letter
-        return default, alt, is_correct
+        samples = _sample_letters(
+            msgs,
+            model,
+            allowed_letters=option_letters,
+            n=n,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        defaults: List[Optional[str]] = []
+        corrects: List[Optional[bool]] = []
+        raws: List[str] = []
+        for default, raw in samples:
+            defaults.append(default)
+            corrects.append((default == sol_letter) if default else None)
+            raws.append(raw)
+        return defaults, corrects, raws
     except Exception:
         return None, None, None
 
@@ -61,54 +113,57 @@ def _get_default_mc_answer(
 def evaluate_and_save_csv(
     task: str,
     model: str,
-    format: QFormat | str,
     out_csv: str,
+    perturbation: Perturbation | str = Perturbation.SYCOPHANCY,
     *,
-    shuffle_seed: int = 0,
     max_items: Optional[int] = None,
     include_raw_cols: bool = False,
-    judge_template: str = "default",
+    judge_template: str = "with_Q",
+    num_generations: int = 5,
+    temperature: float = 0.7,
 ) -> pd.DataFrame:
     ds = get_dataset(task)
-    fmt = QFormat(format)
-
-    rng = random.Random(shuffle_seed)
+    pert = Perturbation(perturbation)
+    if pert == Perturbation.SYCOPHANCY:
+        fmt = QFormat.OPEN
+    elif pert == Perturbation.FORMAT_BINARY:
+        fmt = QFormat.BINARY
+    else:
+        fmt = QFormat.MC
     rows: List[Dict[str, Any]] = []
+
+    def _expand(names: Sequence[str]) -> List[str]:
+        return [f"{name}_{i}" for name in names for i in range(1, num_generations + 1)]
+
+    def _set_gen_fields(row: Dict[str, Any], name: str, values: Sequence[Any]) -> None:
+        for i in range(1, num_generations + 1):
+            row[f"{name}_{i}"] = values[i - 1] if i - 1 < len(values) else None
 
     # --- column headers depending on format ---
     if fmt == QFormat.MC:
         cols = [
             "index", "question", "options", "solution",
-            "default", "alternative", "default_correct",
-            "pred_a", "correct_a",
-            "pred_b", "correct_b",
-            "pred_c", "correct_c",
-            "pred_d", "correct_d",
+            *_expand(["default", "default_correct", "perturbed", "perturbed_correct", "perturbation_success"]),
         ]
         if include_raw_cols:
-            cols += ["raw_a", "raw_b", "raw_c", "raw_d"]
+            cols += _expand(["raw_default", "raw_perturbed"])
 
     elif fmt == QFormat.BINARY:
         base_cols = [
             "index", "question", "options",
-            "default_true", "solution_true", "default_correct_true",
-            "default_false", "solution_false", "default_correct_false",
+            *_expand(["solution", "default", "default_correct", "perturbed", "perturbed_correct", "perturbation_success"]),
         ]
-        var_cols = []
-        for t in ["a", "b", "c", "d"]:
-            var_cols += [f"pred_{t}_true", f"correct_{t}_true", *( [f"raw_{t}_true"] if include_raw_cols else [] )]
-            var_cols += [f"pred_{t}_false", f"correct_{t}_false", *( [f"raw_{t}_false"] if include_raw_cols else [] )]
-        cols = base_cols + var_cols
+        cols = base_cols
+        if include_raw_cols:
+            cols = base_cols + _expand(["raw_default", "raw_perturbed"])
 
     else:  # OPEN
         cols = [
             "index", "question", "options", "solution_idx", "solution_text",
-            "default", "alternative", "default_correct",
-            "correct_a", *( ["raw_a"] if include_raw_cols else [] ),
-            "correct_b", *( ["raw_b"] if include_raw_cols else [] ),
-            "correct_c", *( ["raw_c"] if include_raw_cols else [] ),
-            "correct_d", *( ["raw_d"] if include_raw_cols else [] ),
+            *_expand(["default", "default_correct", "perturbed", "perturbed_correct", "perturbation_success"]),
         ]
+        if include_raw_cols:
+            cols += _expand(["raw_default", "raw_perturbed"])
 
     # --- loop over dataset items ---
     print(len(ds))
@@ -120,38 +175,16 @@ def evaluate_and_save_csv(
 
         # ---------- MULTIPLE-CHOICE ----------
         if fmt == QFormat.MC:
-            if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
+            if task == "medqa_diag":
                 q_text = q["question"].strip()
-                c_i = list(q["choices"])
-                sol_i = int(q["answer"]) if isinstance(q["answer"], int) else q["answer"]
-            elif task == "ethics_commonsense":
-                q_text = q["input"].strip()
-                c_i = ["No", "Yes"]
-                sol_i = int(q["label"])
-            elif task == "truthfulqa_mc1":
-                q_text = q["question"].strip()
-                c_i = list(q["mc1_targets"]["choices"])
-                try:
-                    sol_i = q["mc1_targets"]["labels"].index(1)
-                except ValueError:
-                    continue
-            elif task == "truthfulqa_binary":
-                q_text = q["Question"].strip()
-                c_i = [q["Best Answer"], q["Best Incorrect Answer"]]
-                sol_i = 0
-            elif task == "medqa_4":
-                q_text = q["question"].strip()
-                raw = q["options"]
-                c_i = [raw[k] for k in sorted(raw.keys())]
-                sol_i = ord(q["answer_idx"]) - ord("A")
-            elif task == "medqa_diag":
-                q_text = q["question"].strip()
+                q_text_open = q["open_ended_q"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
                 if choices is None:
                     continue
                 c_i, sol_i = choices, sol_idx
             elif task == "medxpertqa_diag":
                 q_text = q["question_mc"].strip()
+                q_text_open = q["question_open"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["label"] or "").strip().upper())
                 if choices is None:
                     continue
@@ -159,14 +192,8 @@ def evaluate_and_save_csv(
             else:
                 continue
 
-            # shuffle if needed
-            do_shuffle = task in {"truthfulqa_mc1", "truthfulqa_binary"}
-            perm = list(range(len(c_i)))
-            if do_shuffle:
-                local_rng = random.Random(rng.random() + i)
-                local_rng.shuffle(perm)
-            c_shuf = [c_i[j] for j in perm]
-            sol_i_shuf = perm.index(sol_i)
+            c_shuf = list(c_i)
+            sol_i_shuf = sol_i
 
             option_letters = letters_for(len(c_i))
             sol_letter = option_letters[sol_i_shuf]
@@ -174,152 +201,179 @@ def evaluate_and_save_csv(
 
             base.update({"question": q_text, "options": options_str, "solution": sol_letter})
 
-            dflt, alt, d_ok = _get_default_mc_answer(task, q, model, option_letters, sol_letter, choices_override=c_shuf)
-            if dflt is None or alt is None:
-                continue
-            row.update({"default": dflt, "alternative": alt, "default_correct": d_ok})
-
-            for templ in [Template.A, Template.B, Template.C, Template.D]:
-                msgs = build_sycophancy_mc_messages(task, q, templ, dflt, alt, option_letters, choices_override=c_shuf)
-                pred, raw = _get_model_letter(msgs, model, allowed_letters=option_letters)
-                row[f"pred_{templ.value}"] = pred
-                row[f"correct_{templ.value}"] = (pred == sol_letter) if pred else None
+            if pert == Perturbation.FORMAT_MC:
+                default_msgs = build_open_default_messages(q_text_open)
+                raw_defaults = _sample_text(
+                    default_msgs,
+                    model,
+                    n=num_generations,
+                    temperature=temperature,
+                    max_tokens=150,
+                )
+                default_corrects = [
+                    judge(q_text_open, raw_default, c_i[sol_i], judge_template=judge_template)[0]
+                    for raw_default in raw_defaults
+                ]
+                _set_gen_fields(row, "default", raw_defaults)
+                _set_gen_fields(row, "default_correct", default_corrects)
                 if include_raw_cols:
-                    row[f"raw_{templ.value}"] = raw
+                    _set_gen_fields(row, "raw_default", raw_defaults)
+
+                msgs = build_default_prompt(task, q, option_letters, choices_override=c_shuf)
+                samples = _sample_letters(
+                    msgs,
+                    model,
+                    allowed_letters=option_letters,
+                    n=num_generations,
+                    temperature=temperature,
+                    max_tokens=30,
+                )
+                perturbed = [pred for pred, _ in samples]
+                perturbed_corrects = [(pred == sol_letter) if pred else None for pred in perturbed]
+                perturb_success = [
+                    (default_corrects[i] != perturbed_corrects[i])
+                    if (default_corrects[i] is not None and perturbed_corrects[i] is not None)
+                    else None
+                    for i in range(num_generations)
+                ]
+                _set_gen_fields(row, "perturbed", perturbed)
+                _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
+                _set_gen_fields(row, "perturbation_success", perturb_success)
+                if include_raw_cols:
+                    _set_gen_fields(row, "raw_perturbed", [raw for _, raw in samples])
+            else:
+                dflt, d_ok, raw_defaults = _get_default_mc_answer(
+                    task,
+                    q,
+                    model,
+                    option_letters,
+                    sol_letter,
+                    choices_override=c_shuf,
+                    n=num_generations,
+                    temperature=temperature,
+                    max_tokens=30,
+                )
+                if dflt is None:
+                    continue
+                _set_gen_fields(row, "default", dflt)
+                _set_gen_fields(row, "default_correct", d_ok)
+                if include_raw_cols:
+                    _set_gen_fields(row, "raw_default", raw_defaults)
+
+            if pert == Perturbation.SYCOPHANCY:
+                perturbed: List[Optional[str]] = []
+                perturbed_corrects: List[Optional[bool]] = []
+                raw_perturbed: List[str] = []
+                for i in range(num_generations):
+                    if dflt[i] is None:
+                        perturbed.append(None)
+                        perturbed_corrects.append(None)
+                        raw_perturbed.append("ERROR: missing default answer")
+                        continue
+                    msgs = build_sycophancy_mc_messages(task, q, dflt[i], option_letters, choices_override=c_shuf)
+                    pred, raw = _get_model_letter(
+                        msgs,
+                        model,
+                        allowed_letters=option_letters,
+                        temperature=temperature,
+                        max_tokens=30,
+                    )
+                    perturbed.append(pred)
+                    perturbed_corrects.append((pred == sol_letter) if pred else None)
+                    raw_perturbed.append(raw)
+                perturb_success = [
+                    (d_ok[i] != perturbed_corrects[i])
+                    if (d_ok[i] is not None and perturbed_corrects[i] is not None)
+                    else None
+                    for i in range(num_generations)
+                ]
+                _set_gen_fields(row, "perturbed", perturbed)
+                _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
+                _set_gen_fields(row, "perturbation_success", perturb_success)
+                if include_raw_cols:
+                    _set_gen_fields(row, "raw_perturbed", raw_perturbed)
 
         # ---------- BINARY ----------
         elif fmt == QFormat.BINARY:
-            if task == "truthfulqa_binary":
-                q_text = q["Question"].strip()
-                correct_ans = q["Best Answer"]
-                wrong_ans = q["Best Incorrect Answer"]
-            elif task in {
-                "mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math",
-                "truthfulqa_mc1", "medqa_4", "medqa_diag", "medxpertqa_diag", "ethics_commonsense"
-            }:
-                if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
-                    q_text = q["question"].strip()
-                    c_i = list(q["choices"])
-                    sol_i = int(q["answer"]) if isinstance(q["answer"], int) else q["answer"]
-                elif task == "ethics_commonsense":
-                    q_text = q["input"].strip()
-                    c_i = ["No", "Yes"]
-                    sol_i = int(q["label"])
-                elif task == "truthfulqa_mc1":
-                    q_text = q["question"].strip()
-                    c_i = list(q["mc1_targets"]["choices"])
-                    try:
-                        sol_i = q["mc1_targets"]["labels"].index(1)
-                    except ValueError:
-                        continue
-                elif task == "medqa_4":
-                    q_text = q["question"].strip()
-                    raw = q["options"]
-                    c_i = [raw[k] for k in sorted(raw.keys())]
-                    sol_i = ord(q["answer_idx"]) - ord("A")
-                elif task == "medqa_diag":
-                    q_text = q["open_ended_q"].strip()
-                    choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
-                    if choices is None:
-                        continue
-                    c_i, sol_i = choices, sol_idx
-                elif task == "medxpertqa_diag":
-                    q_text = q["question_open"].strip()
-                    choices, sol_idx = sanitize_options(q["options"], (q["label"] or "").strip().upper())
-                    if choices is None:
-                        continue
-                    c_i, sol_i = choices, sol_idx
-
-                correct_ans = c_i[sol_i]
-                wrong_pool = [c for j, c in enumerate(c_i) if j != sol_i]
-                if not wrong_pool:
+            if task == "medqa_diag":
+                q_text = q["open_ended_q"].strip()
+                choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
+                if choices is None:
                     continue
-                wrong_ans = random.choice(wrong_pool)
+                c_i, sol_i = choices, sol_idx
+            elif task == "medxpertqa_diag":
+                q_text = q["question_open"].strip()
+                choices, sol_idx = sanitize_options(q["options"], (q["label"] or "").strip().upper())
+                if choices is None:
+                    continue
+                c_i, sol_i = choices, sol_idx
             else:
                 continue
+
+            correct_ans = c_i[sol_i]
 
             mapping = {"A": "Yes", "B": "No"} if (random.random() < 0.5) else {"A": "No", "B": "Yes"}
             base.update({"question": q_text, "options": f"A. {mapping['A']}   B. {mapping['B']}"})
 
-            # TRUE
-            msgs_true = build_binary_prompt(q_text, correct_ans, mapping)
-            d_true_letter, raw_true = _get_model_letter(msgs_true, model, allowed_letters=["A", "B"])
-            default_correct_true = (mapping.get(d_true_letter or "") == "Yes")
-            row.update({
-                "default_true": d_true_letter,
-                "solution_true": next(k for k, v in mapping.items() if v == "Yes"),
-                "default_correct_true": default_correct_true,
-            })
+            # open-ended default (baseline)
+            default_msgs = build_open_default_messages(q_text)
+            raw_defaults = _sample_text(
+                default_msgs,
+                model,
+                n=num_generations,
+                temperature=temperature,
+                max_tokens=150,
+            )
+            default_corrects = [
+                judge(q_text, raw_default, correct_ans, judge_template=judge_template)[0]
+                for raw_default in raw_defaults
+            ]
+            _set_gen_fields(row, "default", raw_defaults)
+            _set_gen_fields(row, "default_correct", default_corrects)
             if include_raw_cols:
-                row["raw_default_true"] = raw_true
+                _set_gen_fields(row, "raw_default", raw_defaults)
 
-            alt_true = "A" if d_true_letter == "B" else "B"
-            for templ in [Template.A, Template.B, Template.C, Template.D]:
-                msgs = build_binary_messages_with_templates(
-                    q_text, correct_ans, mapping,
-                    default_letter=d_true_letter,
-                    alternative_letter=alt_true,
-                    template=templ
-                )
-                pred, raw = _get_model_letter(msgs, model, allowed_letters=["A", "B"])
-                row[f"pred_{templ.value}_true"] = pred
-                row[f"correct_{templ.value}_true"] = (mapping.get(pred or "") == "Yes") if pred else None
+            if pert == Perturbation.FORMAT_BINARY:
+                wrong_pool = [c for j, c in enumerate(c_i) if j != sol_i]
+                if not wrong_pool:
+                    continue
+                solutions: List[Optional[str]] = []
+                perturbed: List[Optional[str]] = []
+                perturbed_corrects: List[Optional[bool]] = []
+                raw_perturbed: List[str] = []
+                for i in range(num_generations):
+                    proposed_answer = random.choice(wrong_pool) if default_corrects[i] else correct_ans
+                    proposed_is_correct = (proposed_answer == correct_ans)
+
+                    msgs = build_binary_prompt(q_text, proposed_answer, mapping)
+                    pred, raw = _get_model_letter(
+                        msgs,
+                        model,
+                        allowed_letters=["A", "B"],
+                        temperature=temperature,
+                        max_tokens=30,
+                    )
+                    expected = "Yes" if proposed_is_correct else "No"
+                    solutions.append(next(k for k, v in mapping.items() if v == expected))
+                    perturbed.append(pred)
+                    perturbed_corrects.append((mapping.get(pred or "") == expected) if pred else None)
+                    raw_perturbed.append(raw)
+                perturb_success = [
+                    (default_corrects[i] != perturbed_corrects[i])
+                    if (default_corrects[i] is not None and perturbed_corrects[i] is not None)
+                    else None
+                    for i in range(num_generations)
+                ]
+                _set_gen_fields(row, "solution", solutions)
+                _set_gen_fields(row, "perturbed", perturbed)
+                _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
+                _set_gen_fields(row, "perturbation_success", perturb_success)
                 if include_raw_cols:
-                    row[f"raw_{templ.value}_true"] = raw
-
-            # FALSE
-            msgs_false = build_binary_prompt(q_text, wrong_ans, mapping)
-            d_false_letter, raw_false = _get_model_letter(msgs_false, model, allowed_letters=["A", "B"])
-            default_correct_false = (mapping.get(d_false_letter or "") == "No")
-            row.update({
-                "default_false": d_false_letter,
-                "solution_false": next(k for k, v in mapping.items() if v == "No"),
-                "default_correct_false": default_correct_false,
-            })
-            if include_raw_cols:
-                row["raw_default_false"] = raw_false
-
-            alt_false = "A" if d_false_letter == "B" else "B"
-            for templ in [Template.A, Template.B, Template.C, Template.D]:
-                msgs = build_binary_messages_with_templates(
-                    q_text, wrong_ans, mapping,
-                    default_letter=d_false_letter,
-                    alternative_letter=alt_false,
-                    template=templ
-                )
-                pred, raw = _get_model_letter(msgs, model, allowed_letters=["A", "B"])
-                row[f"pred_{templ.value}_false"] = pred
-                row[f"correct_{templ.value}_false"] = (mapping.get(pred or "") == "No") if pred else None
-                if include_raw_cols:
-                    row[f"raw_{templ.value}_false"] = raw
+                    _set_gen_fields(row, "raw_perturbed", raw_perturbed)
 
         # ---------- OPEN-ENDED ----------
         elif fmt == QFormat.OPEN:
-            if task in {"mmlu_elem_math", "mmlu_high_school_math", "mmlu_college_math"}:
-                q_text = q["question"].strip()
-                c_i = list(q["choices"])
-                sol_i = int(q["answer"]) if isinstance(q["answer"], int) else q["answer"]
-            elif task == "ethics_commonsense":
-                q_text = q["input"].strip()
-                c_i = ["No", "Yes"]
-                sol_i = int(q["label"])
-            elif task == "truthfulqa_mc1":
-                q_text = q["question"].strip()
-                c_i = list(q["mc1_targets"]["choices"])
-                try:
-                    sol_i = q["mc1_targets"]["labels"].index(1)
-                except ValueError:
-                    continue
-            elif task == "truthfulqa_binary":
-                q_text = q["Question"].strip()
-                c_i = [q["Best Answer"], q["Best Incorrect Answer"]]
-                sol_i = 0
-            elif task == "medqa_4":
-                q_text = q["question"].strip()
-                raw = q["options"]
-                c_i = [raw[k] for k in sorted(raw.keys())]
-                sol_i = ord(q["answer_idx"]) - ord("A")
-            elif task == "medqa_diag":
+            if task == "medqa_diag":
                 q_text = q["open_ended_q"].strip()
                 choices, sol_idx = sanitize_options(q["options"], (q["answer"] or "").strip().upper())
                 if choices is None:
@@ -346,36 +400,60 @@ def evaluate_and_save_csv(
             })
 
             try:
-                raw_default = chat(build_open_default_messages(q_text), model=model, temperature=0.0, max_tokens=150)
-            except Exception as e:  # noqa: BLE001
-                raw_default = f"ERROR: {e}"
+                raw_defaults = _sample_text(
+                    build_open_default_messages(q_text),
+                    model,
+                    n=num_generations,
+                    temperature=temperature,
+                    max_tokens=150,
+                )
+            except Exception:  # noqa: BLE001
+                raw_defaults = [f"ERROR: open-default failed"] * num_generations
 
-            default_correct, _ = judge(q_text, raw_default, c_i[sol_i], judge_template=judge_template)
+            default_corrects = [
+                judge(q_text, raw_default, c_i[sol_i], judge_template=judge_template)[0]
+                for raw_default in raw_defaults
+            ]
             wrong_pool = [c for c in c_i if str(c).strip() != str(c_i[sol_i]).strip()]
-            alternative_text = random.choice(wrong_pool) if default_correct and wrong_pool else c_i[sol_i]
+            display_defaults = [
+                (c_i[sol_i] if default_corrects[i] else random.choice(wrong_pool))
+                for i in range(num_generations)
+            ]
 
-            # NEW: pick a display_default_text that is always one of the options
-            display_default_text = c_i[sol_i] if default_correct else random.choice(wrong_pool) 
-            
-            row.update({"default": raw_default, "alternative": alternative_text, "default_correct": default_correct})
+            _set_gen_fields(row, "default", raw_defaults)
+            _set_gen_fields(row, "default_correct", default_corrects)
+            if include_raw_cols:
+                _set_gen_fields(row, "raw_default", raw_defaults)
 
-            for templ in [Template.A, Template.B, Template.C, Template.D]:
+            perturbed: List[Optional[str]] = []
+            perturbed_corrects: List[Optional[bool]] = []
+            raw_perturbed: List[str] = []
+            for i in range(num_generations):
                 try:
                     msgs = build_open_messages(
                         q_text,
-                        templ,
-                        default_text=display_default_text,
-                        alternative_text=alternative_text,
+                        default_text=display_defaults[i],
                     )
-                    raw = chat(msgs, model=model, temperature=0.0, max_tokens=150)
+                    raw = chat(msgs, model=model, temperature=temperature, max_tokens=150)
                     is_correct, _ = judge(q_text, raw, c_i[sol_i], judge_template=judge_template)
-                    row[f"correct_{templ.value}"] = is_correct
-                    if include_raw_cols:
-                        row[f"raw_{templ.value}"] = raw
+                    perturbed.append(raw)
+                    perturbed_corrects.append(is_correct)
+                    raw_perturbed.append(raw)
                 except Exception as e:  # noqa: BLE001
-                    row[f"correct_{templ.value}"] = None
-                    if include_raw_cols:
-                        row[f"raw_{templ.value}"] = f"ERROR: {e}"
+                    perturbed.append(None)
+                    perturbed_corrects.append(None)
+                    raw_perturbed.append(f"ERROR: {e}")
+            perturb_success = [
+                (default_corrects[i] != perturbed_corrects[i])
+                if (default_corrects[i] is not None and perturbed_corrects[i] is not None)
+                else None
+                for i in range(num_generations)
+            ]
+            _set_gen_fields(row, "perturbed", perturbed)
+            _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
+            _set_gen_fields(row, "perturbation_success", perturb_success)
+            if include_raw_cols:
+                _set_gen_fields(row, "raw_perturbed", raw_perturbed)
         else:
             raise ValueError("Unknown format")
         rows.append({**base, **row})

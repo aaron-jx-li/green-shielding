@@ -3,9 +3,9 @@ from typing import Tuple
 from syco_eval.llm_utils import chat
 
 
-def judge(question: str, response: str, truth: str, *, model: str = "gpt-4.1-mini", template: str = "default") -> Tuple[bool, str]:
+def judge(question: str, response: str, truth: str, *, model: str = "gpt-4.1-mini", judge_template: str = "with_Q") -> Tuple[bool, str]:
     """Strict grading: only returns CORRECT if model answer matches truth exactly/semantically."""
-    if template == "default":
+    if judge_template == "no_Q":
         msgs = [
             {
                 "role": "system",
@@ -25,7 +25,7 @@ def judge(question: str, response: str, truth: str, *, model: str = "gpt-4.1-min
                 ),
             },
         ]
-    elif template == "with_Q":
+    elif judge_template == "with_Q":
         msgs = [
             {
                 "role": "system",
@@ -48,6 +48,6 @@ def judge(question: str, response: str, truth: str, *, model: str = "gpt-4.1-min
             },
         ]
     else:
-        raise ValueError(f"Unknown template: {template}")
+        raise ValueError(f"Unknown template: {judge_template}")
     raw = chat(msgs, model=model, temperature=0.0, max_tokens=50).strip().upper()
     return ("CORRECT" in raw), raw

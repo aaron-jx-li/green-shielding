@@ -10,7 +10,7 @@ def chat(
     messages: List[Dict[str, str]],
     model: str,
     *,
-    temperature: float = 0.0,
+    temperature: float = 0.7,
     max_tokens: Optional[int] = None,
     retries: int = 5,
     backoff: float = 0.4,

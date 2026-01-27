@@ -7,8 +7,7 @@ class QFormat(str, Enum):
     OPEN = "open-ended"
 
 
-class Template(str, Enum):
-    A = "a"
-    B = "b"
-    C = "c"
-    D = "d"
+class Perturbation(str, Enum):
+    SYCOPHANCY = "sycophancy"
+    FORMAT_MC = "format_mc"
+    FORMAT_BINARY = "format_binary"

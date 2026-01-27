@@ -1,20 +1,17 @@
-#!/usr/bin/env python3
 import json
 import argparse
 import time
-from typing import Optional, Any, List, Dict
+import os
+import tempfile
+from typing import Optional, Any
 
 from tqdm import tqdm
 from openai import OpenAI
 
 DEFAULT_INSTRUCTION = (
-    "You are a careful medical assistant helping a real patient. "
-    "Based on the information provided, explain what the most likely diagnoses are, "
-    "focusing on a small number of clinically plausible explanations. "
-    "When appropriate, briefly mention any serious or time-sensitive diagnoses "
-    "that a clinician would want to actively consider or rule out. "
-    "If the information is insufficient to be confident, explicitly acknowledge this. "
-    "Be concise, clinically realistic, and avoid inventing details."
+   "You are a helpful medical assistant. "
+   "Please answer the medical question given by the user. "
+   "Be concise, accurate, and clinically realistic."
 )
 
 def parse_args():
@@ -38,22 +35,28 @@ def parse_args():
     parser.add_argument("--normalized_key", type=str, default="normalized_prompt",
                         help='JSON key for the normalized prompt (default: "normalized_prompt").')
 
-    # Keys to write outputs into
+    # Base keys to write outputs into (script will append _1.._n)
     parser.add_argument("--out_raw_key", type=str, default="model_response_raw",
-                        help='JSON key to store model output for raw input (default: "model_response_raw").')
+                        help='Base JSON key to store model output for raw input (default: "model_response_raw").')
 
     parser.add_argument("--out_normalized_key", type=str, default="model_response_converted",
-                        help='JSON key to store model output for normalized prompt (default: "model_response_converted").')
+                        help='Base JSON key to store model output for normalized prompt (default: "model_response_converted").')
+
+    # Multi-generation controls
+    parser.add_argument("--num_generations", type=int, default=1,
+                        help="Number of generations to sample per input (default: 1). Keys will be suffixed _1.._n.")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Optional seed for reproducibility (if supported by the model).")
 
     # Prompting controls
     parser.add_argument("--instruction", type=str, default=DEFAULT_INSTRUCTION,
                         help="Developer instruction to send to the model.")
 
     parser.add_argument("--temperature", type=float, default=0.0,
-                        help="Sampling temperature (ignored for gpt-5* models).")
+                        help="Sampling temperature (ignored for some models).")
 
     parser.add_argument("--max_tokens", type=int, default=None,
-                        help="Max output tokens (ignored for gpt-5* models).")
+                        help="Max output tokens.")
 
     # Index slicing
     parser.add_argument("--start_idx", type=int, default=None,
@@ -66,11 +69,34 @@ def parse_args():
     parser.add_argument("--sleep", type=float, default=0.0,
                         help="Seconds to sleep between requests (default: 0.0).")
 
-    # If set, skip a query if the output key already exists and is non-empty
+    # If set, skip a query if *all* generation keys already exist and are non-empty
     parser.add_argument("--skip_existing", action="store_true",
-                        help="Skip querying a field if its output key already exists and is non-empty (within processed indices).")
+                        help="Skip querying if all output keys for all generations already exist and are non-empty.")
+
+    # Periodic checkpoint saving
+    parser.add_argument("--save_every", type=int, default=50,
+                        help="Save a checkpoint every N processed samples (default: 50). Set <=0 to disable.")
 
     return parser.parse_args()
+
+
+def atomic_json_dump(obj: Any, path: str) -> None:
+    """
+    Atomic-ish save: write to a temp file on the same filesystem then replace.
+    Prevents corrupt JSON if the job is interrupted mid-write.
+    """
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(prefix=".tmp_", suffix=".json", dir=os.path.dirname(path) or ".")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(obj, f, indent=2, ensure_ascii=False)
+        os.replace(tmp_path, path)
+    finally:
+        try:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+        except Exception:
+            pass
 
 
 def query_model(
@@ -80,31 +106,52 @@ def query_model(
     instruction: str,
     temperature: float = 0.0,
     max_tokens: Optional[int] = None,
-) -> str:
+    n: int = 1,
+    seed: Optional[int] = None,
+) -> list[str]:
     messages = [
         {"role": "developer", "content": instruction},
         {"role": "user", "content": input_text},
     ]
 
-    if "gpt-5" in model:
-        resp = client.responses.create(model=model, input=messages)
-    else:
-        resp = client.responses.create(
-            model=model,
-            input=messages,
-            temperature=temperature,
-            max_output_tokens=max_tokens,
-        )
+    outs: list[str] = []
+    for k in range(n):
+        kwargs = {"model": model, "input": messages}
+        if temperature is not None:
+            kwargs["temperature"] = temperature
+        if max_tokens is not None:
+            kwargs["max_output_tokens"] = max_tokens
+        if seed is not None:
+            kwargs["seed"] = seed + k  # decorrelate generations
 
-    return resp.output_text or ""
+        resp = client.responses.create(**kwargs)
+        outs.append(resp.output_text or "")
+
+    return outs
 
 
 def _nonempty(x: Any) -> bool:
     return isinstance(x, str) and x.strip() != ""
 
 
+def _gen_key(base: str, k: int) -> str:
+    return f"{base}_{k}"
+
+
+def _all_generations_present(sample: dict, base_key: str, n: int) -> bool:
+    return all(_nonempty(sample.get(_gen_key(base_key, k), "")) for k in range(1, n + 1))
+
+
+def _pop_generation_keys(sample: dict, base_key: str, n: int) -> None:
+    for k in range(1, n + 1):
+        sample.pop(_gen_key(base_key, k), None)
+
+
 def main():
     args = parse_args()
+    if args.num_generations < 1:
+        raise ValueError("❌ --num_generations must be >= 1")
+
     client = OpenAI()  # requires OPENAI_API_KEY
 
     # --------------------------
@@ -126,30 +173,31 @@ def main():
     else:
         if args.start_idx is None or args.end_idx is None:
             raise ValueError("❌ You must specify BOTH --start_idx and --end_idx.")
-
         start_idx = max(0, args.start_idx)
         end_idx = min(total - 1, args.end_idx)
-
         if start_idx > end_idx:
             raise ValueError(f"❌ Invalid range: start_idx={args.start_idx} > end_idx={args.end_idx}")
-
         print(f"Processing samples from index {start_idx} to {end_idx} inclusive.")
 
     processed_set = set(range(start_idx, end_idx + 1))
 
+
     # --------------------------
-    # First pass: remove model_response_* from UNPROCESSED items
+    # First pass: remove generation keys from UNPROCESSED items
     # --------------------------
     for i, sample in enumerate(data):
         if not isinstance(sample, dict):
             continue
         if i not in processed_set:
-            sample.pop(args.out_raw_key, None)
-            sample.pop(args.out_normalized_key, None)
+            _pop_generation_keys(sample, args.out_raw_key, args.num_generations)
+            _pop_generation_keys(sample, args.out_normalized_key, args.num_generations)
 
     # --------------------------
     # Second pass: process selected samples
     # --------------------------
+    processed_count = 0
+    last_save_time = time.time()
+
     for idx in tqdm(sorted(processed_set)):
         if idx < 0 or idx >= total:
             print(f"❌ Index {idx} is out of bounds. Skipping.")
@@ -165,58 +213,67 @@ def main():
 
         # Query on raw input
         if raw_text:
-            if args.skip_existing and _nonempty(sample.get(args.out_raw_key, "")):
-                pass
-            else:
+            if not (args.skip_existing and _all_generations_present(sample, args.out_raw_key, args.num_generations)):
                 try:
-                    out_raw = query_model(
+                    outs_raw = query_model(
                         client,
                         raw_text,
                         model=args.model,
                         instruction=args.instruction,
                         temperature=args.temperature,
                         max_tokens=args.max_tokens,
+                        n=args.num_generations,
+                        seed=args.seed,
                     )
-                    if not out_raw.strip():
-                        raise ValueError("Empty model response")
-                    sample[args.out_raw_key] = out_raw
+                    for k, out_raw in enumerate(outs_raw, start=1):
+                        sample[_gen_key(args.out_raw_key, k)] = out_raw if out_raw.strip() else None
                 except Exception as e:
                     print(f"❌ Error querying RAW for sample {idx}: {e}")
-                    sample[args.out_raw_key] = None
+                    for k in range(1, args.num_generations + 1):
+                        sample[_gen_key(args.out_raw_key, k)] = None
 
                 if args.sleep > 0:
                     time.sleep(args.sleep)
 
         # Query on normalized prompt
         if norm_text:
-            if args.skip_existing and _nonempty(sample.get(args.out_normalized_key, "")):
-                pass
-            else:
+            if not (args.skip_existing and _all_generations_present(sample, args.out_normalized_key, args.num_generations)):
                 try:
-                    out_norm = query_model(
+                    outs_norm = query_model(
                         client,
                         norm_text,
                         model=args.model,
                         instruction=args.instruction,
                         temperature=args.temperature,
                         max_tokens=args.max_tokens,
+                        n=args.num_generations,
+                        seed=args.seed,
                     )
-                    if not out_norm.strip():
-                        raise ValueError("Empty model response")
-                    sample[args.out_normalized_key] = out_norm
+                    for k, out_norm in enumerate(outs_norm, start=1):
+                        sample[_gen_key(args.out_normalized_key, k)] = out_norm if out_norm.strip() else None
                 except Exception as e:
                     print(f"❌ Error querying NORMALIZED for sample {idx}: {e}")
-                    sample[args.out_normalized_key] = None
+                    for k in range(1, args.num_generations + 1):
+                        sample[_gen_key(args.out_normalized_key, k)] = None
 
                 if args.sleep > 0:
                     time.sleep(args.sleep)
 
-    # --------------------------
-    # Save output JSON (new file)
-    # --------------------------
-    with open(args.output_path, "w") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+        processed_count += 1
 
+        if args.save_every > 0 and processed_count % args.save_every == 0:
+            try:
+                atomic_json_dump(data, args.output_path)
+                print(
+                    f"💾 Progress saved to {args.output_path} "
+                    f"(processed {processed_count} samples in range)"
+                )
+            except Exception as e:
+                print(f"⚠️ Failed to save {args.output_path}: {e}")
+
+
+    # Final save: write the requested output_path
+    atomic_json_dump(data, args.output_path)
     print(f"✨ Saved updated dataset to {args.output_path}")
 
 

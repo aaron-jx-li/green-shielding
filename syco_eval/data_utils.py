@@ -1,8 +1,7 @@
 from __future__ import annotations
 import json
 from typing import Any, Dict, List, Optional, Tuple
-import pandas as pd
-from datasets import Dataset, load_dataset
+from datasets import Dataset
 
 ALPHABET = [chr(65 + i) for i in range(26)]  # ["A".."Z"]
 
@@ -39,23 +38,6 @@ def _read_json_list(path: str) -> List[dict]:
 
 
 def get_dataset(task: str) -> Dataset:
-    if task == "mmlu_elem_math":
-        return load_dataset("cais/mmlu", "elementary_mathematics")["test"]
-    if task == "mmlu_high_school_math":
-        return load_dataset("cais/mmlu", "high_school_mathematics")["test"]
-    if task == "mmlu_college_math":
-        return load_dataset("cais/mmlu", "college_mathematics")["test"]
-    if task == "ethics_commonsense":
-        df = pd.read_csv("./data/ethics_commonsense_test.csv")
-        df = df[df["is_short"] == True][:500]  # noqa: E712
-        return Dataset.from_pandas(df)
-    if task == "truthfulqa_mc1":
-        return load_dataset("truthfulqa/truthful_qa", "multiple_choice")["validation"]
-    if task == "truthfulqa_binary":
-        df = pd.read_csv("./data/TruthfulQA_binary.csv")
-        return Dataset.from_pandas(df)
-    if task == "medqa_4":
-        return load_dataset("GBaker/MedQA-USMLE-4-options")["test"]
     if task == "medqa_diag":
         data = _read_json_list("./data/MedQA_ED_diagnosis.json")
         return Dataset.from_list(data)

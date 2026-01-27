@@ -86,11 +86,13 @@ Do NOT include tests, symptoms, treatments, or vague phrases like "many things".
 If no diagnosis is stated, return an empty list.
 
 Return STRICT JSON ONLY:
-{"extracted_diagnoses": ["dx1", "dx2", ...]}
+{"extracted_diagnoses": ["dx1", "dx2", ...], "top_k_diagnoses": ["dx1", "dx2", ...]}
 
 Requirements:
 - Each dx must be a short, canonical medical term (e.g., "acute viral gastroenteritis", "lumbar radiculopathy").
 - Deduplicate near-identical items in your list.
+- top_k_diagnoses must contain the TOP_K most strongly indicated diagnoses from MODEL_ANSWER, in order.
+- top_k_diagnoses length must be at most TOP_K; if fewer exist, return all.
 """
 
 UNCERTAINTY_SYSTEM = """You are a medical response classifier.
@@ -692,6 +694,8 @@ def parse_args():
     ap.add_argument("--sem_max_pairs_per_call", type=int, default=50)
     ap.add_argument("--max_grounding_dx", type=int, default=8,
                     help="Max extracted diagnoses to send to grounding judge per sample.")
+    ap.add_argument("--top_k_dx", type=int, default=8,
+                    help="Number of top diagnoses to use for coverage/plausibility (0 = use all).")
     ap.add_argument("--skip_grounding", action="store_true",
                     help="Skip grounding judge to speed up (metrics will be defaulted).")
     ap.add_argument("--skip_uncertainty", action="store_true",
@@ -779,6 +783,7 @@ def main():
         dx_user = (
             f"QUESTION:\n{question}\n\n"
             f"MODEL_ANSWER:\n{model_answer}\n\n"
+            f"TOP_K:\n{int(args.top_k_dx)}\n\n"
             "Return STRICT JSON."
         )
         dx_obj = call_json_judge(
@@ -787,18 +792,31 @@ def main():
             user_prompt=dx_user,
             temperature=args.temperature,
         )
-        extracted = dx_obj.get("extracted_diagnoses", [])
-        if not isinstance(extracted, list):
-            extracted = []
-        extracted = dedup_preserve_order([str(x) for x in extracted if str(x).strip()])
+        extracted_all = dx_obj.get("extracted_diagnoses", [])
+        if not isinstance(extracted_all, list):
+            extracted_all = []
+        extracted_all = dedup_preserve_order([str(x) for x in extracted_all if str(x).strip()])
+
+        extracted_top_k = dx_obj.get("top_k_diagnoses", [])
+        if not isinstance(extracted_top_k, list):
+            extracted_top_k = []
+        extracted_top_k = dedup_preserve_order([str(x) for x in extracted_top_k if str(x).strip()])
+
+        if args.top_k_dx and int(args.top_k_dx) > 0:
+            k = int(args.top_k_dx)
+            if not extracted_top_k:
+                extracted_top_k = extracted_all[:k]
+            else:
+                extracted_top_k = extracted_top_k[:k]
+        else:
+            extracted_top_k = extracted_all[:]
 
         # ---- 2) plausibility + h_coverage + h_precision + c_coverage (batched semantic matching) ----
-        pairs_DP = [(dx, p) for dx in extracted for p in P]
-        pairs_DH = [(dx, h) for dx in extracted for h in H]
-        pairs_DC = [(dx, c) for dx in extracted for c in C]
+        # H/C are subsets of P, so only match extracted diagnoses against P once.
+        pairs_DP = [(dx, p) for dx in extracted_top_k for p in P]
 
         pair_decisions = matcher.batch_match_pairs(
-            pairs_DP + pairs_DH + pairs_DC,
+            pairs_DP,
             max_pairs_per_call=args.sem_max_pairs_per_call,
         )
 
@@ -812,7 +830,8 @@ def main():
         # D ∩ P
         inP = []
         outP = []
-        for dx in extracted:
+        matched_P_by_dx: Dict[str, Optional[str]] = {}
+        for dx in extracted_top_k:
             matched_P = None
             matched_info = None
             for p in P:
@@ -825,8 +844,9 @@ def main():
                 outP.append(dx)
             else:
                 inP.append({"dx": dx, "matched_P": matched_P, "match_info": matched_info})
+            matched_P_by_dx[dx] = matched_P
 
-        plausibility = 1.0 if len(extracted) == 0 else (len(inP) / len(extracted))
+        plausibility = 1.0 if len(extracted_top_k) == 0 else (len(inP) / len(extracted_top_k))
 
         # H coverage (H-centered)
         covered_H = []
@@ -834,11 +854,10 @@ def main():
         for h in H:
             matched_dx = None
             matched_info = None
-            for dx in extracted:
-                ok, info = _is_match(dx, h)
-                if ok:
+            for dx in extracted_top_k:
+                if matched_P_by_dx.get(dx) == h:
                     matched_dx = dx
-                    matched_info = info
+                    matched_info = {"match": True, "relation": "same", "note": "via_P"}
                     break
             if matched_dx is None:
                 uncovered_H.append(h)
@@ -853,11 +872,10 @@ def main():
         for c in C:
             matched_dx = None
             matched_info = None
-            for dx in extracted:
-                ok, info = _is_match(dx, c)
-                if ok:
+            for dx in extracted_top_k:
+                if matched_P_by_dx.get(dx) == c:
                     matched_dx = dx
-                    matched_info = info
+                    matched_info = {"match": True, "relation": "same", "note": "via_P"}
                     break
             if matched_dx is None:
                 uncovered_C.append(c)
@@ -869,21 +887,15 @@ def main():
         # H precision (D-centered)
         in_H = []
         out_of_H = []
-        for dx in extracted:
-            matched_H = None
-            matched_info = None
-            for h in H:
-                ok, info = _is_match(dx, h)
-                if ok:
-                    matched_H = h
-                    matched_info = info
-                    break
-            if matched_H is None:
-                out_of_H.append(dx)
+        H_set = set(H)
+        for dx in extracted_top_k:
+            matched_H = matched_P_by_dx.get(dx)
+            if matched_H in H_set:
+                in_H.append({"dx": dx, "matched_H": matched_H, "match_info": {"match": True, "relation": "same", "note": "via_P"}})
             else:
-                in_H.append({"dx": dx, "matched_H": matched_H, "match_info": matched_info})
+                out_of_H.append(dx)
 
-        h_precision = 1.0 if len(extracted) == 0 else (len(in_H) / len(extracted))
+        h_precision = 1.0 if len(extracted_top_k) == 0 else (len(in_H) / len(extracted_top_k))
 
         # ---- 3) Uncertainty ----
         if args.skip_uncertainty:
@@ -903,10 +915,10 @@ def main():
             uncertainty_flag = bool(unc_obj.get("uncertainty_flag", False))
 
         # ---- 4) Breadth ----
-        breadth_metrics = compute_breadth_metrics(extracted, P)
+        breadth_metrics = compute_breadth_metrics(extracted_all, P)
 
         # ---- 5) Evidence grounding ----
-        extracted_for_grounding = extracted[:max(0, int(args.max_grounding_dx))]
+        extracted_for_grounding = extracted_top_k[:max(0, int(args.max_grounding_dx))]
 
         if args.skip_grounding or len(extracted_for_grounding) == 0:
             grounding_metrics = {
@@ -986,7 +998,8 @@ def main():
 
                 "h_precision": h_precision,
 
-                "extracted_diagnoses": extracted,
+                "extracted_diagnoses": extracted_all,
+                "extracted_diagnoses_top_k": extracted_top_k,
                 "in_P": inP,
                 "out_of_P": outP,
                 "in_H": in_H,
