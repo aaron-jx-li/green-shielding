@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Tuple
-from syco_eval.llm_utils import chat
+from static_eval.llm_utils import chat
 
 
 def judge(question: str, response: str, truth: str, *, model: str = "gpt-4.1-mini", judge_template: str = "with_Q") -> Tuple[bool, str]:

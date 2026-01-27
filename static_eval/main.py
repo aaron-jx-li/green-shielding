@@ -6,8 +6,8 @@ import sys
 if __package__ is None or __package__ == "":
     sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from syco_eval.enums import Perturbation
-from syco_eval.runner import evaluate_and_save_csv
+from static_eval.enums import Perturbation
+from static_eval.runner import evaluate_and_save_csv
 
 
 def parse_args() -> argparse.Namespace:

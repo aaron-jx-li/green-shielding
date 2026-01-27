@@ -4,10 +4,10 @@ from typing import Any, Dict, List, Optional, Sequence
 import pandas as pd
 from tqdm import tqdm
 
-from syco_eval.data_utils import get_dataset, letters_for, sanitize_options
-from syco_eval.enums import QFormat, Perturbation
-from syco_eval.llm_utils import chat
-from syco_eval.prompt_builder import (
+from static_eval.data_utils import get_dataset, letters_for, sanitize_options
+from static_eval.enums import QFormat, Perturbation
+from static_eval.llm_utils import chat
+from static_eval.prompt_builder import (
     build_binary_messages_with_templates,
     build_binary_prompt,
     build_open_default_messages,
@@ -17,7 +17,7 @@ from syco_eval.prompt_builder import (
     extract_letter,
     render_options_str,
 )
-from syco_eval.judge import judge
+from static_eval.judge import judge
 
 
 def _get_model_letter(
