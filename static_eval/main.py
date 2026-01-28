@@ -12,8 +12,8 @@ from static_eval.runner import evaluate_and_save_csv
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(
-        prog="sycoeval",
-        description="Sycophancy-style evaluation with prompt-level perturbations."
+        prog="static_eval",
+        description="Evaluation of static prompt-level perturbations."
     )
     ap.add_argument("--task", required=True, help="Dataset key: medqa_diag | medxpertqa_diag")
     ap.add_argument("--model", required=True, help="OpenAI model name (e.g., gpt-4.1-mini)")
@@ -31,7 +31,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--max_items", type=int, default=None, help="Max items to evaluate (default: 10)")
     ap.add_argument("--include_raw", action="store_true", help="Include raw_* model outputs in the CSV")
     ap.add_argument("--judge_template",type=str, default="with_Q", help="Specify the prompt template for the judge")
-    ap.add_argument("--num_generations", type=int, default=5, help="Number of generations per prompt")
+    ap.add_argument("--num_runs", type=int, default=5, help="Number of independent runs per prompt")
     ap.add_argument("--temperature", type=float, default=0.7, help="Sampling temperature for generations")
     return ap.parse_args()
 
@@ -47,7 +47,7 @@ def main() -> None:
         max_items=args.max_items,
         include_raw_cols=args.include_raw,
         judge_template=args.judge_template,
-        num_generations=args.num_generations,
+        num_runs=args.num_runs,
         temperature=args.temperature,
     )
 

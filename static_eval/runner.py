@@ -119,7 +119,7 @@ def evaluate_and_save_csv(
     max_items: Optional[int] = None,
     include_raw_cols: bool = False,
     judge_template: str = "with_Q",
-    num_generations: int = 5,
+    num_runs: int = 5,
     temperature: float = 0.7,
 ) -> pd.DataFrame:
     ds = get_dataset(task)
@@ -133,10 +133,10 @@ def evaluate_and_save_csv(
     rows: List[Dict[str, Any]] = []
 
     def _expand(names: Sequence[str]) -> List[str]:
-        return [f"{name}_{i}" for name in names for i in range(1, num_generations + 1)]
+        return [f"{name}_{i}" for name in names for i in range(1, num_runs + 1)]
 
     def _set_gen_fields(row: Dict[str, Any], name: str, values: Sequence[Any]) -> None:
-        for i in range(1, num_generations + 1):
+        for i in range(1, num_runs + 1):
             row[f"{name}_{i}"] = values[i - 1] if i - 1 < len(values) else None
 
     # --- column headers depending on format ---
@@ -206,7 +206,7 @@ def evaluate_and_save_csv(
                 raw_defaults = _sample_text(
                     default_msgs,
                     model,
-                    n=num_generations,
+                    n=num_runs,
                     temperature=temperature,
                     max_tokens=150,
                 )
@@ -224,7 +224,7 @@ def evaluate_and_save_csv(
                     msgs,
                     model,
                     allowed_letters=option_letters,
-                    n=num_generations,
+                    n=num_runs,
                     temperature=temperature,
                     max_tokens=30,
                 )
@@ -234,7 +234,7 @@ def evaluate_and_save_csv(
                     (default_corrects[i] != perturbed_corrects[i])
                     if (default_corrects[i] is not None and perturbed_corrects[i] is not None)
                     else None
-                    for i in range(num_generations)
+                    for i in range(num_runs)
                 ]
                 _set_gen_fields(row, "perturbed", perturbed)
                 _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
@@ -249,7 +249,7 @@ def evaluate_and_save_csv(
                     option_letters,
                     sol_letter,
                     choices_override=c_shuf,
-                    n=num_generations,
+                    n=num_runs,
                     temperature=temperature,
                     max_tokens=30,
                 )
@@ -264,7 +264,7 @@ def evaluate_and_save_csv(
                 perturbed: List[Optional[str]] = []
                 perturbed_corrects: List[Optional[bool]] = []
                 raw_perturbed: List[str] = []
-                for i in range(num_generations):
+                for i in range(num_runs):
                     if dflt[i] is None:
                         perturbed.append(None)
                         perturbed_corrects.append(None)
@@ -285,7 +285,7 @@ def evaluate_and_save_csv(
                     (d_ok[i] != perturbed_corrects[i])
                     if (d_ok[i] is not None and perturbed_corrects[i] is not None)
                     else None
-                    for i in range(num_generations)
+                    for i in range(num_runs)
                 ]
                 _set_gen_fields(row, "perturbed", perturbed)
                 _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
@@ -320,7 +320,7 @@ def evaluate_and_save_csv(
             raw_defaults = _sample_text(
                 default_msgs,
                 model,
-                n=num_generations,
+                n=num_runs,
                 temperature=temperature,
                 max_tokens=150,
             )
@@ -341,7 +341,7 @@ def evaluate_and_save_csv(
                 perturbed: List[Optional[str]] = []
                 perturbed_corrects: List[Optional[bool]] = []
                 raw_perturbed: List[str] = []
-                for i in range(num_generations):
+                for i in range(num_runs):
                     proposed_answer = random.choice(wrong_pool) if default_corrects[i] else correct_ans
                     proposed_is_correct = (proposed_answer == correct_ans)
 
@@ -362,7 +362,7 @@ def evaluate_and_save_csv(
                     (default_corrects[i] != perturbed_corrects[i])
                     if (default_corrects[i] is not None and perturbed_corrects[i] is not None)
                     else None
-                    for i in range(num_generations)
+                    for i in range(num_runs)
                 ]
                 _set_gen_fields(row, "solution", solutions)
                 _set_gen_fields(row, "perturbed", perturbed)
@@ -403,12 +403,12 @@ def evaluate_and_save_csv(
                 raw_defaults = _sample_text(
                     build_open_default_messages(q_text),
                     model,
-                    n=num_generations,
+                    n=num_runs,
                     temperature=temperature,
                     max_tokens=150,
                 )
             except Exception:  # noqa: BLE001
-                raw_defaults = [f"ERROR: open-default failed"] * num_generations
+                raw_defaults = [f"ERROR: open-default failed"] * num_runs
 
             default_corrects = [
                 judge(q_text, raw_default, c_i[sol_i], judge_template=judge_template)[0]
@@ -417,7 +417,7 @@ def evaluate_and_save_csv(
             wrong_pool = [c for c in c_i if str(c).strip() != str(c_i[sol_i]).strip()]
             display_defaults = [
                 (c_i[sol_i] if default_corrects[i] else random.choice(wrong_pool))
-                for i in range(num_generations)
+                for i in range(num_runs)
             ]
 
             _set_gen_fields(row, "default", raw_defaults)
@@ -428,7 +428,7 @@ def evaluate_and_save_csv(
             perturbed: List[Optional[str]] = []
             perturbed_corrects: List[Optional[bool]] = []
             raw_perturbed: List[str] = []
-            for i in range(num_generations):
+            for i in range(num_runs):
                 try:
                     msgs = build_open_messages(
                         q_text,
@@ -447,7 +447,7 @@ def evaluate_and_save_csv(
                 (default_corrects[i] != perturbed_corrects[i])
                 if (default_corrects[i] is not None and perturbed_corrects[i] is not None)
                 else None
-                for i in range(num_generations)
+                for i in range(num_runs)
             ]
             _set_gen_fields(row, "perturbed", perturbed)
             _set_gen_fields(row, "perturbed_correct", perturbed_corrects)

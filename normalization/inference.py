@@ -42,9 +42,9 @@ def parse_args():
     parser.add_argument("--out_normalized_key", type=str, default="model_response_converted",
                         help='Base JSON key to store model output for normalized prompt (default: "model_response_converted").')
 
-    # Multi-generation controls
-    parser.add_argument("--num_generations", type=int, default=1,
-                        help="Number of generations to sample per input (default: 1). Keys will be suffixed _1.._n.")
+    # Multi-run controls
+    parser.add_argument("--num_runs", type=int, default=5,
+                        help="Number of independent runs per input (default: 1). Keys will be suffixed _1.._n.")
     parser.add_argument("--seed", type=int, default=None,
                         help="Optional seed for reproducibility (if supported by the model).")
 
@@ -52,7 +52,7 @@ def parse_args():
     parser.add_argument("--instruction", type=str, default=DEFAULT_INSTRUCTION,
                         help="Developer instruction to send to the model.")
 
-    parser.add_argument("--temperature", type=float, default=0.0,
+    parser.add_argument("--temperature", type=float, default=0.7,
                         help="Sampling temperature (ignored for some models).")
 
     parser.add_argument("--max_tokens", type=int, default=None,
@@ -69,9 +69,9 @@ def parse_args():
     parser.add_argument("--sleep", type=float, default=0.0,
                         help="Seconds to sleep between requests (default: 0.0).")
 
-    # If set, skip a query if *all* generation keys already exist and are non-empty
+    # If set, skip a query if *all* run keys already exist and are non-empty
     parser.add_argument("--skip_existing", action="store_true",
-                        help="Skip querying if all output keys for all generations already exist and are non-empty.")
+                        help="Skip querying if all output keys for all runs already exist and are non-empty.")
 
     # Periodic checkpoint saving
     parser.add_argument("--save_every", type=int, default=50,
@@ -106,7 +106,7 @@ def query_model(
     instruction: str,
     temperature: float = 0.0,
     max_tokens: Optional[int] = None,
-    n: int = 1,
+    num_runs: int = 1,
     seed: Optional[int] = None,
 ) -> list[str]:
     messages = [
@@ -115,14 +115,14 @@ def query_model(
     ]
 
     outs: list[str] = []
-    for k in range(n):
+    for k in range(num_runs):
         kwargs = {"model": model, "input": messages}
         if temperature is not None:
             kwargs["temperature"] = temperature
         if max_tokens is not None:
             kwargs["max_output_tokens"] = max_tokens
         if seed is not None:
-            kwargs["seed"] = seed + k  # decorrelate generations
+            kwargs["seed"] = seed + k  # decorrelate runs
 
         resp = client.responses.create(**kwargs)
         outs.append(resp.output_text or "")
@@ -138,19 +138,19 @@ def _gen_key(base: str, k: int) -> str:
     return f"{base}_{k}"
 
 
-def _all_generations_present(sample: dict, base_key: str, n: int) -> bool:
+def _all_runs_present(sample: dict, base_key: str, n: int) -> bool:
     return all(_nonempty(sample.get(_gen_key(base_key, k), "")) for k in range(1, n + 1))
 
 
-def _pop_generation_keys(sample: dict, base_key: str, n: int) -> None:
+def _pop_run_keys(sample: dict, base_key: str, n: int) -> None:
     for k in range(1, n + 1):
         sample.pop(_gen_key(base_key, k), None)
 
 
 def main():
     args = parse_args()
-    if args.num_generations < 1:
-        raise ValueError("❌ --num_generations must be >= 1")
+    if args.num_runs < 1:
+        raise ValueError("❌ --num_runs must be >= 1")
 
     client = OpenAI()  # requires OPENAI_API_KEY
 
@@ -183,14 +183,14 @@ def main():
 
 
     # --------------------------
-    # First pass: remove generation keys from UNPROCESSED items
+    # First pass: remove run keys from UNPROCESSED items
     # --------------------------
     for i, sample in enumerate(data):
         if not isinstance(sample, dict):
             continue
         if i not in processed_set:
-            _pop_generation_keys(sample, args.out_raw_key, args.num_generations)
-            _pop_generation_keys(sample, args.out_normalized_key, args.num_generations)
+            _pop_run_keys(sample, args.out_raw_key, args.num_runs)
+            _pop_run_keys(sample, args.out_normalized_key, args.num_runs)
 
     # --------------------------
     # Second pass: process selected samples
@@ -213,7 +213,7 @@ def main():
 
         # Query on raw input
         if raw_text:
-            if not (args.skip_existing and _all_generations_present(sample, args.out_raw_key, args.num_generations)):
+            if not (args.skip_existing and _all_runs_present(sample, args.out_raw_key, args.num_runs)):
                 try:
                     outs_raw = query_model(
                         client,
@@ -222,14 +222,14 @@ def main():
                         instruction=args.instruction,
                         temperature=args.temperature,
                         max_tokens=args.max_tokens,
-                        n=args.num_generations,
+                        num_runs=args.num_runs,
                         seed=args.seed,
                     )
                     for k, out_raw in enumerate(outs_raw, start=1):
                         sample[_gen_key(args.out_raw_key, k)] = out_raw if out_raw.strip() else None
                 except Exception as e:
                     print(f"❌ Error querying RAW for sample {idx}: {e}")
-                    for k in range(1, args.num_generations + 1):
+                    for k in range(1, args.num_runs + 1):
                         sample[_gen_key(args.out_raw_key, k)] = None
 
                 if args.sleep > 0:
@@ -237,7 +237,7 @@ def main():
 
         # Query on normalized prompt
         if norm_text:
-            if not (args.skip_existing and _all_generations_present(sample, args.out_normalized_key, args.num_generations)):
+            if not (args.skip_existing and _all_runs_present(sample, args.out_normalized_key, args.num_runs)):
                 try:
                     outs_norm = query_model(
                         client,
@@ -246,14 +246,14 @@ def main():
                         instruction=args.instruction,
                         temperature=args.temperature,
                         max_tokens=args.max_tokens,
-                        n=args.num_generations,
+                        num_runs=args.num_runs,
                         seed=args.seed,
                     )
                     for k, out_norm in enumerate(outs_norm, start=1):
                         sample[_gen_key(args.out_normalized_key, k)] = out_norm if out_norm.strip() else None
                 except Exception as e:
                     print(f"❌ Error querying NORMALIZED for sample {idx}: {e}")
-                    for k in range(1, args.num_generations + 1):
+                    for k in range(1, args.num_runs + 1):
                         sample[_gen_key(args.out_normalized_key, k)] = None
 
                 if args.sleep > 0:
