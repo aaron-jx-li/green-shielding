@@ -4,85 +4,24 @@ class DiagnosisAnnotationApp {
         this.currentQuestion = null;
         this.stats = null;
         this.currentUserId = null;
-        this.availableUsers = [];
         this.initializeApp();
     }
 
     async initializeApp() {
         this.bindEvents();
         
-        // Load available users first
-        await this.loadAvailableUsers();
-        
         // Check for stored user_id in localStorage and validate it
         const storedUserId = localStorage.getItem('annotation_user_id');
-        if (storedUserId && this.availableUsers.includes(storedUserId)) {
+        if (storedUserId) {
             await this.login(storedUserId);
         } else {
-            // Clear invalid stored user_id
-            if (storedUserId) {
-                localStorage.removeItem('annotation_user_id');
-            }
-            this.showLoginScreen();
+            // No user stored, redirect to login page
+            window.location.href = 'login.html';
         }
     }
 
     bindEvents() {
         document.getElementById('nextBtn').addEventListener('click', () => this.saveAndNext());
-    }
-
-    async loadAvailableUsers() {
-        try {
-            const response = await fetch('/users');
-            const data = await response.json();
-            
-            if (data.success && data.users) {
-                this.availableUsers = data.users;
-            } else {
-                // Fallback to default users
-                this.availableUsers = ['user1', 'user2', 'user3', 'user4'];
-            }
-        } catch (error) {
-            console.error('Error loading users:', error);
-            // Fallback to default users if server unavailable
-            this.availableUsers = ['user1', 'user2', 'user3', 'user4'];
-        }
-    }
-
-    showLoginScreen() {
-        const loginSection = document.getElementById('loginSection');
-        const annotationCard = document.getElementById('annotationCard');
-        const progressBar = document.getElementById('progressBar');
-        const userInfo = document.getElementById('userInfo');
-        
-        loginSection.style.display = 'block';
-        annotationCard.style.display = 'none';
-        progressBar.style.display = 'none';
-        userInfo.style.display = 'none';
-        
-        // Populate user buttons
-        const userButtons = document.getElementById('userButtons');
-        userButtons.innerHTML = '';
-        
-        this.availableUsers.forEach(userId => {
-            const button = document.createElement('button');
-            button.className = 'btn btn-primary';
-            button.textContent = userId;
-            button.addEventListener('click', () => this.login(userId));
-            userButtons.appendChild(button);
-        });
-    }
-
-    hideLoginScreen() {
-        const loginSection = document.getElementById('loginSection');
-        const annotationCard = document.getElementById('annotationCard');
-        const progressBar = document.getElementById('progressBar');
-        const userInfo = document.getElementById('userInfo');
-        
-        loginSection.style.display = 'none';
-        annotationCard.style.display = 'block';
-        progressBar.style.display = 'block';
-        userInfo.style.display = 'block';
     }
 
     async login(userId) {
@@ -104,7 +43,7 @@ class DiagnosisAnnotationApp {
                     localStorage.removeItem('annotation_user_id');
                 }
                 this.showError('Login failed: ' + (data.error || 'Unknown error'));
-                this.showLoginScreen();
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -112,9 +51,16 @@ class DiagnosisAnnotationApp {
             localStorage.setItem('annotation_user_id', userId);
             
             // Update user info display
-            document.getElementById('userInfo').textContent = `Logged in as: ${userId}`;
+            const userInfo = document.getElementById('userInfo');
+            if (userInfo) {
+                userInfo.textContent = `Logged in as: ${userId}`;
+                userInfo.style.display = 'block';
+            }
             
-            this.hideLoginScreen();
+            // Show main interface
+            document.getElementById('annotationCard').style.display = 'block';
+            document.getElementById('progressBar').style.display = 'block';
+            
             await this.loadNextQuestion();
             
         } catch (error) {
@@ -122,7 +68,7 @@ class DiagnosisAnnotationApp {
             // Clear stored user_id on server error
             localStorage.removeItem('annotation_user_id');
             this.showError('❌ Server not available! Please start the Python server first.\nRun: python3 server.py');
-            this.showLoginScreen();
+            window.location.href = 'login.html';
         }
     }
 
@@ -325,4 +271,3 @@ class DiagnosisAnnotationApp {
 document.addEventListener('DOMContentLoaded', () => {
     window.diagnosisAnnotationApp = new DiagnosisAnnotationApp();
 });
-
