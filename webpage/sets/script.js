@@ -22,6 +22,17 @@ class DiagnosisAnnotationApp {
 
     bindEvents() {
         document.getElementById('nextBtn').addEventListener('click', () => this.saveAndNext());
+
+        // Logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout? You will need to login again to continue.')) {
+                    localStorage.removeItem('annotation_user_id');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
     }
 
     async login(userId) {
@@ -52,9 +63,13 @@ class DiagnosisAnnotationApp {
             
             // Update user info display
             const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
             if (userInfo) {
                 userInfo.textContent = `Logged in as: ${userId}`;
                 userInfo.style.display = 'block';
+            }
+            if (logoutBtn) {
+                logoutBtn.style.display = 'block';
             }
             
             // Show main interface

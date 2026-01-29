@@ -15,6 +15,7 @@ from flask_cors import CORS
 import json
 import os
 import time
+import shutil
 from contextlib import contextmanager
 import pandas as pd
 import csv
@@ -221,18 +222,50 @@ def get_drive_service():
     return build("drive", "v3", credentials=creds)
 
 
+def get_user_csv_path(user_id):
+    """Get the user-specific CSV path. Sanitize user_id to be filename safe."""
+    base_path = CONFIG["all_questions_metadata_csv_path"]
+    if not base_path:
+        return None
+        
+    # If user_id is None or empty, fallback to base path (or handle error)
+    if not user_id:
+        return base_path
+
+    dir_name = os.path.dirname(base_path)
+    file_name = os.path.basename(base_path)
+    name, ext = os.path.splitext(file_name)
+    
+    # Simple sanitization
+    safe_user_id = "".join(c for c in user_id if c.isalnum() or c in ('-', '_')).strip()
+    if not safe_user_id:
+        safe_user_id = "default"
+        
+    return os.path.join(dir_name, f"{name}_{safe_user_id}{ext}")
+
+
+def ensure_user_csv(user_id):
+    """Ensure the user-specific CSV exists by copying from the master if needed."""
+    user_path = get_user_csv_path(user_id)
+    if not os.path.exists(user_path):
+        print(f"✨ Creating new annotation CSV for user '{user_id}' at {user_path}", flush=True)
+        # Lock the master file just in case, though we only read it
+        with with_csv_lock(CONFIG["all_questions_metadata_csv_path"]):
+             shutil.copy2(CONFIG["all_questions_metadata_csv_path"], user_path)
+    return user_path
+
+
 # -----------------------------------------------------------------------------
 # CSV file lock (your multi-user-safe version)
 # -----------------------------------------------------------------------------
-def get_lock_file_path():
-    csv_path = CONFIG["all_questions_metadata_csv_path"]
-    if not csv_path:
+def get_lock_file_path(target_csv_path):
+    if not target_csv_path:
         return None
-    return csv_path + ".lock"
+    return target_csv_path + ".lock"
 
 
-def acquire_csv_lock(timeout=10):
-    lock_path = get_lock_file_path()
+def acquire_csv_lock(target_csv_path, timeout=10):
+    lock_path = get_lock_file_path(target_csv_path)
     if not lock_path:
         return False
 
@@ -254,8 +287,8 @@ def acquire_csv_lock(timeout=10):
     return False
 
 
-def release_csv_lock():
-    lock_path = get_lock_file_path()
+def release_csv_lock(target_csv_path):
+    lock_path = get_lock_file_path(target_csv_path)
     if not lock_path:
         return
     try:
@@ -266,26 +299,39 @@ def release_csv_lock():
 
 
 @contextmanager
-def with_csv_lock():
-    if not acquire_csv_lock():
-        raise Exception("Failed to acquire CSV lock")
+def with_csv_lock(target_csv_path=None):
+    # Default to config path if none provided (for backward compat)
+    if target_csv_path is None:
+        target_csv_path = CONFIG["all_questions_metadata_csv_path"]
+        
+    if not acquire_csv_lock(target_csv_path):
+        raise Exception(f"Failed to acquire CSV lock for {target_csv_path}")
     try:
         yield
     finally:
-        release_csv_lock()
+        release_csv_lock(target_csv_path)
 
 
 # -----------------------------------------------------------------------------
 # Core logic
 # -----------------------------------------------------------------------------
 def get_slrt_random_unannotated_question(user_id: str):
-    """Pick a random unannotated question for this user (not already assigned)."""
-    with with_csv_lock():
+    """Pick a random unannotated question for this user (using their private CSV)."""
+    
+    # Ensure user has their own CSV
+    user_csv_path = ensure_user_csv(user_id)
+    
+    with with_csv_lock(user_csv_path):
+        # Note: We don't use the global user_assignments dict anymore because 
+        # each user has their own file state, so 'assigned' is just what they haven't finished yet.
+        # But we can still use it to avoid re-assigning the SAME question in the same session if needed.
+        # For simplicity, let's rely on the DB state.
+        
         if user_id not in user_assignments:
             user_assignments[user_id] = set()
         user_assigned_indices = user_assignments[user_id]
 
-        questions_df = pd.read_csv(CONFIG["all_questions_metadata_csv_path"], quoting=csv.QUOTE_ALL)
+        questions_df = pd.read_csv(user_csv_path, quoting=csv.QUOTE_ALL)
         slrt_bounds_df = pd.read_csv(CONFIG["slrt_bounds_csv_path"], quoting=csv.QUOTE_ALL)
         with open(CONFIG["all_questions_json_path"], "r") as f:
             questions_json = json.load(f)
@@ -311,10 +357,10 @@ def get_slrt_random_unannotated_question(user_id: str):
             if (num_incorrect >= cat_high_bound) or (num_incorrect <= cat_low_bound):
                 questions_df.loc[questions_df["category"] == curr_cat, "to_be_seen"] = False
 
-        # Persist updated to_be_seen
-        questions_df.to_csv(CONFIG["all_questions_metadata_csv_path"], index=False, quoting=csv.QUOTE_ALL)
+        # Persist updated to_be_seen (to USER'S file)
+        questions_df.to_csv(user_csv_path, index=False, quoting=csv.QUOTE_ALL)
 
-        # Filter: still to be seen + not assigned to this user
+        # Filter: still to be seen + not assigned to this user (in memory)
         available_questions = questions_df[
             (questions_df["to_be_seen"] == True) &
             (~questions_df["Index"].isin(user_assigned_indices))
@@ -342,12 +388,17 @@ def get_slrt_random_unannotated_question(user_id: str):
         }
 
 
-def get_stats():
-    """Get annotation statistics by reading the CSV."""
+def get_stats(user_id=None):
+    """Get annotation statistics by reading the user's CSV (or default if None)."""
     try:
-        with with_csv_lock():
+        if user_id:
+            target_path = ensure_user_csv(user_id)
+        else:
+            target_path = CONFIG["all_questions_metadata_csv_path"]
+
+        with with_csv_lock(target_path):
             df = pd.read_csv(
-                CONFIG["all_questions_metadata_csv_path"],
+                target_path,
                 usecols=[CONFIG["expert_dec_column"], "to_be_seen"],
                 quoting=csv.QUOTE_ALL,
             )
@@ -373,18 +424,21 @@ def get_stats():
         return None
 
 
-def upload_csv_to_drive_best_effort():
+def upload_csv_to_drive_best_effort(target_path=None):
     """Upload/update the metadata CSV in Google Drive (best-effort)."""
     if not (TOKEN_JSON and CLIENT_SECRET_JSON and FOLDER_ID):
         # silently skip if Drive isn't configured
         return
 
+    if target_path is None:
+        target_path = CONFIG["all_questions_metadata_csv_path"]
+
     service = get_drive_service()
-    file_name = os.path.basename(CONFIG["all_questions_metadata_csv_path"])
+    file_name = os.path.basename(target_path)
     query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
 
     existing_files = service.files().list(q=query, fields="files(id, name)").execute().get("files", [])
-    media = MediaFileUpload(CONFIG["all_questions_metadata_csv_path"], resumable=True)
+    media = MediaFileUpload(target_path, resumable=True)
 
     if existing_files:
         file_id = existing_files[0]["id"]
@@ -397,11 +451,18 @@ def upload_csv_to_drive_best_effort():
 
 
 def save_annotation_to_csv(csv_index, annotation_value, comment="", user_id=None):
-    """Save annotation/comment to CSV and upload updated CSV to Drive best-effort."""
+    """Save annotation/comment to user's CSV and upload updated CSV to Drive best-effort."""
     try:
-        with with_csv_lock():
+        # Require user_id now
+        if not user_id:
+             print("❌ Error: user_id required for saving annotation", flush=True)
+             return False
+
+        user_csv_path = ensure_user_csv(user_id)
+
+        with with_csv_lock(user_csv_path):
             df = pd.read_csv(
-                CONFIG["all_questions_metadata_csv_path"],
+                user_csv_path,
                 quoting=csv.QUOTE_ALL,
                 dtype={"comments": "string"},
             )
@@ -410,16 +471,16 @@ def save_annotation_to_csv(csv_index, annotation_value, comment="", user_id=None
             df.loc[df["Index"] == int(csv_index), "to_be_seen"] = False
             df.loc[df["Index"] == int(csv_index), "comments"] = comment
 
-            df.to_csv(CONFIG["all_questions_metadata_csv_path"], index=False, quoting=csv.QUOTE_ALL)
+            df.to_csv(user_csv_path, index=False, quoting=csv.QUOTE_ALL)
 
-            # remove from all users
+            # remove from this user's assignment set
             idx = int(csv_index)
-            for uid in list(user_assignments.keys()):
-                user_assignments[uid].discard(idx)
+            if user_id in user_assignments:
+                user_assignments[user_id].discard(idx)
 
         # Upload outside lock (avoid holding lock during network call)
         try:
-            upload_csv_to_drive_best_effort()
+            upload_csv_to_drive_best_effort(user_csv_path)
         except Exception as e:
             print(f"⚠️ Drive upload skipped due to error: {e}", flush=True)
 
@@ -454,7 +515,7 @@ def get_next_question():
         question = get_slrt_random_unannotated_question(user_id)
 
         if question is None:
-            stats = get_stats()
+            stats = get_stats(user_id)
             if stats is None:
                 return jsonify({"error": "Failed to get stats"}), 500
             return jsonify({
@@ -464,7 +525,7 @@ def get_next_question():
                 "stats": stats,
             })
 
-        stats = get_stats()
+        stats = get_stats(user_id)
         if stats is None:
             return jsonify({"error": "Failed to get stats"}), 500
 
@@ -508,7 +569,7 @@ def save_and_next():
 
         question = get_slrt_random_unannotated_question(user_id)
         if question is None:
-            stats = get_stats()
+            stats = get_stats(user_id)
             if stats is None:
                 return jsonify({"error": "Failed to get stats"}), 500
             return jsonify({
@@ -518,7 +579,7 @@ def save_and_next():
                 "stats": stats,
             })
 
-        stats = get_stats()
+        stats = get_stats(user_id)
         if stats is None:
             return jsonify({"error": "Failed to get stats"}), 500
 
@@ -536,7 +597,9 @@ def save_and_next():
 
 @app.route("/get_stats", methods=["GET"])
 def get_stats_route():
-    stats = get_stats()
+    # Pass user_id if available to show per-user stats
+    user_id = request.args.get("user")
+    stats = get_stats(user_id)
     if stats is None:
         return jsonify({"error": "Failed to get stats"}), 500
     return jsonify({"success": True, "stats": stats})
