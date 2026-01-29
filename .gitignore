@@ -10,6 +10,7 @@ __pycache__/
 *.err
 *.out
 *.log
+*.sh
 data/HCM_filtered-100.json
 data/HCM_filtered_parsed-20.json
 data/HealthCareMagic-100k.json

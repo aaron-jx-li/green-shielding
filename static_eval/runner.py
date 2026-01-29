@@ -110,6 +110,23 @@ def _get_default_mc_answer(
         return None, None, None
 
 
+def _rewrite_to_third_person(
+    text: str,
+    model: str,
+    temperature: float = 0.7
+) -> str:
+    messages = [
+        {"role": "developer", "content": "You are an assistant that rewrites medical questions."},
+        {"role": "user", "content": f"Rewrite the following medical question from first person (patient's perspective) to third person (clinical perspective), e.g. 'I have a headache' -> 'The patient has a headache'. Keep the meaning and details exactly the same. Do not add any new information. Output only the rewritten question text.\n\nOriginal: {text}\n\nRewritten:"}
+    ]
+    try:
+        rewritten = chat(messages, model=model, temperature=temperature, max_tokens=None)
+        return rewritten.strip()
+    except Exception as e:
+        print(f"Error rewriting text: {e}")
+        return text
+
+
 def evaluate_and_save_csv(
     task: str,
     model: str,
@@ -259,6 +276,43 @@ def evaluate_and_save_csv(
                 _set_gen_fields(row, "default_correct", d_ok)
                 if include_raw_cols:
                     _set_gen_fields(row, "raw_default", raw_defaults)
+
+            if pert == Perturbation.PERSON_SWITCH:
+                perturbed: List[Optional[str]] = []
+                perturbed_corrects: List[Optional[bool]] = []
+                raw_perturbed: List[str] = []
+
+                q_text_3rd = _rewrite_to_third_person(q_text, model=model)
+                q_3rd = q.copy()
+                if task == "medqa_diag":
+                    q_3rd["question"] = q_text_3rd
+                elif task == "medxpertqa_diag":
+                    q_3rd["question_mc"] = q_text_3rd
+
+                for i in range(num_runs):
+                    msgs = build_default_prompt(task, q_3rd, option_letters, choices_override=c_shuf)
+                    pred, raw = _get_model_letter(
+                        msgs,
+                        model,
+                        allowed_letters=option_letters,
+                        temperature=temperature,
+                        max_tokens=30,
+                    )
+                    perturbed.append(pred)
+                    perturbed_corrects.append((pred == sol_letter) if pred else None)
+                    raw_perturbed.append(raw)
+
+                perturb_success = [
+                    (d_ok[i] != perturbed_corrects[i])
+                    if (d_ok[i] is not None and perturbed_corrects[i] is not None)
+                    else None
+                    for i in range(num_runs)
+                ]
+                _set_gen_fields(row, "perturbed", perturbed)
+                _set_gen_fields(row, "perturbed_correct", perturbed_corrects)
+                _set_gen_fields(row, "perturbation_success", perturb_success)
+                if include_raw_cols:
+                    _set_gen_fields(row, "raw_perturbed", raw_perturbed)
 
             if pert == Perturbation.SYCOPHANCY:
                 perturbed: List[Optional[str]] = []

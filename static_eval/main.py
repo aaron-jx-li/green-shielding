@@ -23,6 +23,7 @@ def parse_args() -> argparse.Namespace:
             Perturbation.SYCOPHANCY.value,
             Perturbation.FORMAT_MC.value,
             Perturbation.FORMAT_BINARY.value,
+            Perturbation.PERSON_SWITCH.value,
         ],
         default=Perturbation.SYCOPHANCY.value,
         help="Prompt-level perturbation to apply",

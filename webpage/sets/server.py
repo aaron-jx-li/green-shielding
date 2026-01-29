@@ -54,7 +54,7 @@ ASSIGNMENTS_PATH = os.environ.get(
 # =========================
 # Multi-user configuration
 # =========================
-USERS = ["Dr. Kornblith", "Dr. Bains"]
+USERS = ["Dr. Kornblith", "Dr. Bains", "Dr. Jaradeh"]
 USERS_PER_QUESTION = 2  # number of users assigned to each question
 
 # =========================
