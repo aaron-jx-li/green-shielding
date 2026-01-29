@@ -55,7 +55,7 @@ ASSIGNMENTS_PATH = os.environ.get(
 # Multi-user configuration
 # =========================
 USERS = ["Dr. Kornblith", "Dr. Bains", "Dr. Jaradeh"]
-USERS_PER_QUESTION = 2  # number of users assigned to each question
+USERS_PER_QUESTION = 3  # number of users assigned to each question
 
 # =========================
 # Globals
@@ -231,23 +231,36 @@ def save_assignments(assignments_dict):
 def initialize_assignments():
     """
     Initialize question assignments by randomly assigning each question to N users.
-    Idempotent: only assigns previously-unseen question indices.
+    Ensures every question has at least USERS_PER_QUESTION assignees.
     """
     questions = load_data()
     assignments = load_assignments()
 
     question_indices = [str(q["__idx"]) for q in questions]
-    existing_indices = set(assignments.keys())
-    new_indices = set(question_indices) - existing_indices
+    
+    # Track if we made any changes
+    changed = False
 
-    if not new_indices:
-        return assignments
+    for q_idx in question_indices:
+        current_assignees = assignments.get(q_idx, [])
+        
+        # If we need more users for this question
+        if len(current_assignees) < USERS_PER_QUESTION:
+            # Find users who aren't already assigned
+            available_users = [u for u in USERS if u not in current_assignees]
+            
+            # How many needed?
+            needed = USERS_PER_QUESTION - len(current_assignees)
+            
+            if available_users:
+                # Add random users from available pool
+                new_users = random.sample(available_users, min(needed, len(available_users)))
+                assignments[q_idx] = current_assignees + new_users
+                changed = True
 
-    for q_idx in new_indices:
-        num_users = min(USERS_PER_QUESTION, len(USERS))
-        assignments[q_idx] = random.sample(USERS, num_users)
-
-    save_assignments(assignments)
+    if changed:
+        save_assignments(assignments)
+    
     return assignments
 
 
