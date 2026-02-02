@@ -1,0 +1,762 @@
+{
+  "104": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [
+        "Insect bite / arthropod reaction",
+        "Folliculitis"
+      ],
+      "not_plausible": [
+        "Insect bite / arthropod reaction",
+        "Folliculitis",
+        "Urticaria",
+        "Contact dermatitis"
+      ],
+      "timestamp": "2026-02-01T00:10:05.276911"
+    }
+  },
+  "1044": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "Overfeeding",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:40:19.275999"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "antibiotics associated diarrhea",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Urinary tract infection"
+      ],
+      "timestamp": "2026-01-31T22:08:36.767033"
+    }
+  },
+  "1090": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T23:34:48.427985"
+    }
+  },
+  "116": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:59:00.379991"
+    }
+  },
+  "118": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Pancreatitis",
+        "Nephrolithiasis (renal colic)"
+      ],
+      "timestamp": "2026-02-01T00:36:59.670551"
+    }
+  },
+  "1186": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "dermoid cyst",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:28:07.418688"
+    }
+  },
+  "125": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "Thyroid disorder",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Vestibular disorder (e.g., BPPV)"
+      ],
+      "timestamp": "2026-01-31T23:58:16.250046"
+    }
+  },
+  "1300": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Gastroesophageal reflux disease (GERD)"
+      ],
+      "timestamp": "2026-01-31T23:53:15.648884"
+    }
+  },
+  "1415": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Asthma"
+      ],
+      "timestamp": "2026-02-01T01:01:17.097013"
+    }
+  },
+  "1554": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "Prolapsed internal hemorrhoid",
+      "missing_plausible": "Prolapsed internal hemorrhoid",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:54:32.933482"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "Perineal abscess",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:43:05.928055"
+    }
+  },
+  "1561": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Gastroesophageal reflux disease",
+        "Protracted bacterial bronchitis"
+      ],
+      "timestamp": "2026-02-01T00:26:08.627566"
+    }
+  },
+  "1596": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T23:03:46.713844"
+    }
+  },
+  "1704": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:35:24.852376"
+    }
+  },
+  "1728": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T00:33:58.697402"
+    }
+  },
+  "1772": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "pneumonia",
+      "missing_highly_likely": "viral uri, pharyngitis, allergic rhinitis",
+      "missing_plausible": "Viral URI, pharyngitis, allergic rhinitis, pneumonia",
+      "not_cannot_miss": [
+        "Allergic reaction / angioedema"
+      ],
+      "not_highly_likely": [
+        "Eustachian tube dysfunction",
+        "Cerumen impaction"
+      ],
+      "not_plausible": [
+        "Eustachian tube dysfunction",
+        "Cerumen impaction",
+        "Anxiety / hyperventilation syndrome",
+        "Allergic reaction / angioedema",
+        "Gastroesophageal reflux disease (GERD/LPR)",
+        "Vocal cord dysfunction (inducible laryngeal obstruction)"
+      ],
+      "timestamp": "2026-01-31T23:18:31.417535"
+    }
+  },
+  "1793": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "sacroiliac joint dysfunction",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T00:50:32.449310"
+    }
+  },
+  "1824": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "folliculitis",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Hidradenitis suppurativa"
+      ],
+      "timestamp": "2026-01-31T23:34:01.759733"
+    }
+  },
+  "1841": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:49:13.890428"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:31:20.563789"
+    }
+  },
+  "1882": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "heart failure, copd",
+      "missing_highly_likely": "",
+      "missing_plausible": "allergen/environment induced bronchoconstriction, copd, heart failure",
+      "not_cannot_miss": [
+        "Anaphylaxis / angioedema"
+      ],
+      "not_highly_likely": [
+        "Gastroesophageal reflux disease (GERD) / laryngopharyngeal reflux"
+      ],
+      "not_plausible": [
+        "Gastroesophageal reflux disease (GERD) / laryngopharyngeal reflux",
+        "Anxiety-related hyperventilation / panic",
+        "Anaphylaxis / angioedema"
+      ],
+      "timestamp": "2026-02-01T01:25:37.366036"
+    }
+  },
+  "1934": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "SJS/TEN, DRESS",
+      "missing_highly_likely": "Papular urticaria",
+      "missing_plausible": "SJS/TEN, DRESS, AGEP",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:51:40.193932"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "contact dermatitis",
+      "missing_plausible": "Miliaria",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:35:46.175353"
+    }
+  },
+  "1998": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "Bite misalignment",
+      "missing_plausible": "Bite misalignment",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:57:43.474387"
+    }
+  },
+  "2029": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "Ludwig angina, Lemierre syndrome",
+      "missing_highly_likely": "",
+      "missing_plausible": "Lemierre syndrome, mastoiditis, Ludwig angina",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:48:18.409180"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "sepsis, meningitis",
+      "missing_highly_likely": "abscess",
+      "missing_plausible": "Sepsis, leukemia, lymphoma, cat scratch disease, meningitis",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:29:55.886668"
+    }
+  },
+  "2030": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Allergic conjunctivitis",
+        "Obsessive-compulsive disorder",
+        "Anxiety disorder"
+      ],
+      "timestamp": "2026-02-01T00:51:54.448241"
+    }
+  },
+  "2161": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T00:40:03.229348"
+    }
+  },
+  "2217": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "lumbar spine fracture, pelvic injury, hip dislocation",
+      "missing_plausible": "pelvic fracture, lower leg fracture, hip dislocation",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T00:22:06.468740"
+    }
+  },
+  "2264": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Pes anserine bursitis"
+      ],
+      "timestamp": "2026-02-01T00:57:45.608045"
+    }
+  },
+  "2279": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "folliculitis",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:40:57.337264"
+    }
+  },
+  "2331": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "Axillary lymphadenopathy (would lead to additional breast cancer screening)",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Generalized anxiety disorder"
+      ],
+      "timestamp": "2026-02-02T18:43:39.569055"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "Hidradenitis suppurativa",
+      "missing_highly_likely": "",
+      "missing_plausible": "contact dermatitis",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T21:56:54.176666"
+    }
+  },
+  "2421": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T23:42:44.686041"
+    }
+  },
+  "2488": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T23:19:56.719665"
+    }
+  },
+  "258": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "Deconditioning",
+      "missing_plausible": "Anemia",
+      "not_cannot_miss": [],
+      "not_highly_likely": [
+        "Heart failure"
+      ],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:44:12.005628"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "New onset heart failure",
+      "missing_highly_likely": "",
+      "missing_plausible": "Valvular disease",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:01:24.182816"
+    }
+  },
+  "2630": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "Pregnancy",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Ovarian cyst"
+      ],
+      "timestamp": "2026-02-01T01:42:29.082862"
+    }
+  },
+  "2660": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T00:14:31.029653"
+    }
+  },
+  "2668": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:53:04.584571"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "B 12 deficiency",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:38:13.135419"
+    }
+  },
+  "37": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T00:24:47.822353"
+    }
+  },
+  "384": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:51:53.777793"
+    }
+  },
+  "409": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "gastric outlet obstruction",
+      "missing_highly_likely": "gastric outlet obstruction, cyclic vomiting, gastroparesis",
+      "missing_plausible": "gastric outlet obstruction, gastroparesis",
+      "not_cannot_miss": [],
+      "not_highly_likely": [
+        "Peptic ulcer disease / gastritis"
+      ],
+      "not_plausible": [
+        "Abdominal aortic aneurysm",
+        "Mesenteric ischemia"
+      ],
+      "timestamp": "2026-02-01T01:48:53.327919"
+    }
+  },
+  "418": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "muscular dystrophy, neurodegenerative disorders, metabolic encephalopathy",
+      "missing_highly_likely": "muscular dystrophy, neurodegenerative disorders, metabolic encephalopathy",
+      "missing_plausible": "muscular dystrophy, neurodegenerative disorders",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Neuroblastoma",
+        "Posterior fossa tumor / intracranial mass",
+        "Guillain-Barré syndrome"
+      ],
+      "timestamp": "2026-01-31T23:51:46.409910"
+    }
+  },
+  "482": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "APLS",
+      "missing_highly_likely": "",
+      "missing_plausible": "Rhabdomyolysis, APLS (antiphospholipid antibody syndrome)",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Fibromyalgia"
+      ],
+      "timestamp": "2026-02-02T18:46:27.869403"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "mixed connective tissue disease",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T22:17:47.869756"
+    }
+  },
+  "550": {
+    "Dr. Bains": {
+      "missing_cannot_miss": "Mastoiditis",
+      "missing_highly_likely": "",
+      "missing_plausible": "Mastoiditis",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-02T18:41:18.517275"
+    },
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-01-31T21:54:36.004261"
+    },
+    "Dr. Kornblith": {
+      "missing_cannot_miss": "TEST, TEST1",
+      "missing_highly_likely": "THIS IS A TEST ANNOTATION, NO USE,",
+      "missing_plausible": "DO NOT USE THIS DATA",
+      "not_cannot_miss": [
+        "Giant cell arteritis"
+      ],
+      "not_highly_likely": [
+        "Temporomandibular disorder (TMD)",
+        "Myofascial/masticatory muscle pain (myalgia)"
+      ],
+      "not_plausible": [
+        "Temporomandibular disorder (TMD)",
+        "Giant cell arteritis"
+      ],
+      "timestamp": "2026-02-02T19:23:34.088864"
+    }
+  },
+  "761": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "seizures",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:51:02.546765"
+    }
+  },
+  "8": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "acute coronary syndrome, autoimmune disease",
+      "missing_highly_likely": "",
+      "missing_plausible": "angina, acute coronary syndrome, electrolyte derangements, autoimmune disease",
+      "not_cannot_miss": [],
+      "not_highly_likely": [
+        "Transient ischemic attack (TIA)"
+      ],
+      "not_plausible": [
+        "Migraine with aura",
+        "Hypertension"
+      ],
+      "timestamp": "2026-01-31T23:29:55.451457"
+    }
+  },
+  "859": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "Amphetamine toxicity/overdose",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [
+        "Pulmonary embolism"
+      ],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Pulmonary embolism"
+      ],
+      "timestamp": "2026-01-31T22:50:08.483139"
+    }
+  },
+  "88": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "umbilical cord accident",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:33:18.252773"
+    }
+  },
+  "887": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "sebaceous cyst",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Molluscum contagiosum",
+        "Genital warts (condyloma acuminatum)",
+        "Testicular cancer"
+      ],
+      "timestamp": "2026-02-01T00:32:06.320951"
+    }
+  },
+  "896": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "",
+      "missing_plausible": "peripheral neuropathy",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:18:47.171899"
+    }
+  },
+  "908": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "",
+      "missing_highly_likely": "iliopsoas tendinitis",
+      "missing_plausible": "iliopsoas tendinitis, femoroacetabular impingement",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [
+        "Inguinal/femoral hernia"
+      ],
+      "timestamp": "2026-02-01T00:48:28.321933"
+    }
+  },
+  "91": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "seizure, structural heart disease",
+      "missing_highly_likely": "seizure, vasovagal syncope, structural heart disease",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [
+        "Hypertension"
+      ],
+      "not_plausible": [
+        "Renal cyst"
+      ],
+      "timestamp": "2026-02-01T00:05:53.987370"
+    }
+  },
+  "937": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "oral candidiasis",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [
+        "Contact stomatitis (allergic/irritant)"
+      ],
+      "not_highly_likely": [
+        "Chemical burn of oral mucosa"
+      ],
+      "not_plausible": [
+        "Herpetic gingivostomatitis (HSV)"
+      ],
+      "timestamp": "2026-01-31T23:41:35.896877"
+    }
+  },
+  "945": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "nephrolithiasis",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:14:25.045189"
+    }
+  },
+  "954": {
+    "Dr. Jaradeh": {
+      "missing_cannot_miss": "intracranial mass, giant cell arteritis",
+      "missing_highly_likely": "",
+      "missing_plausible": "",
+      "not_cannot_miss": [],
+      "not_highly_likely": [],
+      "not_plausible": [],
+      "timestamp": "2026-02-01T01:00:10.451011"
+    }
+  }
+}
