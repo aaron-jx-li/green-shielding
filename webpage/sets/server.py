@@ -10,12 +10,13 @@ from flask_cors import CORS
 import json
 import os
 import random
+import io
 from datetime import datetime
 
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from google.auth.transport.requests import Request
 
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -62,6 +63,7 @@ USERS_PER_QUESTION = 3  # number of users assigned to each question
 # =========================
 questions_data = None
 annotations = {}
+has_synced_from_drive = False  # Track if we have synced from Drive in this session
 
 APP_VERSION = "v2-multiuser-assignments-2026-01-21"
 app.logger.warning("BOOT %s file=%s", APP_VERSION, __file__)
@@ -137,41 +139,85 @@ def get_drive_service():
     return build("drive", "v3", credentials=creds)
 
 
-def upload_annotations_to_drive(local_path: str):
+def upload_to_drive(local_path: str):
     """
-    Upload/update annotations.json in the Drive folder FOLDER_ID.
+    Upload/update a file in the Drive folder FOLDER_ID.
     Update if exists, else create.
     """
     if not FOLDER_ID:
-        raise Exception("❌ Missing FOLDER_ID env var")
+        # silently skip if no folder ID
+        print("⚠️ No FOLDER_ID set, skipping Drive upload.")
+        return None
 
-    service = get_drive_service()
-    file_name = os.path.basename(local_path)
-    query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
+    try:
+        service = get_drive_service()
+        file_name = os.path.basename(local_path)
+        query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
 
-    existing_files = (
-        service.files().list(q=query, fields="files(id, name)").execute().get("files", [])
-    )
-    media = MediaFileUpload(local_path, mimetype="application/json", resumable=True)
-
-    if existing_files:
-        file_id = existing_files[0]["id"]
-        updated_file = (
-            service.files()
-            .update(fileId=file_id, media_body=media, fields="id, name, webViewLink")
-            .execute()
+        existing_files = (
+            service.files().list(q=query, fields="files(id, name)").execute().get("files", [])
         )
-        print(f"🔄 Updated Drive annotations file: {updated_file.get('webViewLink')}")
-        return updated_file.get("webViewLink")
-    else:
-        file_metadata = {"name": file_name, "parents": [FOLDER_ID]}
-        new_file = (
-            service.files()
-            .create(body=file_metadata, media_body=media, fields="id, name, webViewLink")
-            .execute()
-        )
-        print(f"✅ Uploaded new Drive annotations file: {new_file.get('webViewLink')}")
-        return new_file.get("webViewLink")
+        media = MediaFileUpload(local_path, mimetype="application/json", resumable=True)
+
+        if existing_files:
+            file_id = existing_files[0]["id"]
+            updated_file = (
+                service.files()
+                .update(fileId=file_id, media_body=media, fields="id, name, webViewLink")
+                .execute()
+            )
+            print(f"🔄 Updated Drive file '{file_name}': {updated_file.get('webViewLink')}")
+            return updated_file.get("webViewLink")
+        else:
+            file_metadata = {"name": file_name, "parents": [FOLDER_ID]}
+            new_file = (
+                service.files()
+                .create(body=file_metadata, media_body=media, fields="id, name, webViewLink")
+                .execute()
+            )
+            print(f"✅ Uploaded new Drive file '{file_name}': {new_file.get('webViewLink')}")
+            return new_file.get("webViewLink")
+    except Exception as e:
+        print(f"⚠️ Drive upload failed for {local_path}: {e}")
+        return None
+
+
+def download_from_drive(local_path: str):
+    """Download a file from Drive if it exists, overwriting local."""
+    if not FOLDER_ID:
+        return
+
+    try:
+        service = get_drive_service()
+        file_name = os.path.basename(local_path)
+        query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
+        results = service.files().list(q=query, fields="files(id, name)").execute()
+        files = results.get("files", [])
+
+        if files:
+            file_id = files[0]["id"]
+            print(f"⬇️ Found '{file_name}' on Drive (ID: {file_id}). Downloading to sync...", flush=True)
+            
+            request = service.files().get_media(fileId=file_id)
+            fh = io.BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+            
+            # Write to disk
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+            with open(local_path, "wb") as f:
+                f.write(fh.getvalue())
+            print(f"✅ Downloaded '{file_name}' from Drive.", flush=True)
+            return True
+        else:
+            print(f"ℹ️ '{file_name}' not found on Drive. Using local.", flush=True)
+            return False
+
+    except Exception as e:
+        print(f"⚠️ Drive download/sync failed for {local_path}: {e}", flush=True)
+        return False
 
 
 # =========================
@@ -205,12 +251,7 @@ def save_annotations(annotations_dict):
     with open(ANNOTATIONS_PATH, "w") as f:
         json.dump(annotations_dict, f, indent=2)
 
-    try:
-        link = upload_annotations_to_drive(ANNOTATIONS_PATH)
-        return link
-    except Exception as e:
-        print(f"⚠️ Google Drive upload skipped due to error: {e}")
-        return None
+    upload_to_drive(ANNOTATIONS_PATH)
 
 
 def load_assignments():
@@ -222,10 +263,12 @@ def load_assignments():
 
 
 def save_assignments(assignments_dict):
-    """Save question-to-users assignments."""
+    """Save question-to-users assignments + upload to Drive."""
     os.makedirs(os.path.dirname(ASSIGNMENTS_PATH), exist_ok=True)
     with open(ASSIGNMENTS_PATH, "w") as f:
         json.dump(assignments_dict, f, indent=2)
+    
+    upload_to_drive(ASSIGNMENTS_PATH)
 
 
 def initialize_assignments():
@@ -259,7 +302,7 @@ def initialize_assignments():
                 changed = True
 
     if changed:
-    save_assignments(assignments)
+        save_assignments(assignments)
     
     return assignments
 
@@ -326,7 +369,8 @@ def get_users():
 
 @app.route("/login", methods=["POST"])
 def login():
-    """Validate user and ensure assignments exist."""
+    """Validate user and ensure assignments exist. Sync from Drive if needed."""
+    global has_synced_from_drive
     try:
         data = request.get_json() or {}
         user_id = data.get("user_id")
@@ -335,6 +379,17 @@ def login():
             return jsonify({"success": False, "error": "No user_id provided"}), 400
         if user_id not in USERS:
             return jsonify({"success": False, "error": f"Invalid user_id. Must be one of: {USERS}"}), 400
+
+        # Sync from Drive only once per server session (or restart)
+        if not has_synced_from_drive:
+            print("🔄 First login in this session. Checking Drive for updates...", flush=True)
+            download_from_drive(ANNOTATIONS_PATH)
+            download_from_drive(ASSIGNMENTS_PATH)
+            has_synced_from_drive = True
+            
+            # Reload in-memory data after sync
+            global annotations
+            annotations = load_annotations()
 
         initialize_assignments()
 
