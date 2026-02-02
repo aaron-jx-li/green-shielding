@@ -47,16 +47,13 @@ ANNOTATIONS_PATH = os.environ.get(
     "ANNOTATIONS_PATH",
     os.path.join(DATA_DIR, "annotations.json"),
 )
-ASSIGNMENTS_PATH = os.environ.get(
-    "ASSIGNMENTS_PATH",
-    os.path.join(DATA_DIR, "user_assignments.json"),
-)
 
 # =========================
 # Multi-user configuration
 # =========================
 USERS = ["Dr. Kornblith", "Dr. Bains", "Dr. Jaradeh"]
-USERS_PER_QUESTION = 3  # number of users assigned to each question
+# USERS_PER_QUESTION is implicitly used to limit assignment if we want,
+# but we are now just iterating through data.
 
 # =========================
 # Globals
@@ -267,7 +264,7 @@ def download_from_drive(local_path: str):
 
 
 # =========================
-# Data / Assignments / Annotations
+# Data / Annotations
 # =========================
 def load_data():
     """Load questions data from JSON file."""
@@ -300,94 +297,33 @@ def save_annotations(annotations_dict):
     upload_to_drive(ANNOTATIONS_PATH)
 
 
-def load_assignments():
-    """Load question-to-users assignments."""
-    if os.path.exists(ASSIGNMENTS_PATH):
-        with open(ASSIGNMENTS_PATH, "r") as f:
-            return json.load(f)
-    return {}
-
-
-def save_assignments(assignments_dict):
-    """Save question-to-users assignments + upload to Drive."""
-    os.makedirs(os.path.dirname(ASSIGNMENTS_PATH), exist_ok=True)
-    with open(ASSIGNMENTS_PATH, "w") as f:
-        json.dump(assignments_dict, f, indent=2)
-    
-    upload_to_drive(ASSIGNMENTS_PATH)
-
-
-def initialize_assignments():
-    """
-    Initialize question assignments by randomly assigning each question to N users.
-    Ensures every question has at least USERS_PER_QUESTION assignees.
-    """
-    questions = load_data()
-    assignments = load_assignments()
-
-    question_indices = [str(q["__idx"]) for q in questions]
-    
-    # Track if we made any changes
-    changed = False
-
-    for q_idx in question_indices:
-        current_assignees = assignments.get(q_idx, [])
-        
-        # If we need more users for this question
-        if len(current_assignees) < USERS_PER_QUESTION:
-            # Find users who aren't already assigned
-            available_users = [u for u in USERS if u not in current_assignees]
-            
-            # How many needed?
-            needed = USERS_PER_QUESTION - len(current_assignees)
-            
-            if available_users:
-                # Add random users from available pool
-                new_users = random.sample(available_users, min(needed, len(available_users)))
-                assignments[q_idx] = current_assignees + new_users
-                changed = True
-
-    if changed:
-        save_assignments(assignments)
-    
-    return assignments
-
-
 def get_user_next_question(user_id: str):
-    """Get the next unannotated question for a specific user (assigned-to-user only)."""
+    """Get the next unannotated question for a specific user (iterating all questions)."""
     questions = load_data()
     annotations_dict = load_annotations()
-    assignments = load_assignments()
-
-    if not assignments:
-        assignments = initialize_assignments()
 
     for question in questions:
         q_idx = str(question["__idx"])
-        if q_idx in assignments and user_id in assignments[q_idx]:
-            if q_idx not in annotations_dict or user_id not in annotations_dict.get(q_idx, {}):
-                return question
+        # Check if this user has already annotated this question
+        if q_idx not in annotations_dict or user_id not in annotations_dict.get(q_idx, {}):
+            return question
+            
+    # If we loop through everything and find nothing new, user is done.
     return None
 
 
 def get_user_stats(user_id: str):
-    """Get annotation statistics for a specific user (assigned vs done)."""
+    """Get annotation statistics for a specific user (total vs annotated)."""
     questions = load_data()
     annotations_dict = load_annotations()
-    assignments = load_assignments()
 
-    if not assignments:
-        assignments = initialize_assignments()
-
-    total = 0
+    total = len(questions)
     annotated = 0
 
     for question in questions:
         q_idx = str(question["__idx"])
-        if q_idx in assignments and user_id in assignments[q_idx]:
-            total += 1
-            if q_idx in annotations_dict and user_id in annotations_dict[q_idx]:
-                annotated += 1
+        if q_idx in annotations_dict and user_id in annotations_dict[q_idx]:
+            annotated += 1
 
     return {"total": total, "annotated": annotated, "remaining": total - annotated}
 
@@ -415,7 +351,7 @@ def get_users():
 
 @app.route("/login", methods=["POST"])
 def login():
-    """Validate user and ensure assignments exist. Sync from Drive if needed."""
+    """Validate user. Sync from Drive if needed."""
     global has_synced_from_drive
     try:
         data = request.get_json() or {}
@@ -430,14 +366,12 @@ def login():
         if not has_synced_from_drive:
             print("🔄 First login in this session. Checking Drive for updates...", flush=True)
             download_from_drive(ANNOTATIONS_PATH)
-            download_from_drive(ASSIGNMENTS_PATH)
+            # We don't sync assignments anymore
             has_synced_from_drive = True
             
             # Reload in-memory data after sync
             global annotations
             annotations = load_annotations()
-
-        initialize_assignments()
 
         return jsonify({"success": True, "user_id": user_id, "users": USERS})
     except Exception as e:
@@ -517,18 +451,7 @@ def save_annotation():
 
         question_index = str(data["__idx"])
 
-        # Make sure assignments exist and user is actually assigned this question
-        assignments = load_assignments()
-        if not assignments:
-            assignments = initialize_assignments()
-
-        if question_index not in assignments or user_id not in assignments[question_index]:
-            return jsonify(
-                {
-                    "success": False,
-                    "error": "User is not assigned to this question (or assignments not initialized).",
-                }
-            ), 403
+        # Assignments logic removed - any user can annotate any question
 
         # Save annotation under nested structure {question_index: {user_id: annotation}}
         annotation = {
@@ -575,22 +498,6 @@ def save_annotation():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-@app.route("/initialize_assignments", methods=["POST"])
-def initialize_assignments_endpoint():
-    """Initialize question assignments (idempotent)."""
-    try:
-        assignments = initialize_assignments()
-        return jsonify(
-            {
-                "success": True,
-                "message": "Assignments initialized",
-                "total_questions": len(assignments),
-            }
-        )
-    except Exception as e:
-        return jsonify({"success": False, "error": str(e)}), 500
-
-
 @app.route("/health", methods=["GET"])
 def health_check():
     """Health check endpoint."""
@@ -600,9 +507,7 @@ def health_check():
             "data_path": DATA_PATH,
             "data_exists": os.path.exists(DATA_PATH),
             "annotations_path": ANNOTATIONS_PATH,
-            "assignments_path": ASSIGNMENTS_PATH,
             "annotations_exists": os.path.exists(ANNOTATIONS_PATH),
-            "assignments_exists": os.path.exists(ASSIGNMENTS_PATH),
         }
     )
 
@@ -611,7 +516,6 @@ if __name__ == "__main__":
     print("🚀 Starting Diagnosis Annotation Server...")
     print(f"📊 Data file: {DATA_PATH}")
     print(f"💾 Annotations file: {ANNOTATIONS_PATH}")
-    print(f"👥 Assignments file: {ASSIGNMENTS_PATH}")
     print("🌐 Server will be available at: http://localhost:5002")
     print("\n" + "=" * 50)
 
