@@ -110,14 +110,14 @@ def _get_default_mc_answer(
         return None, None, None
 
 
-def _rewrite_to_third_person(
+def _rewrite_to_first_person(
     text: str,
     model: str,
     temperature: float = 0.7
 ) -> str:
     messages = [
         {"role": "developer", "content": "You are an assistant that rewrites medical questions."},
-        {"role": "user", "content": f"Rewrite the following medical question from first person (patient's perspective) to third person (clinical perspective), e.g. 'I have a headache' -> 'The patient has a headache'. Keep the meaning and details exactly the same. Do not add any new information. Output only the rewritten question text.\n\nOriginal: {text}\n\nRewritten:"}
+        {"role": "user", "content": f"Rewrite the following medical question from third person (clinical perspective) to first person (patient's perspective), e.g. 'The patient has a headache' -> 'I have a headache'. Keep the meaning and details exactly the same. Do not add any new information. Output only the rewritten question text.\n\nOriginal: {text}\n\nRewritten:"}
     ]
     try:
         rewritten = chat(messages, model=model, temperature=temperature, max_tokens=None)
@@ -282,15 +282,15 @@ def evaluate_and_save_csv(
                 perturbed_corrects: List[Optional[bool]] = []
                 raw_perturbed: List[str] = []
 
-                q_text_3rd = _rewrite_to_third_person(q_text, model=model)
-                q_3rd = q.copy()
+                q_text_1st = _rewrite_to_first_person(q_text, model=model)
+                q_1st = q.copy()
                 if task == "medqa_diag":
-                    q_3rd["question"] = q_text_3rd
+                    q_1st["question"] = q_text_1st
                 elif task == "medxpertqa_diag":
-                    q_3rd["question_mc"] = q_text_3rd
+                    q_1st["question_mc"] = q_text_1st
 
                 for i in range(num_runs):
-                    msgs = build_default_prompt(task, q_3rd, option_letters, choices_override=c_shuf)
+                    msgs = build_default_prompt(task, q_1st, option_letters, choices_override=c_shuf)
                     pred, raw = _get_model_letter(
                         msgs,
                         model,

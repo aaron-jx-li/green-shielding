@@ -16,6 +16,7 @@ import json
 import os
 import time
 import shutil
+import io
 from contextlib import contextmanager
 import pandas as pd
 import csv
@@ -23,7 +24,7 @@ import csv
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from google.auth.transport.requests import Request
 
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -81,6 +82,9 @@ CONFIG = {
 
 # Global user assignment tracking: user_id -> set of csv_indices
 user_assignments = {}
+
+# Global set to track which users we have already synced from Drive in this session
+synced_users = set()
 
 # -----------------------------------------------------------------------------
 # Startup/config helpers (incorporated from start_server.py)
@@ -222,6 +226,42 @@ def get_drive_service():
     return build("drive", "v3", credentials=creds)
 
 
+def download_csv_from_drive(target_path):
+    """Attempt to download the user CSV from Drive to sync local state."""
+    if not (TOKEN_JSON and CLIENT_SECRET_JSON and FOLDER_ID):
+        # silently skip if Drive isn't configured
+        return
+
+    try:
+        service = get_drive_service()
+        file_name = os.path.basename(target_path)
+        query = f"name='{file_name}' and '{FOLDER_ID}' in parents and trashed=false"
+        results = service.files().list(q=query, fields="files(id, name, modifiedTime)").execute()
+        files = results.get("files", [])
+
+        if files:
+            # Found file on Drive, download it
+            file_id = files[0]["id"]
+            print(f"⬇️ Found '{file_name}' on Drive (ID: {file_id}). Downloading to sync...", flush=True)
+            
+            request = service.files().get_media(fileId=file_id)
+            fh = io.BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+            
+            # Write to disk
+            with open(target_path, "wb") as f:
+                f.write(fh.getvalue())
+            print(f"✅ Downloaded '{file_name}' from Drive.", flush=True)
+        else:
+            print(f"ℹ️ '{file_name}' not found on Drive. Using local.", flush=True)
+
+    except Exception as e:
+        print(f"⚠️ Drive download/sync failed: {e}", flush=True)
+
+
 def get_user_csv_path(user_id):
     """Get the user-specific CSV path. Sanitize user_id to be filename safe."""
     base_path = CONFIG["all_questions_metadata_csv_path"]
@@ -247,6 +287,14 @@ def get_user_csv_path(user_id):
 def ensure_user_csv(user_id):
     """Ensure the user-specific CSV exists by copying from the master if needed."""
     user_path = get_user_csv_path(user_id)
+
+    # 1. Sync from Drive if we haven't done so for this user in this session
+    if user_id not in synced_users:
+        print(f"🔄 First access for user '{user_id}' in this session. Checking Drive...", flush=True)
+        download_csv_from_drive(user_path)
+        synced_users.add(user_id)
+
+    # 2. If still doesn't exist locally (not on Drive), create from master
     if not os.path.exists(user_path):
         print(f"✨ Creating new annotation CSV for user '{user_id}' at {user_path}", flush=True)
         # Lock the master file just in case, though we only read it

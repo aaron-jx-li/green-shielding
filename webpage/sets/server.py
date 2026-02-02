@@ -259,7 +259,7 @@ def initialize_assignments():
                 changed = True
 
     if changed:
-        save_assignments(assignments)
+    save_assignments(assignments)
     
     return assignments
 

@@ -110,22 +110,53 @@ def query_model(
     seed: Optional[int] = None,
 ) -> list[str]:
     messages = [
-        {"role": "developer", "content": instruction},
+        {"role": "system", "content": instruction},
         {"role": "user", "content": input_text},
     ]
 
     outs: list[str] = []
     for k in range(num_runs):
-        kwargs = {"model": model, "input": messages}
-        if temperature is not None:
-            kwargs["temperature"] = temperature
-        if max_tokens is not None:
-            kwargs["max_output_tokens"] = max_tokens
-        if seed is not None:
-            kwargs["seed"] = seed + k  # decorrelate runs
+        # Base kwargs for chat completions
+        kwargs = {
+            "model": model,
+            "messages": messages,  # standard API uses 'messages', not 'input'
+        }
 
-        resp = client.responses.create(**kwargs)
-        outs.append(resp.output_text or "")
+        # Handling model-specific parameter constraints
+        if model.startswith("o1") or model.startswith("deepseek-reasoner"):
+            # Reasoning models often don't support temperature (fixed at 1)
+            pass
+        elif temperature is not None:
+            kwargs["temperature"] = temperature
+
+        if max_tokens is not None:
+            # Standard OpenAI API uses max_tokens (or max_completion_tokens for o1)
+            if model.startswith("o1") or model.startswith("deepseek-reasoner"):
+                 kwargs["max_completion_tokens"] = max_tokens
+            else:
+                 kwargs["max_tokens"] = max_tokens
+        
+        if seed is not None:
+            kwargs["seed"] = seed + k
+
+        try:
+            # Use standard chat completion
+            resp = client.chat.completions.create(**kwargs)
+            outs.append(resp.choices[0].message.content or "")
+        except Exception as e:
+            # Fallback for custom/legacy client if standard fails
+            print(f"Standard chat completion failed: {e}. Trying legacy/custom...")
+            try:
+                # Legacy custom wrapper adapt
+                kwargs["input"] = kwargs.pop("messages") 
+                if "max_tokens" in kwargs:
+                    kwargs["max_output_tokens"] = kwargs.pop("max_tokens")
+                
+                resp = client.responses.create(**kwargs)
+                outs.append(getattr(resp, "output_text", "") or "")
+            except Exception as e2:
+                print(f"Custom client also failed: {e2}")
+                raise e
 
     return outs
 
@@ -152,7 +183,31 @@ def main():
     if args.num_runs < 1:
         raise ValueError("❌ --num_runs must be >= 1")
 
-    client = OpenAI()  # requires OPENAI_API_KEY
+    # If using DeepSeek, we need to configure the client appropriately
+    # The shell script exports DEEPSEEK_API_KEY, but OpenAI() client looks for OPENAI_API_KEY.
+    # Also need to set base_url for DeepSeek.
+    
+    api_key = os.getenv("OPENAI_API_KEY")
+    base_url = os.getenv("OPENAI_BASE_URL")
+    
+    # Check if DEEPSEEK_API_KEY is present and we are using a DeepSeek model
+    if "deepseek" in args.model.lower():
+        ds_key = os.getenv("DEEPSEEK_API_KEY")
+        if ds_key:
+            api_key = ds_key
+            base_url = "https://api.deepseek.com"
+            print(f"🔹 Detected DeepSeek model '{args.model}' and DEEPSEEK_API_KEY. Configured client for DeepSeek.")
+    
+    client = OpenAI(api_key=api_key, base_url=base_url)
+
+    # print("=== DEBUG ===")
+    # print("model:", args.model)
+    # print("DEEPSEEK_API_KEY set?:", bool(os.getenv("DEEPSEEK_API_KEY")))
+    # print("OPENAI_API_KEY set?:", bool(os.getenv("OPENAI_API_KEY")))
+    # print("base_url:", base_url)
+    # print("api_key prefix:", (api_key or "")[:8])
+    # print("=============")
+
 
     # --------------------------
     # Load data
