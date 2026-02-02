@@ -182,8 +182,31 @@ def upload_to_drive(local_path: str):
         return None
 
 
+def recursive_merge(base, update):
+    """
+    Recursively merge update into base.
+    - Dicts: merge keys.
+    - Lists: extend and deduplicate (if items hashable/strings).
+    - Others: update overwrites base.
+    """
+    if isinstance(base, dict) and isinstance(update, dict):
+        for k, v in update.items():
+            base[k] = recursive_merge(base.get(k), v) if k in base else v
+        return base
+    elif isinstance(base, list) and isinstance(update, list):
+        # Specific logic for assignments: union of unique strings
+        try:
+            return list(set(base + update))
+        except:
+            return base + update
+    else:
+        # For simple values (strings/ints), the update (from Drive) takes precedence
+        # if we assume Drive has the latest from other users.
+        return update
+
+
 def download_from_drive(local_path: str):
-    """Download a file from Drive if it exists, overwriting local."""
+    """Download a file from Drive if it exists, merging with local if local exists."""
     if not FOLDER_ID:
         return
 
@@ -205,10 +228,33 @@ def download_from_drive(local_path: str):
             while done is False:
                 status, done = downloader.next_chunk()
             
-            # Write to disk
+            # Read remote content from memory
+            remote_content = fh.getvalue()
+            
+            # If local file exists, merge
+            if os.path.exists(local_path) and local_path.endswith('.json'):
+                try:
+                    with open(local_path, 'r') as f:
+                        local_data = json.load(f)
+                    remote_data = json.loads(remote_content)
+                    
+                    # Merge remote into local (remote adds to local)
+                    merged_data = recursive_merge(local_data, remote_data)
+                    
+                    # Write merged data
+                    os.makedirs(os.path.dirname(local_path), exist_ok=True)
+                    with open(local_path, "w") as f:
+                        json.dump(merged_data, f, indent=2)
+                    print(f"✅ Merged '{file_name}' from Drive with local.", flush=True)
+                    return True
+                except Exception as e:
+                    print(f"⚠️ Merge failed for {local_path}, overwriting: {e}")
+                    # Fallthrough to overwrite
+            
+            # Write to disk (overwrite if no local or not json or merge failed)
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
             with open(local_path, "wb") as f:
-                f.write(fh.getvalue())
+                f.write(remote_content)
             print(f"✅ Downloaded '{file_name}' from Drive.", flush=True)
             return True
         else:

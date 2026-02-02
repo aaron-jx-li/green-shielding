@@ -223,11 +223,89 @@ def get_drive_service():
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
         print("🔄 Access token refreshed successfully.", flush=True)
+        # Optional: print updated token for Render env refresh
+        print("🔁 Updated token JSON (copy to GOOGLE_TOKEN_JSON):", flush=True)
+        print(creds.to_json(), flush=True)
     return build("drive", "v3", credentials=creds)
 
 
+def merge_csv_bytes_into_local(local_path, remote_bytes):
+    """
+    Merge logic for CSVs:
+    1. Read local CSV (if exists).
+    2. Read remote CSV from bytes.
+    3. Merge: If Remote has a valid annotation (expert_dec != unannotated) and Local does not, update Local.
+       If both have different valid annotations, Remote (Drive) wins to ensure sync consistency.
+    """
+    try:
+        remote_df = pd.read_csv(io.BytesIO(remote_bytes), quoting=csv.QUOTE_ALL, dtype={"comments": "string"})
+        
+        if not os.path.exists(local_path):
+            # No local file? Just write remote
+            remote_df.to_csv(local_path, index=False, quoting=csv.QUOTE_ALL)
+            print(f"✅ Local CSV didn't exist. Wrote remote version to {local_path}", flush=True)
+            return
+
+        local_df = pd.read_csv(local_path, quoting=csv.QUOTE_ALL, dtype={"comments": "string"})
+        
+        # Ensure we have common index for merging (assumes 'Index' column exists and is unique)
+        if "Index" not in local_df.columns or "Index" not in remote_df.columns:
+            print(f"⚠️ 'Index' column missing in CSVs. Overwriting local with remote.", flush=True)
+            remote_df.to_csv(local_path, index=False, quoting=csv.QUOTE_ALL)
+            return
+
+        # Prepare for merge
+        expert_col = CONFIG["expert_dec_column"]
+        unannotated = CONFIG["unannotated_value"]
+        
+        # We iterate over remote_df and update local_df where appropriate
+        # Optimized approach: use pandas update/combine logic?
+        # A simple loop might be safer to strictly enforce logic:
+        # If remote row is annotated, force local row to match.
+        
+        # Let's filter only annotated rows in remote
+        annotated_mask = remote_df[expert_col] != unannotated
+        annotated_remote = remote_df[annotated_mask]
+        
+        merged_count = 0
+        
+        # Iterate over remote annotated rows and update local
+        for _, remote_row in annotated_remote.iterrows():
+            idx = remote_row["Index"]
+            
+            # Find corresponding local row
+            local_mask = local_df["Index"] == idx
+            if not local_mask.any():
+                # Weird case: remote has an index local doesn't? Maybe append?
+                # For safety in this project (fixed dataset), we might skip or append.
+                # Let's append if strictly new.
+                local_df = pd.concat([local_df, pd.DataFrame([remote_row])], ignore_index=True)
+                merged_count += 1
+                continue
+                
+            local_val = local_df.loc[local_mask, expert_col].values[0]
+            remote_val = remote_row[expert_col]
+            
+            # If values differ, update local to match remote (Drive wins)
+            if local_val != remote_val:
+                local_df.loc[local_mask, expert_col] = remote_val
+                local_df.loc[local_mask, "to_be_seen"] = False # Ensure to_be_seen is false if annotated
+                local_df.loc[local_mask, "comments"] = remote_row.get("comments", "")
+                merged_count += 1
+                
+        # Save merged
+        local_df.to_csv(local_path, index=False, quoting=csv.QUOTE_ALL)
+        print(f"✅ Merged remote CSV into local. Updated/Added {merged_count} rows.", flush=True)
+
+    except Exception as e:
+        print(f"❌ Error merging CSVs: {e}. Overwriting local with remote as fallback.", flush=True)
+        # Fallback: simple overwrite
+        with open(local_path, "wb") as f:
+            f.write(remote_bytes)
+
+
 def download_csv_from_drive(target_path):
-    """Attempt to download the user CSV from Drive to sync local state."""
+    """Attempt to download the user CSV from Drive to sync local state, merging if needed."""
     if not (TOKEN_JSON and CLIENT_SECRET_JSON and FOLDER_ID):
         # silently skip if Drive isn't configured
         return
@@ -251,10 +329,12 @@ def download_csv_from_drive(target_path):
             while done is False:
                 status, done = downloader.next_chunk()
             
-            # Write to disk
-            with open(target_path, "wb") as f:
-                f.write(fh.getvalue())
-            print(f"✅ Downloaded '{file_name}' from Drive.", flush=True)
+            remote_bytes = fh.getvalue()
+            
+            # Use merge logic
+            with with_csv_lock(target_path):
+                 merge_csv_bytes_into_local(target_path, remote_bytes)
+            
         else:
             print(f"ℹ️ '{file_name}' not found on Drive. Using local.", flush=True)
 
