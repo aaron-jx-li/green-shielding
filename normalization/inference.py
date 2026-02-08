@@ -110,16 +110,16 @@ def query_model(
     seed: Optional[int] = None,
 ) -> list[str]:
     messages = [
-        {"role": "developer", "content": instruction},
+        {"role": "system", "content": instruction},
         {"role": "user", "content": input_text},
     ]
 
     outs: list[str] = []
     for k in range(num_runs):
         kwargs = {"model": model, "input": messages}
-        if temperature is not None:
+        if temperature is not None and "gpt-5" not in model:
             kwargs["temperature"] = temperature
-        if max_tokens is not None:
+        if max_tokens is not None and "gpt-5" not in model:
             kwargs["max_output_tokens"] = max_tokens
         if seed is not None:
             kwargs["seed"] = seed + k  # decorrelate runs

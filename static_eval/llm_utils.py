@@ -25,6 +25,7 @@ def chat(
                 resp = _client.responses.create(
                     model=model,
                     input=messages,
+                    temperature=temperature,
                 )
             else:
                 resp = _client.responses.create(
