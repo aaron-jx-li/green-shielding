@@ -97,15 +97,6 @@ def _question_run_triples(df: pd.DataFrame) -> List[Tuple[float, float, float]]:
     return triples
 
 
-def _summary_se(values: List[float]) -> Tuple[float, float]:
-    series = pd.Series(values, dtype="float64")
-    mean = series.mean()
-    if len(series) <= 1:
-        return mean, 0.0
-    sem = series.std(ddof=1) / (len(series) ** 0.5)
-    return mean, sem
-
-
 def _bootstrap_ci(
     triples: List[Tuple[float, float, float]],
     n_bootstrap: int,
@@ -140,8 +131,8 @@ def _bootstrap_ci(
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(
-        prog="static-eval-analyze-bootstrap",
-        description="Bootstrap confidence intervals for perturbation metrics (questions and runs exchangeable).",
+        prog="static-eval-analyze",
+        description="Aggregate perturbation metrics across runs.",
     )
     ap.add_argument(
         "--paths",
@@ -154,24 +145,6 @@ def parse_args() -> argparse.Namespace:
         "--per_run",
         action="store_true",
         help="Print per-run metrics before the aggregate.",
-    )
-    ap.add_argument(
-        "--n_bootstrap",
-        type=int,
-        default=2000,
-        help="Number of bootstrap samples (default: 2000).",
-    )
-    ap.add_argument(
-        "--confidence",
-        type=float,
-        default=0.95,
-        help="Confidence level (default: 0.95).",
-    )
-    ap.add_argument(
-        "--seed",
-        type=int,
-        default=None,
-        help="Random seed for reproducibility.",
     )
     return ap.parse_args()
 
@@ -219,24 +192,27 @@ def main() -> None:
                 f"\tperturbed_acc={global_acc:.4f}"
             )
 
-    rng = np.random.default_rng(args.seed)
+    n_bootstrap = 2000
+    confidence = 0.95
+    rng = np.random.default_rng()
     point, (ci_default, ci_perturb, ci_acc) = _bootstrap_ci(
-        all_triples, args.n_bootstrap, args.confidence, rng
+        all_triples, n_bootstrap, confidence, rng
     )
-    level_pct = args.confidence * 100
+    level_pct = confidence * 100
 
-    n_obs = len(all_triples)
-    n_runs = len(per_run)
-    print(f"(Question, run) pairs (exchangeable units): {n_obs}")
-    print(f"Runs: {n_runs}")
+    default_err = (ci_default[1] - ci_default[0]) / 2
+    perturb_err = (ci_perturb[1] - ci_perturb[0]) / 2
+    acc_err = (ci_acc[1] - ci_acc[0]) / 2
+
+    print(f"Runs: {len(per_run)}")
     print(
-        f"Default accuracy: {point[0]:.4f}  [{level_pct:.0f}% CI: {ci_default[0]:.4f} -- {ci_default[1]:.4f}]"
+        f"Default accuracy: {point[0]:.4f} ± {default_err:.4f} (bootstrap {level_pct:.0f}% CI/2)"
     )
     print(
-        f"Perturbation success rate: {point[1]:.4f}  [{level_pct:.0f}% CI: {ci_perturb[0]:.4f} -- {ci_perturb[1]:.4f}]"
+        f"Perturbation success rate: {point[1]:.4f} ± {perturb_err:.4f} (bootstrap {level_pct:.0f}% CI/2)"
     )
     print(
-        f"Global accuracy after perturbation: {point[2]:.4f}  [{level_pct:.0f}% CI: {ci_acc[0]:.4f} -- {ci_acc[1]:.4f}]"
+        f"Global accuracy after perturbation: {point[2]:.4f} ± {acc_err:.4f} (bootstrap {level_pct:.0f}% CI/2)"
     )
 
 

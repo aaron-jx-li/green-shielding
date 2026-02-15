@@ -1,13 +1,12 @@
 import argparse
 import glob
 import json
-import math
 import os
 import random
 import re
 import sys
 import statistics
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 
 def _is_number(value: object) -> bool:
@@ -35,7 +34,7 @@ def bootstrap_ci(
     values: List[float],
     n_boot: int,
     ci: float,
-    seed: int,
+    seed: Optional[int],
 ) -> Tuple[float, float]:
     if not values:
         raise ValueError("bootstrap_ci requires non-empty values")
@@ -50,18 +49,6 @@ def bootstrap_ci(
     low = _percentile(means, alpha * 100.0)
     high = _percentile(means, (1.0 - alpha) * 100.0)
     return low, high
-
-
-def normal_ci(values: List[float], ci: float) -> Tuple[float, float]:
-    if len(values) < 2:
-        raise ValueError("normal_ci requires at least 2 values")
-    mean_val = statistics.mean(values)
-    stdev = statistics.stdev(values)
-    if stdev == 0:
-        return mean_val, mean_val
-    z = statistics.NormalDist().inv_cdf((1.0 + ci) / 2.0)
-    margin = z * (stdev / math.sqrt(len(values)))
-    return mean_val - margin, mean_val + margin
 
 
 def load_run_summaries(
@@ -104,8 +91,7 @@ def compute_summary(
     runs: List[Dict[str, object]],
     n_boot: int,
     ci: float,
-    seed: int,
-    ci_method: str,
+    seed: Optional[int],
 ) -> List[Tuple[str, float, float, float]]:
     keys = intersect_metric_keys(runs)
     results = []
@@ -114,10 +100,8 @@ def compute_summary(
         mean_val = statistics.mean(values)
         if len(values) < 2:
             ci_low, ci_high = mean_val, mean_val
-        elif ci_method == "bootstrap":
-            ci_low, ci_high = bootstrap_ci(values, n_boot=n_boot, ci=ci, seed=seed)
         else:
-            ci_low, ci_high = normal_ci(values, ci=ci)
+            ci_low, ci_high = bootstrap_ci(values, n_boot=n_boot, ci=ci, seed=seed)
         results.append((key, mean_val, ci_low, ci_high))
     return results
 
@@ -144,30 +128,6 @@ def main() -> None:
         default=r"eval_converted_(\d+)_",
         help="Regex with a single capture group for run index.",
     )
-    parser.add_argument(
-        "--n-boot",
-        type=int,
-        default=10000,
-        help="Number of bootstrap resamples.",
-    )
-    parser.add_argument(
-        "--ci-method",
-        choices=["normal", "bootstrap"],
-        default="bootstrap",
-        help="Confidence interval method.",
-    )
-    parser.add_argument(
-        "--ci",
-        type=float,
-        default=0.95,
-        help="Confidence level for intervals.",
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        default=42,
-        help="Random seed for bootstrap.",
-    )
     args = parser.parse_args()
 
     runs = load_run_summaries(args.results_dir, args.pattern, args.run_regex)
@@ -181,10 +141,9 @@ def main() -> None:
 
     summary = compute_summary(
         runs,
-        n_boot=args.n_boot,
-        ci=args.ci,
-        seed=args.seed,
-        ci_method=args.ci_method,
+        n_boot=2000,
+        ci=0.95,
+        seed=None,
     )
 
     print("metric\tmean\tci_low\tci_high")
