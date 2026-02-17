@@ -32,14 +32,14 @@ def parse_args():
     parser.add_argument("--raw_key", type=str, default="raw_input",
                         help='JSON key for the raw patient text (default: "raw_input").')
 
-    parser.add_argument("--normalized_key", type=str, default="normalized_prompt",
+    parser.add_argument("--normalized_key", type=str, default="neutralized_prompt",
                         help='JSON key for the normalized prompt (default: "normalized_prompt").')
 
     # Base keys to write outputs into (script will append _1.._n)
     parser.add_argument("--out_raw_key", type=str, default="model_response_raw",
                         help='Base JSON key to store model output for raw input (default: "model_response_raw").')
 
-    parser.add_argument("--out_normalized_key", type=str, default="model_response_converted",
+    parser.add_argument("--out_normalized_key", type=str, default="model_response_neutralized",
                         help='Base JSON key to store model output for normalized prompt (default: "model_response_converted").')
 
     # Multi-run controls
@@ -68,6 +68,11 @@ def parse_args():
     # Optional rate limiting
     parser.add_argument("--sleep", type=float, default=0.0,
                         help="Seconds to sleep between requests (default: 0.0).")
+
+    # Which inputs to run inference on
+    parser.add_argument("--mode", type=str, default="both",
+                        choices=["both", "raw", "normalized"],
+                        help='Which inputs to query: "both" (default), "raw" only, or "normalized" only.')
 
     # If set, skip a query if *all* run keys already exist and are non-empty
     parser.add_argument("--skip_existing", action="store_true",
@@ -208,8 +213,8 @@ def main():
             print(f"❌ Sample {idx} is not a JSON object/dict. Skipping.")
             continue
 
-        raw_text = sample.get(args.raw_key, "")
-        norm_text = sample.get(args.normalized_key, "")
+        raw_text = sample.get(args.raw_key, "") if args.mode in ("both", "raw") else ""
+        norm_text = sample.get(args.normalized_key, "") if args.mode in ("both", "normalized") else ""
 
         # Query on raw input
         if raw_text:
