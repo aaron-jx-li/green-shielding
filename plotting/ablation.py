@@ -6,6 +6,13 @@ import matplotlib.pyplot as plt
 
 
 RAW_COLOR = "#1a1a1a"   # near-black for maximum contrast with all others
+FONT_FAMILY = "DejaVu Sans"
+FIG_SIZE = (9.6, 7.2)
+TITLE_FONT_SIZE = 17
+LABEL_FONT_SIZE = 15
+RADIAL_TICK_FONT_SIZE = 12
+LEGEND_FONT_SIZE = 12.5
+LEGEND_TITLE_FONT_SIZE = 12
 
 COLORS = {
     "Raw (baseline)":        RAW_COLOR,
@@ -53,8 +60,16 @@ def load_all(base_dir):
 def save_fig(fig, stem):
     for ext in ("png", "pdf"):
         path = f"{stem}.{ext}"
-        fig.savefig(path, format=ext, dpi=300, bbox_inches="tight")
+        fig.savefig(path, format=ext, dpi=300)
         print(f"Saved  {path}")
+
+
+def configure_matplotlib():
+    plt.rcParams.update({
+        "font.family": "sans-serif",
+        "font.sans-serif": [FONT_FAMILY],
+        "axes.linewidth": 0.8,
+    })
 
 
 def make_radar(
@@ -74,14 +89,19 @@ def make_radar(
     angles = np.linspace(0, 2 * np.pi, N, endpoint=False).tolist()
     ang_c  = angles + angles[:1]
 
-    plt.rcParams.update({
-        "font.family":     "sans-serif",
-        "font.sans-serif": ["DejaVu Sans"],
-        "axes.linewidth":  0.8,
-    })
-
-    fig, ax = plt.subplots(figsize=(7, 7), subplot_kw=dict(polar=True),
-                           facecolor="white")
+    fig = plt.figure(figsize=FIG_SIZE, facecolor="white")
+    grid = fig.add_gridspec(
+        1, 2,
+        width_ratios=(1.0, 0.72),
+        left=0.06,
+        right=0.96,
+        bottom=0.08,
+        top=0.84,
+        wspace=0.22,
+    )
+    ax = fig.add_subplot(grid[0, 0], polar=True)
+    legend_ax = fig.add_subplot(grid[0, 1])
+    legend_ax.axis("off")
     ax.set_facecolor("#f9f9f9")
 
     # background (faded) conditions first, dominant on top
@@ -112,7 +132,7 @@ def make_radar(
     ax.set_ylim(y_min, y_max)
     ax.set_yticks(rings)
     ax.set_yticklabels([f"{int(round(v*100))}%" for v in rings],
-                       size=9, color="#555555")
+                       size=RADIAL_TICK_FONT_SIZE, color="#555555")
     ax.yaxis.grid(True, color="#999999", linestyle="-", linewidth=0.9, alpha=0.9)
     ax.xaxis.grid(True, color="#bbbbbb", linestyle="-", linewidth=0.7, alpha=0.8)
 
@@ -124,34 +144,50 @@ def make_radar(
 
     # ── spoke labels ─────────────────────────────────────────────────────────
     ax.set_xticks(angles)
-    ax.set_xticklabels(metric_labels, size=13, fontweight="bold", color="#222222")
+    ax.set_xticklabels(
+        metric_labels,
+        size=LABEL_FONT_SIZE,
+        fontweight="bold",
+        color="#222222",
+    )
     ax.tick_params(axis="x", pad=14)
     ax.set_rlabel_position(20)
 
     # ── title ────────────────────────────────────────────────────────────────
-    ax.set_title(title, size=13, fontweight="bold", color="#222222", pad=20)
+    fig.suptitle(
+        title,
+        fontsize=TITLE_FONT_SIZE,
+        fontweight="bold",
+        color="#222222",
+        y=0.94,
+    )
 
     # ── legend ───────────────────────────────────────────────────────────────
-    legend = ax.legend(
+    handles, labels = ax.get_legend_handles_labels()
+    legend = legend_ax.legend(
+        handles,
+        labels,
         loc="upper left",
-        bbox_to_anchor=(1.18, 1.14),
+        bbox_to_anchor=(0.02, 0.98),
         title=legend_title,
-        title_fontsize=10,
-        fontsize=10.5,
+        title_fontsize=LEGEND_TITLE_FONT_SIZE,
+        fontsize=LEGEND_FONT_SIZE,
         frameon=True,
         framealpha=0.95,
         edgecolor="#cccccc",
         handlelength=2.0,
         labelspacing=0.5,
+        borderpad=0.8,
     )
     if legend_title:
         legend.get_title().set_fontweight("bold")
 
-    fig.tight_layout(pad=2.0)
     return fig, ax
 
 
 def main():
+    configure_matplotlib()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--base_dir", type=str, default=".",
                         help="Root of the green-shielding project.")
