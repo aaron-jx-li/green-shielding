@@ -6,11 +6,9 @@ __pycache__/
 .venv/
 .ipynb_checkpoints/
 .DS_Store
-*.slurm
 *.err
 *.out
 *.log
-data/HCM_filtered-100.json
-data/HCM_filtered_parsed-20.json
-data/HealthCareMagic-100k.json
-results/
+figs/
+results/tmp/
+/*.slurm

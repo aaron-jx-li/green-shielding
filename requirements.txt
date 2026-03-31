@@ -1,0 +1,8 @@
+anthropic
+datasets
+google-genai
+matplotlib
+numpy
+openai
+pandas
+tqdm
