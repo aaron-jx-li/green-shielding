@@ -16,17 +16,21 @@ Usage:
     --sem_cache_path ../results/HCM-3k/sem_cache_comparison.json
 """
 
-import json
 import argparse
+import json
+import os
+import sys
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from tqdm import tqdm
 
-from evaluate import (
-    SemanticMatcher,
-    normalize_text,
-    save_json,
-)
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+from open_eval.core.io import save_json
+from open_eval.core.text import normalize_text
+from open_eval.eval.semantic_match import SemanticMatcher
 
 
 # ============================================================

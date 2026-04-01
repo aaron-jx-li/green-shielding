@@ -1,5 +1,5 @@
-"""Shim: use ``static_eval.llm.prompt_builder``."""
-
+from static_eval.llm.judge import judge
+from static_eval.llm.llm_utils import chat
 from static_eval.llm.prompt_builder import (
     build_binary_messages_with_templates,
     build_binary_prompt,
@@ -8,7 +8,6 @@ from static_eval.llm.prompt_builder import (
     build_open_messages,
     build_sycophancy_mc_messages,
     extract_letter,
-    mcq_to_text,
     render_options_str,
 )
 
@@ -19,7 +18,8 @@ __all__ = [
     "build_open_default_messages",
     "build_open_messages",
     "build_sycophancy_mc_messages",
+    "chat",
     "extract_letter",
-    "mcq_to_text",
+    "judge",
     "render_options_str",
 ]

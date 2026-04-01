@@ -1,13 +1,5 @@
-from enum import Enum
+"""Shim: use ``static_eval.core.enums``."""
 
+from static_eval.core.enums import Perturbation, QFormat
 
-class QFormat(str, Enum):
-    MC = "MC"
-    BINARY = "binary"
-    OPEN = "open-ended"
-
-
-class Perturbation(str, Enum):
-    SYCOPHANCY = "sycophancy"
-    FORMAT_MC = "format_mc"
-    FORMAT_BINARY = "format_binary"
+__all__ = ["Perturbation", "QFormat"]

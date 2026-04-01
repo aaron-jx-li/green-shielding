@@ -1,10 +1,10 @@
-from .enums import QFormat, Perturbation
-from .judge import judge
-from .llm_utils import chat
+from static_eval.core.enums import Perturbation, QFormat
+from static_eval.llm.judge import judge
+from static_eval.llm.llm_utils import chat
 
 __all__ = [
     "QFormat",
     "Perturbation",
-    "judge",
     "chat",
+    "judge",
 ]

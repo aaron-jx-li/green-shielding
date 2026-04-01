@@ -3,9 +3,11 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/.."
+# shellcheck source=../lib/common.sh
+source "$SCRIPT_DIR/../lib/common.sh"
 
-: "${OPENAI_API_KEY:?Set OPENAI_API_KEY before running this script.}"
+enter_repo_root
+require_env OPENAI_API_KEY
 
 python static_eval/main.py \
   --task medxpertqa_diag \
