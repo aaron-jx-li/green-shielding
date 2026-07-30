@@ -1,0 +1,36 @@
+# Pinned model IDs for management_reasoning.
+#
+# Intent: align with Green Shielding §4.2 reference triad (GPT-5.2, Gemini-3-Pro,
+# Claude-4.5-Opus) when those IDs are callable on this project.
+#
+# Active GCP project: bin-yu-green-shield
+# Verified 2026-07-30 on bin-yu-green-shield:
+#   gemini-3.1-pro-preview   → OK via google.genai @ global
+#   claude-opus-4-5@20251101 → OK via AnthropicVertex @ global / us-east5
+#     (NOT via google.genai generateContent — unsupported for Claude)
+#   gemini-3-pro-preview     → previously 404 on old project (recheck if needed)
+#   gpt-5.2                  → OpenAI track (later)
+
+vertex:
+  project_default: bin-yu-green-shield
+  location_default: global
+  # Active Gemini target (callable). Paper name "Gemini-3-Pro"; Vertex ID below.
+  gemini_target: gemini-3.1-pro-preview
+  gemini_paper_name: Gemini-3-Pro
+  gemini_preferred_id: gemini-3-pro-preview
+  gemini_target_note: "Preferred gemini-3-pro-preview not callable (404); using gemini-3.1-pro-preview @ global"
+  gemini_target_verified: "2026-07-30"
+  # Claude via AnthropicVertex (claude_vertex_client.py), not generateContent.
+  claude_target: claude-opus-4-5@20251101
+  claude_target_alias: claude-opus-4-5
+  claude_location_default: global
+  claude_target_verified: "2026-07-30"
+  claude_access_note: "Enabled on bin-yu-green-shield; use AnthropicVertex + claude-opus-4-5@20251101"
+  # Dev-only cheap smoke (pipeline check; not paper primary)
+  gemini_dev_smoke: gemini-2.5-pro
+  gemini_dev_smoke_verified: "2026-07-30"
+  gemini_dev_smoke_location: us-central1
+
+openai:
+  gpt_target: gpt-5.2
+  gpt_target_verified: null
