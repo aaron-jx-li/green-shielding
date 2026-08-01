@@ -1,0 +1,11 @@
+model,field,n_ablations,n_samples
+claude,diagnostic_consensus,1,372
+claude,diagnostic_consensus,2,250
+claude,diagnostic_consensus,3,170
+claude,diagnostic_consensus,4,145
+claude,diagnostic_consensus,5,111
+claude,structured_any,1,391
+claude,structured_any,2,401
+claude,structured_any,3,403
+claude,structured_any,4,379
+claude,structured_any,5,456

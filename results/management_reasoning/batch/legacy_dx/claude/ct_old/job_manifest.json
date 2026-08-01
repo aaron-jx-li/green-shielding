@@ -1,0 +1,17 @@
+{
+  "suite": "legacy_dx",
+  "provider": "claude",
+  "arm": "ct_old",
+  "model": "claude-opus-4-5@20251101",
+  "model_resource": "publishers/anthropic/models/claude-opus-4-5@20251101",
+  "project": "bin-yu-green-shield",
+  "location": "us-east5",
+  "bucket": "bin-yu-green-shield-mgmt-reasoning",
+  "input_uri": "gs://bin-yu-green-shield-mgmt-reasoning/batch/legacy_dx/claude/ct_old/input/requests.jsonl",
+  "output_uri_prefix": "gs://bin-yu-green-shield-mgmt-reasoning/batch/legacy_dx/claude/ct_old/output/20260801T004344Z/",
+  "local_request_jsonl": "./results/management_reasoning/batch/legacy_dx/claude/ct_old/requests.jsonl",
+  "job_name": "projects/46439825009/locations/us-east5/batchPredictionJobs/61098761643884544",
+  "job_state": "JOB_STATE_SUCCEEDED",
+  "display_name": "mgmt-legacy_dx-claude-ct_old",
+  "submitted_at": "2026-08-01T00:43:50.120455+00:00"
+}

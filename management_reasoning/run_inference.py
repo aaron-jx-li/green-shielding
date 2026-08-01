@@ -134,10 +134,11 @@ def main() -> None:
             "parse_ok": False,
             "error": None,
             "refusal": False,
+            "usage": None,
         }
         try:
             user_msg = build_user_message(inquiry)
-            raw = generate_fn(
+            raw, usage = generate_fn(
                 instruction,
                 user_msg,
                 model,
@@ -145,6 +146,7 @@ def main() -> None:
                 location=location,
             )
             record["raw_response"] = raw
+            record["usage"] = usage or None
             parsed = parse_model_response(raw)
             record["parse_ok"] = parsed.parse_ok
             record["parsed"] = parsed.parsed

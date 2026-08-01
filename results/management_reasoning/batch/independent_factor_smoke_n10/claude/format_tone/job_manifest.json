@@ -1,0 +1,17 @@
+{
+  "suite": "independent_factor_smoke_n10",
+  "provider": "claude",
+  "arm": "format_tone",
+  "model": "claude-opus-4-5@20251101",
+  "model_resource": "publishers/anthropic/models/claude-opus-4-5@20251101",
+  "project": "bin-yu-green-shield",
+  "location": "us-east5",
+  "bucket": "bin-yu-green-shield-mgmt-reasoning",
+  "input_uri": "gs://bin-yu-green-shield-mgmt-reasoning/batch/independent_factor_smoke_n10/claude/format_tone/input/requests.jsonl",
+  "output_uri_prefix": "gs://bin-yu-green-shield-mgmt-reasoning/batch/independent_factor_smoke_n10/claude/format_tone/output/20260801T035732Z/",
+  "local_request_jsonl": "./results/management_reasoning/batch/independent_factor_smoke_n10/claude/format_tone/requests.jsonl",
+  "job_name": "projects/46439825009/locations/us-east5/batchPredictionJobs/2204812184272240640",
+  "job_state": "JOB_STATE_SUCCEEDED",
+  "display_name": "mgmt-independent_factor_smoke_n10-claude-format_tone",
+  "submitted_at": "2026-08-01T03:57:40.532644+00:00"
+}

@@ -1,0 +1,17 @@
+{
+  "suite": "legacy_dx_factor_smoke_n10",
+  "provider": "gemini",
+  "arm": "format_tone",
+  "model": "gemini-3.1-pro-preview",
+  "model_resource": "gemini-3.1-pro-preview",
+  "project": "bin-yu-green-shield",
+  "location": "global",
+  "bucket": "bin-yu-green-shield-mgmt-reasoning",
+  "input_uri": "gs://bin-yu-green-shield-mgmt-reasoning/batch/legacy_dx_factor_smoke_n10/gemini/format_tone/input/requests.jsonl",
+  "output_uri_prefix": "gs://bin-yu-green-shield-mgmt-reasoning/batch/legacy_dx_factor_smoke_n10/gemini/format_tone/output/20260801T035716Z/",
+  "local_request_jsonl": "./results/management_reasoning/batch/legacy_dx_factor_smoke_n10/gemini/format_tone/requests.jsonl",
+  "job_name": "projects/46439825009/locations/global/batchPredictionJobs/1631830011881193472",
+  "job_state": "JOB_STATE_SUCCEEDED",
+  "display_name": "mgmt-legacy_dx_factor_smoke_n10-gemini-format_tone",
+  "submitted_at": "2026-08-01T03:57:23.535280+00:00"
+}

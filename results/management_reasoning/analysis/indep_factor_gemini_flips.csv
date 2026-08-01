@@ -1,0 +1,16 @@
+ablation,field,n_paired,n_flip,pct_flip,n_high_to_low,pct_high_to_low,n_low_to_high,pct_low_to_high,n_ordinal,n_changed,pct_changed,mean_delta,mean_abs_delta,n_nmi,pct_nmi
+format_tone,diagnostic_consensus,2651,408,15.3904,312,11.7691,96,3.6213,0,0,,,,0,0.0
+format_tone,next_steps_consensus,2686,635,23.6411,373,13.8868,262,9.7543,0,0,,,,0,0.0
+format_tone,diagnosis,2683,1642,61.2001,0,0.0,0,0.0,0,0,,,,0,0.0
+format_tone,cant_miss_ruling_out_question,2673,2649,99.1021,0,0.0,0,0.0,0,0,,,,0,0.0
+format_tone,care_seeking,2689,531,19.7471,0,0.0,0,0.0,2662,505,18.9707,-0.0222,0.3024,27,1.0041
+content_format,diagnostic_consensus,2650,375,14.1509,273,10.3019,102,3.8491,0,0,,,,0,0.0
+content_format,next_steps_consensus,2687,545,20.2828,304,11.3137,241,8.9691,0,0,,,,0,0.0
+content_format,diagnosis,2671,1460,54.6612,0,0.0,0,0.0,0,0,,,,0,0.0
+content_format,cant_miss_ruling_out_question,2676,2647,98.9163,0,0.0,0,0.0,0,0,,,,0,0.0
+content_format,care_seeking,2686,459,17.0886,0,0.0,0,0.0,2671,446,16.6979,0.0127,0.2493,15,0.5585
+ord_mean,diagnostic_consensus,,,nan,,,,,,,,,,,
+ord_mean,next_steps_consensus,,,nan,,,,,,,,,,,
+ord_mean,diagnosis,,,nan,,,,,,,,,,,
+ord_mean,cant_miss_ruling_out_question,,,nan,,,,,,,,,,,
+ord_mean,care_seeking,,,nan,,,,,,,,,,,

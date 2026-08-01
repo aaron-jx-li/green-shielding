@@ -78,7 +78,7 @@ async def _generate_with_retries(
     project: str,
     location: str,
     max_retries: int,
-) -> str:
+) -> tuple[str, Dict[str, Any]]:
     last: Optional[Exception] = None
     for attempt in range(max_retries + 1):
         try:
@@ -188,11 +188,12 @@ async def _run(args: argparse.Namespace) -> None:
             "parse_ok": False,
             "error": None,
             "refusal": False,
+            "usage": None,
         }
         async with sem:
             try:
                 user_msg = build_user_message(inquiry)
-                raw = await _generate_with_retries(
+                raw, usage = await _generate_with_retries(
                     provider=args.provider,
                     system=instruction,
                     user=user_msg,
@@ -203,6 +204,7 @@ async def _run(args: argparse.Namespace) -> None:
                     max_retries=args.max_retries,
                 )
                 record["raw_response"] = raw
+                record["usage"] = usage or None
                 parsed = parse_model_response(raw)
                 record["parse_ok"] = parsed.parse_ok
                 record["parsed"] = parsed.parsed

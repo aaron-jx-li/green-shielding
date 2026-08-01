@@ -1,0 +1,7 @@
+model,track,core,ct_arm,n_core,n_also_flip_under_ct,pct_core_survives_ct
+claude,diagnostic_consensus,ra_ft,ct_old,376,209,55.59
+claude,diagnostic_consensus,ra_ft,ct_new,376,211,56.12
+claude,diagnostic_consensus,ra_ft,ct_old_and_ct_new,376,159,42.29
+claude,acuity_gt1,ra_ft,ct_old,140,60,42.86
+claude,acuity_gt1,ra_ft,ct_new,140,63,45.0
+claude,acuity_gt1,ra_ft,ct_old_and_ct_new,140,46,32.86

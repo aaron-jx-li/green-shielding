@@ -1,0 +1,11 @@
+model,field,arm,n_flipped
+claude,diagnostic_consensus,format_tone,571
+claude,diagnostic_consensus,content_format,465
+claude,diagnostic_consensus,remove_all,591
+claude,diagnostic_consensus,ct_old,441
+claude,diagnostic_consensus,ct_new,449
+claude,structured_any,format_tone,1343
+claude,structured_any,content_format,1227
+claude,structured_any,remove_all,1387
+claude,structured_any,ct_old,1122
+claude,structured_any,ct_new,1119

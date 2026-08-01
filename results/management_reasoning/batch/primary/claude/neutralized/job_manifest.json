@@ -1,0 +1,17 @@
+{
+  "suite": "primary",
+  "provider": "claude",
+  "arm": "neutralized",
+  "model": "claude-opus-4-5@20251101",
+  "model_resource": "publishers/anthropic/models/claude-opus-4-5@20251101",
+  "project": "bin-yu-green-shield",
+  "location": "us-east5",
+  "bucket": "bin-yu-green-shield-mgmt-reasoning",
+  "input_uri": "gs://bin-yu-green-shield-mgmt-reasoning/batch/primary/claude/neutralized/input/requests.jsonl",
+  "output_uri_prefix": "gs://bin-yu-green-shield-mgmt-reasoning/batch/primary/claude/neutralized/output/20260731T030208Z/",
+  "local_request_jsonl": "./results/management_reasoning/batch/primary/claude/neutralized/requests.jsonl",
+  "job_name": "projects/46439825009/locations/us-east5/batchPredictionJobs/1096082251008966656",
+  "job_state": "JOB_STATE_SUCCEEDED",
+  "display_name": "mgmt-primary-claude-neutralized",
+  "submitted_at": "2026-07-31T03:02:12.547093+00:00"
+}

@@ -1,0 +1,7 @@
+model,track,core,ct_arm,n_core,n_also_flip_under_ct,pct_core_survives_ct
+gemini,diagnostic_consensus,ra_ft,ct_old,270,148,54.81
+gemini,diagnostic_consensus,ra_ft,ct_new,270,153,56.67
+gemini,diagnostic_consensus,ra_ft,ct_old_and_ct_new,270,114,42.22
+gemini,acuity_gt1,ra_ft,ct_old,121,57,47.11
+gemini,acuity_gt1,ra_ft,ct_new,121,59,48.76
+gemini,acuity_gt1,ra_ft,ct_old_and_ct_new,121,42,34.71

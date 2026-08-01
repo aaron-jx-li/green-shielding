@@ -1,0 +1,11 @@
+model,field,n_ablations,n_samples
+gemini,diagnostic_consensus,1,294
+gemini,diagnostic_consensus,2,171
+gemini,diagnostic_consensus,3,111
+gemini,diagnostic_consensus,4,100
+gemini,diagnostic_consensus,5,89
+gemini,structured_any,1,418
+gemini,structured_any,2,397
+gemini,structured_any,3,362
+gemini,structured_any,4,390
+gemini,structured_any,5,376

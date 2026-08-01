@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+# Flash-Lite (full_response) on ra_new legacy free-form diagnosis arms.
+#
+# Usage:
+#   bash ./scripts/management_reasoning/smoke_eval_ra_new_dx.sh
+#   SUITE=legacy_dx_factor bash ./scripts/management_reasoning/smoke_eval_ra_new_dx.sh   # full n
+#   END_IDX=99 SUITE=legacy_dx_factor bash ./scripts/management_reasoning/smoke_eval_ra_new_dx.sh
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+cd "$ROOT"
+
+export GOOGLE_CLOUD_PROJECT="${GOOGLE_CLOUD_PROJECT:-bin-yu-green-shield}"
+export GOOGLE_CLOUD_LOCATION="${GOOGLE_CLOUD_LOCATION:-global}"
+
+SUITE="${SUITE:-legacy_dx_ra_new_smoke_n10}"
+# Unset → default 9 for smoke suites only. Empty END_IDX= means full cohort.
+if [[ -z "${END_IDX+x}" ]]; then
+  if [[ "$SUITE" == *smoke* ]]; then
+    END_IDX=9
+  else
+    END_IDX=""
+  fi
+fi
+BUCKET="${BUCKET:-bin-yu-green-shield-mgmt-reasoning}"
+POLL_SEC="${POLL_SEC:-20}"
+
+mapfile -t JOBS < <(python3 - <<'PY'
+from management_reasoning.eval.batch.paths import resolve_jobs
+for t, a in resolve_jobs(None, None, suite="legacy_dx_ra_new"):
+    print(f"{t} {a}")
+PY
+)
+
+common_base=(--suite "$SUITE" --bucket "$BUCKET" --location "$GOOGLE_CLOUD_LOCATION")
+END_ARGS=()
+[[ -n "$END_IDX" ]] && END_ARGS=(--end_idx "$END_IDX")
+
+echo "=== suite=$SUITE end_idx=${END_IDX:-FULL} jobs=${#JOBS[@]} ==="
+for ja in "${JOBS[@]}"; do echo "  $ja"; done
+
+for stage in extract unc; do
+  echo "=== prepare $stage ==="
+  for ja in "${JOBS[@]}"; do
+    read -r TARGET ARM <<<"$ja"
+    python3 -m management_reasoning.eval.batch prepare \
+      --stage "$stage" "${common_base[@]}" \
+      --target "$TARGET" --arm "$ARM" "${END_ARGS[@]}"
+  done
+done
+
+for stage in extract unc; do
+  echo "=== submit $stage ==="
+  for ja in "${JOBS[@]}"; do
+    read -r TARGET ARM <<<"$ja"
+    python3 -m management_reasoning.eval.batch submit \
+      --stage "$stage" "${common_base[@]}" \
+      --target "$TARGET" --arm "$ARM"
+  done
+done
+
+wait_all_stage() {
+  local stage="$1"
+  while true; do
+    all_ok=1
+    for ja in "${JOBS[@]}"; do
+      read -r TARGET ARM <<<"$ja"
+      out=$(python3 -m management_reasoning.eval.batch status \
+        --stage "$stage" "${common_base[@]}" \
+        --target "$TARGET" --arm "$ARM" 2>&1 || true)
+      echo "$out"
+      if echo "$out" | grep -Eq 'JOB_STATE_FAILED|JOB_STATE_CANCELLED'; then
+        echo "FAILED $stage $TARGET/$ARM" >&2
+        return 1
+      fi
+      if ! echo "$out" | grep -Eq 'JOB_STATE_SUCCEEDED|SKIPPED_EMPTY'; then
+        all_ok=0
+      fi
+    done
+    if [[ "$all_ok" -eq 1 ]]; then
+      return 0
+    fi
+    sleep "$POLL_SEC"
+  done
+}
+
+echo "=== wait extract+unc ==="
+wait_all_stage extract
+wait_all_stage unc
+
+for stage in extract unc; do
+  echo "=== collect $stage ==="
+  for ja in "${JOBS[@]}"; do
+    read -r TARGET ARM <<<"$ja"
+    python3 -m management_reasoning.eval.batch collect \
+      --stage "$stage" "${common_base[@]}" \
+      --target "$TARGET" --arm "$ARM"
+  done
+done
+
+for stage in sem ground; do
+  echo "=== prepare $stage ==="
+  for ja in "${JOBS[@]}"; do
+    read -r TARGET ARM <<<"$ja"
+    python3 -m management_reasoning.eval.batch prepare \
+      --stage "$stage" "${common_base[@]}" \
+      --target "$TARGET" --arm "$ARM" "${END_ARGS[@]}"
+  done
+done
+
+for stage in sem ground; do
+  echo "=== submit $stage ==="
+  for ja in "${JOBS[@]}"; do
+    read -r TARGET ARM <<<"$ja"
+    python3 -m management_reasoning.eval.batch submit \
+      --stage "$stage" "${common_base[@]}" \
+      --target "$TARGET" --arm "$ARM"
+  done
+done
+
+echo "=== wait sem+ground ==="
+wait_all_stage sem
+wait_all_stage ground
+
+for stage in sem ground; do
+  echo "=== collect $stage ==="
+  for ja in "${JOBS[@]}"; do
+    read -r TARGET ARM <<<"$ja"
+    python3 -m management_reasoning.eval.batch collect \
+      --stage "$stage" "${common_base[@]}" \
+      --target "$TARGET" --arm "$ARM"
+  done
+done
+
+echo "=== aggregate ==="
+for ja in "${JOBS[@]}"; do
+  read -r TARGET ARM <<<"$ja"
+  python3 -m management_reasoning.eval.batch aggregate \
+    "${common_base[@]}" \
+    --target "$TARGET" --arm "$ARM" "${END_ARGS[@]}"
+done
+
+echo "Done smoke_eval_ra_new_dx suite=$SUITE"

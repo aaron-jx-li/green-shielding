@@ -30,6 +30,10 @@ vertex:
   gemini_dev_smoke: gemini-2.5-pro
   gemini_dev_smoke_verified: "2026-07-30"
   gemini_dev_smoke_location: us-central1
+  # Diagnosis-side eval judges for management_reasoning (separate from open_eval OpenAI).
+  gemini_judge: gemini-3.1-flash-lite
+  gemini_judge_thinking_level: HIGH
+  gemini_judge_note: "Used by management_reasoning/eval (full metrics); batch staging later"
 
 openai:
   gpt_target: gpt-5.2

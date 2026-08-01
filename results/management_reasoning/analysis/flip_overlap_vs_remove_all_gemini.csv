@@ -1,0 +1,11 @@
+model,field,arm,n_arm,n_remove_all,n_intersection,pct_arm_also_in_remove_all,pct_remove_all_also_in_arm,n_unique_to_arm,jaccard_vs_remove_all
+gemini,diagnostic_consensus,format_tone,408,423,270,66.18,63.83,138,0.4813
+gemini,diagnostic_consensus,content_format,375,423,223,59.47,52.72,152,0.3878
+gemini,diagnostic_consensus,remove_all,423,423,423,100.0,100.0,0,1.0
+gemini,diagnostic_consensus,ct_old,290,423,175,60.34,41.37,115,0.3253
+gemini,diagnostic_consensus,ct_new,318,423,190,59.75,44.92,128,0.3448
+gemini,structured_any,format_tone,1256,1277,931,74.12,72.91,325,0.5811
+gemini,structured_any,content_format,1141,1277,816,71.52,63.9,325,0.5094
+gemini,structured_any,remove_all,1277,1277,1277,100.0,100.0,0,1.0
+gemini,structured_any,ct_old,1004,1277,721,71.81,56.46,283,0.4622
+gemini,structured_any,ct_new,1060,1277,751,70.85,58.81,309,0.4735

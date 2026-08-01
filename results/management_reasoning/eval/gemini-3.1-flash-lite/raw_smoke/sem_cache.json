@@ -1,0 +1,227 @@
+{
+  "lumbar radiculopathy|||lumbar radiculopathy including herniated disc/nerve root compression": {
+    "match": true,
+    "relation": "same",
+    "note": "string_match"
+  },
+  "lumbar radiculopathy including herniated disc/nerve root compression|||spinal metastasis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar spinal stenosis|||spinal metastasis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "spinal metastases metastatic cancer to spine/epidural metastases|||spinal metastasis": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "pathologic vertebral fracture compression fracture|||spinal metastasis": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "spinal cord compression epidural spinal cord compression|||spinal metastasis": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "psoas abscess|||spinal metastasis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "hip pathology|||spinal metastasis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "nephrolithiasis|||spinal metastasis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar radiculopathy|||lumbar spinal stenosis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar radiculopathy|||spinal metastases metastatic cancer to spine/epidural metastases": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar radiculopathy|||pathologic vertebral fracture compression fracture": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar radiculopathy|||spinal cord compression epidural spinal cord compression": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar radiculopathy|||psoas abscess": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "hip pathology|||lumbar radiculopathy": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "lumbar radiculopathy|||nephrolithiasis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||endometriosis": {
+    "match": true,
+    "relation": "same",
+    "note": "string_match"
+  },
+  "endometriosis|||pelvic adhesions": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||ovarian cyst": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||pelvic inflammatory disease pid": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||interstitial cystitis / bladder pain syndrome": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||irritable bowel syndrome ibs": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||pelvic floor dysfunction": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "adenomyosis|||endometriosis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "endometriosis|||ovarian torsion": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "gastroesophageal reflux disease|||gastroesophageal reflux disease gerd": {
+    "match": true,
+    "relation": "same",
+    "note": "string_match"
+  },
+  "erosive esophagitis|||esophagitis": {
+    "match": true,
+    "relation": "same",
+    "note": "string_match"
+  },
+  "esophagitis|||gastroesophageal reflux disease": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "esophageal motility disorder|||gastroesophageal reflux disease": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "gastroesophageal reflux disease|||pill-induced esophagitis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "gastroesophageal reflux disease|||infectious esophagitis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "eosinophilic esophagitis|||gastroesophageal reflux disease": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "esophageal stricture/obstruction|||gastroesophageal reflux disease": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "esophageal cancer|||gastroesophageal reflux disease": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "gastroesophageal reflux disease|||peptic ulcer disease": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "angina|||gastroesophageal reflux disease": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||gastroesophageal reflux disease gerd": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||esophageal motility disorder": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||pill-induced esophagitis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||infectious esophagitis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "eosinophilic esophagitis|||erosive esophagitis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||esophageal stricture/obstruction": {
+    "match": true,
+    "relation": "same",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||esophageal cancer": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "erosive esophagitis|||peptic ulcer disease": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  },
+  "angina|||erosive esophagitis": {
+    "match": false,
+    "relation": "different",
+    "note": "batch_bool"
+  }
+}

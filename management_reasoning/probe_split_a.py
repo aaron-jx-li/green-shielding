@@ -230,7 +230,7 @@ async def _run_arm(
         }
         async with sem:
             try:
-                raw = await gemini_client.generate_async(
+                raw, usage = await gemini_client.generate_async(
                     instruction,
                     build_user_message(inquiry),
                     model,
@@ -239,6 +239,7 @@ async def _run_arm(
                     location=location,
                 )
                 record["raw_response"] = raw
+                record["usage"] = usage or None
                 parsed = parse_split_response(raw)
                 record["parse_ok"] = parsed.parse_ok
                 record["parsed"] = parsed.parsed

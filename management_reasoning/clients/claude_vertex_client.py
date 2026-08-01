@@ -7,9 +7,11 @@ supported by the Gemini ``generateContent`` API. Use Anthropic's Vertex client.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from management_reasoning.clients.vertex import get_location, get_project
+
+GenerateResult = Tuple[str, Dict[str, Any]]
 
 _ACCESS_HINT = (
     "Claude-on-Vertex requires Anthropic models enabled in Vertex Model Garden "
@@ -52,6 +54,29 @@ def _extract_text(message: Any) -> str:
     return "".join(parts).strip()
 
 
+def _extract_usage(message: Any) -> Dict[str, Any]:
+    usage_obj = getattr(message, "usage", None)
+    if usage_obj is None:
+        return {}
+    keys = (
+        "input_tokens",
+        "output_tokens",
+        "cache_creation_input_tokens",
+        "cache_read_input_tokens",
+    )
+    usage: Dict[str, Any] = {}
+    for k in keys:
+        v = getattr(usage_obj, k, None)
+        if v is not None:
+            usage[k] = int(v)
+    if "input_tokens" in usage:
+        usage["prompt_token_count"] = usage["input_tokens"]
+    if "output_tokens" in usage:
+        usage["billed_output_token_count"] = usage["output_tokens"]
+        usage["candidates_token_count"] = usage["output_tokens"]
+    return usage
+
+
 def _raise_access_error(model: str, err: Exception) -> None:
     msg = str(err)
     if "404" in msg or "NOT_FOUND" in msg or "not_found" in msg.lower():
@@ -76,12 +101,13 @@ def generate(
     project: Optional[str] = None,
     location: Optional[str] = None,
     max_tokens: int = 4096,
-) -> str:
+) -> GenerateResult:
     """
     Call Claude via AnthropicVertex.
 
     ``client`` may be an ``AnthropicVertex`` instance; otherwise one is created.
     ``location`` maps to AnthropicVertex ``region`` (``global`` and ``us-east5`` OK).
+    Returns (text, usage).
     """
     client = client or _make_anthropic_client(project=project, location=location)
     try:
@@ -93,7 +119,7 @@ def generate(
         )
     except Exception as e:
         _raise_access_error(model, e)
-    return _extract_text(message)
+    return _extract_text(message), _extract_usage(message)
 
 
 async def generate_async(
@@ -105,7 +131,7 @@ async def generate_async(
     project: Optional[str] = None,
     location: Optional[str] = None,
     max_tokens: int = 4096,
-) -> str:
+) -> GenerateResult:
     """Async Claude via AsyncAnthropicVertex (or thread-offload of a sync client)."""
     if client is not None and type(client).__name__ == "AnthropicVertex":
         return await asyncio.to_thread(
@@ -131,4 +157,4 @@ async def generate_async(
         )
     except Exception as e:
         _raise_access_error(model, e)
-    return _extract_text(message)
+    return _extract_text(message), _extract_usage(message)

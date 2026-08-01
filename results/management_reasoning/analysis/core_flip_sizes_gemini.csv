@@ -1,0 +1,9 @@
+model,track,core,n
+gemini,diagnostic_consensus,ra_ft,270
+gemini,diagnostic_consensus,paper_ge2,353
+gemini,diagnostic_consensus,paper_ge3,179
+gemini,diagnostic_consensus,all_ge3,300
+gemini,acuity_gt1,ra_ft,121
+gemini,acuity_gt1,paper_ge2,172
+gemini,acuity_gt1,paper_ge3,58
+gemini,acuity_gt1,all_ge3,137

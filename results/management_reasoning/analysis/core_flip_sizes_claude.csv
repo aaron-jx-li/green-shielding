@@ -1,0 +1,9 @@
+model,track,core,n
+claude,diagnostic_consensus,ra_ft,376
+claude,diagnostic_consensus,paper_ge2,512
+claude,diagnostic_consensus,paper_ge3,212
+claude,diagnostic_consensus,all_ge3,426
+claude,acuity_gt1,ra_ft,140
+claude,acuity_gt1,paper_ge2,166
+claude,acuity_gt1,paper_ge3,68
+claude,acuity_gt1,all_ge3,110

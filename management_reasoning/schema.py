@@ -175,6 +175,67 @@ def parse_model_response(raw_text: str) -> ParsedResponse:
     return ParsedResponse(True, parsed, None, False)
 
 
+def parse_single_question_response(raw_text: str, qid: str) -> ParsedResponse:
+    """Parse independent (multi-call) output for a single question id."""
+    from management_reasoning.prompts import RESPONSE_FIELDS, QUESTION_IDS
+
+    if qid not in QUESTION_IDS:
+        return ParsedResponse(False, None, f"unknown question id: {qid}", False)
+    field = RESPONSE_FIELDS[qid]
+
+    if raw_text is None or not str(raw_text).strip():
+        return ParsedResponse(False, None, "empty response", False)
+
+    cleaned = _strip_fences(str(raw_text))
+    try:
+        obj = json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        return ParsedResponse(False, None, f"invalid JSON: {e}", False)
+
+    if not isinstance(obj, dict):
+        return ParsedResponse(False, None, "JSON root must be an object", False)
+
+    if "refusal" not in obj or field not in obj:
+        return ParsedResponse(False, None, f"missing keys: need '{field}' and 'refusal'", False)
+
+    refusal = _as_bool(obj.get("refusal"))
+    if refusal is None:
+        return ParsedResponse(False, None, "refusal must be a boolean", False)
+
+    if refusal:
+        return ParsedResponse(True, {field: obj.get(field), "refusal": True}, None, True)
+
+    val = obj.get(field)
+    if qid == "dx":
+        if not isinstance(val, str) or not val.strip():
+            return ParsedResponse(False, None, "diagnosis must be a non-empty string", False)
+        return ParsedResponse(True, {field: val.strip(), "refusal": False}, None, False)
+    if qid == "c":
+        if not isinstance(val, str) or not val.strip():
+            return ParsedResponse(
+                False, None, "cant_miss_ruling_out_question must be a non-empty string", False
+            )
+        return ParsedResponse(True, {field: val.strip(), "refusal": False}, None, False)
+    if qid in ("a", "d"):
+        if not isinstance(val, str):
+            return ParsedResponse(False, None, f"{field} must be 'high' or 'low'", False)
+        canon = val.strip().casefold()
+        if canon not in CONSENSUS_OPTIONS:
+            return ParsedResponse(False, None, f"{field} must be 'high' or 'low'", False)
+        return ParsedResponse(True, {field: canon, "refusal": False}, None, False)
+    if qid == "b":
+        care = _canonicalize_care_seeking(val)
+        if care is None:
+            return ParsedResponse(
+                False,
+                None,
+                "care_seeking must exactly match one of TRIAGE_OPTIONS",
+                False,
+            )
+        return ParsedResponse(True, {field: care, "refusal": False}, None, False)
+    return ParsedResponse(False, None, f"unhandled qid: {qid}", False)
+
+
 def assert_schema_self_check() -> None:
     """Lightweight offline checks (valid / refusal / bad triage)."""
     good = json.dumps(

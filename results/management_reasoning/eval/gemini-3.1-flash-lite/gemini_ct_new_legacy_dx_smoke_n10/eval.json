@@ -1,0 +1,1786 @@
+{
+  "summary": {
+    "num_total_processed": 10,
+    "num_with_pxhx": 10,
+    "rate_with_pxhx": 1.0,
+    "mean_plausibility": 0.7082142857142856,
+    "mean_h_coverage": 0.7166666666666666,
+    "h_coverage_defined_count": 10,
+    "mean_c_coverage": 0.41666666666666663,
+    "c_coverage_defined_count": 10,
+    "mean_h_precision": 0.4155952380952381,
+    "mean_support_rate": 1.0,
+    "mean_indirect_inference_rate": 0.0,
+    "mean_breadth": 6.6,
+    "mean_normalized_breadth": 0.8817063492063492,
+    "normalized_breadth_defined_count": 10,
+    "uncertainty_rate": 0.0,
+    "models": {
+      "judge_model": "gemini-3.1-flash-lite",
+      "judge_provider": "vertex_gemini_batch",
+      "target": "gemini",
+      "arm": "ct_new",
+      "suite": "legacy_dx_smoke_n10",
+      "track": "management_reasoning.eval.batch"
+    },
+    "sem_match_cache_entries": 0
+  },
+  "per_sample": [
+    {
+      "index": 0,
+      "sample_id": 0,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "Hi my name is Wendy I ve been having an issue for the last couple of months or so I been having severe pain in my lower back around the front into the groin area and its radiating down my thigh and so on I am currently a cancer patient nobody seems to be able to tell me what it could be the pain is so bad that it brings tears to my eyes would you possibly know what it could be or might be",
+      "model_response": "*Disclaimer: I am an AI medical assistant, not a doctor. Because this patient has a history of cancer, these symptoms must be evaluated urgently by a physician, preferably an oncologist or a spine specialist.*\n\nThe pain pattern you are describing—lower back pain wrapping around to the groin and radiating down the *front* of the thigh—is highly specific. It typically indicates involvement of the **upper lumbar nerve roots (L1, L2, L3, or L4)**, the **lumbar plexus**, or the **hip joint**. \n\nGiven the patient's history of cancer, a physician will approach this with a high index of suspicion for cancer recurrence, though benign causes are also entirely possible. \n\nHere is a clinical breakdown of what could be causing this:\n\n### 1. Cancer-Related Causes (Highest Priority to Rule Out)\n*   **Bone Metastasis:** Cancer can spread to the lumbar vertebrae (spine), the pelvis, or the femur. If a tumor grows in the upper lumbar spine, it can compress the L1-L4 nerve roots, causing pain in the groin and front of the thigh.\n*   **Retroperitoneal Mass / Lymphadenopathy:** Enlarged lymph nodes or a tumor in the back of the abdomen (retroperitoneum) can press directly against the **lumbar plexus** (the network of nerves that supplies the groin and front of the leg). \n*   **Malignant Psoas Syndrome:** Cancer involvement in the psoas muscle (a deep core muscle connecting the lower back to the groin) causes severe pain with this exact distribution.\n*   **Avascular Necrosis (AVN) of the Hip:** If the patient received high doses of steroids or radiation therapy during their cancer treatment, the blood supply to the hip joint can fail, causing bone death. This causes severe groin and thigh pain.\n\n### 2. Spinal / Neurological Causes (Non-Cancerous)\n*   **Upper Lumbar Disc Herniation:** Most \"sciatica\" goes down the *back* of the leg because it involves the lower spine (L5-S1). However, a herniated disc higher up (L2-L3 or L3-L4) pinches the femoral nerve, sending pain into the groin and *front* of the thigh.\n*   **Spinal Stenosis:** Narrowing of the spinal canal in the upper lumbar region can compress these same nerves.\n\n### 3. Hip / Musculoskeletal Causes\n*   **Hip Joint Pathology:** Severe osteoarthritis, a labral tear, or a stress fracture in the hip often presents as groin pain that radiates down the front of the thigh and refers to the lower back. \n\n### 4. Visceral / Vascular Causes\n*   **Renal (Kidney) Issues:** A chronically obstructing kidney stone or kidney mass can cause back pain that radiates directly into the groin.\n*   **Abdominal Aortic Aneurysm (AAA):** An enlargement of the main artery in the abdomen can cause deep back pain radiating to the groin.\n\n### Recommended Next Steps for the Patient:\nIf standard X-rays and basic exams have not found the cause, the patient should strongly advocate for advanced imaging. Standard X-rays often miss soft-tissue tumors, nerve compression, and early bone metastases. \n\nThe patient should ask their doctor about:\n1.  **MRI of the Lumbar Spine and Pelvis (with and without contrast):** This is the gold standard to look for nerve compression, disc herniations, and tumors in the spine or pelvis.\n2.  **PET Scan or Bone Scan:** Given the cancer history, this will check for any metabolic activity or metastasis in the bones or lymph nodes.\n3.  **Evaluation of the Hip:** An MRI of the hip to rule out Avascular Necrosis or joint disease.",
+      "reference_diagnosis": "Possible metastatic cancer to spine or lymph nodes",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Lumbar radiculopathy (including herniated disc/nerve root compression)",
+          "Lumbar spinal stenosis",
+          "Spinal metastases (metastatic cancer to spine/epidural metastases)",
+          "Pathologic vertebral fracture (compression fracture)",
+          "Spinal cord compression (epidural spinal cord compression)",
+          "Psoas abscess",
+          "Hip pathology",
+          "Nephrolithiasis"
+        ],
+        "highly_likely_set": [
+          "Spinal metastases (metastatic cancer to spine/epidural metastases)",
+          "Lumbar radiculopathy (including herniated disc/nerve root compression)"
+        ],
+        "cannot_miss_set": [
+          "Spinal cord compression (epidural spinal cord compression)",
+          "Pathologic vertebral fracture (compression fracture)",
+          "Spinal metastases (metastatic cancer to spine/epidural metastases)"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.75,
+        "h_coverage": 1.0,
+        "covered_H": [
+          {
+            "h": "Spinal metastases (metastatic cancer to spine/epidural metastases)",
+            "matched_dx": "Bone metastasis"
+          },
+          {
+            "h": "Lumbar radiculopathy (including herniated disc/nerve root compression)",
+            "matched_dx": "Upper lumbar disc herniation"
+          }
+        ],
+        "uncovered_H": [],
+        "c_coverage": 0.3333333333333333,
+        "covered_C": [
+          {
+            "c": "Spinal metastases (metastatic cancer to spine/epidural metastases)",
+            "matched_dx": "Bone metastasis"
+          }
+        ],
+        "uncovered_C": [
+          "Spinal cord compression (epidural spinal cord compression)",
+          "Pathologic vertebral fracture (compression fracture)"
+        ],
+        "h_precision": 0.25,
+        "extracted_diagnoses": [
+          "Bone metastasis",
+          "Retroperitoneal mass",
+          "Retroperitoneal lymphadenopathy",
+          "Malignant psoas syndrome",
+          "Avascular necrosis of the hip",
+          "Upper lumbar disc herniation",
+          "Spinal stenosis",
+          "Hip osteoarthritis",
+          "Hip labral tear",
+          "Hip stress fracture",
+          "Kidney stone",
+          "Kidney mass",
+          "Abdominal aortic aneurysm"
+        ],
+        "extracted_diagnoses_top_k": [
+          "Bone metastasis",
+          "Retroperitoneal mass",
+          "Malignant psoas syndrome",
+          "Avascular necrosis of the hip",
+          "Upper lumbar disc herniation",
+          "Spinal stenosis",
+          "Hip osteoarthritis",
+          "Kidney stone"
+        ],
+        "in_P": [
+          {
+            "dx": "Bone metastasis",
+            "matched_P": "Spinal metastases (metastatic cancer to spine/epidural metastases)"
+          },
+          {
+            "dx": "Avascular necrosis of the hip",
+            "matched_P": "Hip pathology"
+          },
+          {
+            "dx": "Upper lumbar disc herniation",
+            "matched_P": "Lumbar radiculopathy (including herniated disc/nerve root compression)"
+          },
+          {
+            "dx": "Spinal stenosis",
+            "matched_P": "Lumbar spinal stenosis"
+          },
+          {
+            "dx": "Hip osteoarthritis",
+            "matched_P": "Hip pathology"
+          },
+          {
+            "dx": "Kidney stone",
+            "matched_P": "Nephrolithiasis"
+          }
+        ],
+        "out_of_P": [
+          "Retroperitoneal mass",
+          "Malignant psoas syndrome"
+        ],
+        "in_H": [
+          {
+            "dx": "Bone metastasis",
+            "matched_H": "Spinal metastases (metastatic cancer to spine/epidural metastases)"
+          },
+          {
+            "dx": "Upper lumbar disc herniation",
+            "matched_H": "Lumbar radiculopathy (including herniated disc/nerve root compression)"
+          }
+        ],
+        "out_of_H": [
+          "Retroperitoneal mass",
+          "Malignant psoas syndrome",
+          "Avascular necrosis of the hip",
+          "Spinal stenosis",
+          "Hip osteoarthritis",
+          "Kidney stone"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 13,
+        "normalized_breadth": 1.625,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "Bone metastasis",
+            "input_support_quotes": [
+              "I am currently a cancer patient",
+              "severe pain in my lower back around the front into the groin area"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Retroperitoneal mass",
+            "input_support_quotes": [
+              "I am currently a cancer patient",
+              "radiating down my thigh"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Malignant psoas syndrome",
+            "input_support_quotes": [
+              "I am currently a cancer patient",
+              "severe pain in my lower back around the front into the groin area"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Avascular necrosis of the hip",
+            "input_support_quotes": [
+              "I am currently a cancer patient",
+              "severe pain in my lower back around the front into the groin area"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Upper lumbar disc herniation",
+            "input_support_quotes": [
+              "severe pain in my lower back",
+              "radiating down my thigh"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Spinal stenosis",
+            "input_support_quotes": [
+              "severe pain in my lower back",
+              "radiating down my thigh"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Hip osteoarthritis",
+            "input_support_quotes": [
+              "severe pain in my lower back around the front into the groin area",
+              "radiating down my thigh"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "Kidney stone",
+            "input_support_quotes": [
+              "severe pain in my lower back around the front into the groin area"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "sample_id": 1,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "i had surgery done 5 months ago for scar tissue and adhesion removal. my gynecologist just found a cyst on my right ovary. im still having problems, when my husband and i have sex i get severe cervical pain and afterward i get abdominal cramps severe enough i get light headed, also i get abdominal pain and rectal pain before and during a bowel movement, i also get abdominal pain during urination. im 26 years old. what could it be?",
+      "model_response": "Based on your surgical history, the recent discovery of an ovarian cyst, and the specific combination of symptoms you are experiencing, the most likely clinical explanation is **Endometriosis**, specifically **Deep Infiltrating Endometriosis (DIE)**. \n\nHere is a clinical breakdown of why your symptoms point to this condition:\n\n*   **History of Scar Tissue/Adhesions:** Endometriosis is a primary cause of pelvic adhesions. It is common for symptoms to return months after surgery, especially if the lesions were burned off (ablation) rather than cut out at the root (excision), or if deep disease was left behind.\n*   **Right Ovarian Cyst:** In the context of endometriosis, this is often an **endometrioma** (a \"chocolate cyst\"). The presence of an endometrioma usually indicates more advanced pelvic endometriosis.\n*   **Severe Cervical Pain During Sex (Deep Dyspareunia):** Endometriosis frequently implants behind the cervix, on the uterosacral ligaments, or in the \"Pouch of Douglas\" (the space between the rectum and uterus). Pressure on these areas during intercourse causes severe pain. The lightheadedness is a **vasovagal response**—your body's reaction to intense, sudden pain.\n*   **Pain Before/During Bowel Movements (Dyschezia):** This strongly suggests that endometriosis lesions or adhesions have attached to your rectum or lower bowel.\n*   **Pain During Urination (Dysuria):** This suggests that endometriosis lesions or adhesions are irritating the bladder wall or ureters. \n\n**Secondary factors to consider:**\n*   **Hypertonic Pelvic Floor:** Chronic pelvic pain from endometriosis often causes the pelvic floor muscles to go into continuous, painful spasms, which worsens pain during sex, bowel movements, and urination.\n*   **Cyst Complications:** If the cyst is large, it may be pulling on surrounding structures, contributing to the localized pain. \n\n**Next Steps & Recommendations:**\n1.  **See an Endometriosis Specialist:** General gynecologists are often not equipped to handle deep infiltrating endometriosis on the bowel or bladder. Look for a fellowship-trained **Endometriosis Excision Specialist**.\n2.  **Advanced Imaging:** You may need a specialized pelvic MRI or an expert transvaginal ultrasound to properly map out bowel and bladder involvement before any further treatment.\n3.  **Pelvic Floor Physical Therapy:** A specialized physical therapist can help relax the pelvic floor muscles to reduce pain during sex, urination, and bowel movements.\n\n*Disclaimer: I am an AI medical assistant, not a doctor. Because an ovarian cyst can rupture or cause the ovary to twist (ovarian torsion)—which is a medical emergency—you should go to the ER or seek immediate medical care if you experience sudden, agonizing, sharp abdominal pain accompanied by nausea, vomiting, or fever.*",
+      "reference_diagnosis": "Pelvic Inflammatory Disease (PID), possible recurrent adhesions, cystitis, proctocolitis, ovarian cyst",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Endometriosis",
+          "Pelvic adhesions",
+          "Ovarian cyst",
+          "Pelvic inflammatory disease (PID)",
+          "Interstitial cystitis / bladder pain syndrome",
+          "Irritable bowel syndrome (IBS)",
+          "Pelvic floor dysfunction",
+          "Adenomyosis",
+          "Ovarian torsion"
+        ],
+        "highly_likely_set": [
+          "Endometriosis",
+          "Pelvic adhesions",
+          "Ovarian cyst"
+        ],
+        "cannot_miss_set": [
+          "Pelvic inflammatory disease (PID)",
+          "Ovarian torsion"
+        ]
+      },
+      "metrics": {
+        "plausibility": 1.0,
+        "h_coverage": 0.6666666666666666,
+        "covered_H": [
+          {
+            "h": "Endometriosis",
+            "matched_dx": "deep infiltrating endometriosis"
+          },
+          {
+            "h": "Ovarian cyst",
+            "matched_dx": "ovarian cyst"
+          }
+        ],
+        "uncovered_H": [
+          "Pelvic adhesions"
+        ],
+        "c_coverage": 0.5,
+        "covered_C": [
+          {
+            "c": "Ovarian torsion",
+            "matched_dx": "ovarian torsion"
+          }
+        ],
+        "uncovered_C": [
+          "Pelvic inflammatory disease (PID)"
+        ],
+        "h_precision": 0.6,
+        "extracted_diagnoses": [
+          "deep infiltrating endometriosis",
+          "endometrioma",
+          "ovarian cyst",
+          "hypertonic pelvic floor",
+          "ovarian torsion"
+        ],
+        "extracted_diagnoses_top_k": [
+          "deep infiltrating endometriosis",
+          "endometrioma",
+          "ovarian cyst",
+          "hypertonic pelvic floor",
+          "ovarian torsion"
+        ],
+        "in_P": [
+          {
+            "dx": "deep infiltrating endometriosis",
+            "matched_P": "Endometriosis"
+          },
+          {
+            "dx": "endometrioma",
+            "matched_P": "Endometriosis"
+          },
+          {
+            "dx": "ovarian cyst",
+            "matched_P": "Ovarian cyst"
+          },
+          {
+            "dx": "hypertonic pelvic floor",
+            "matched_P": "Pelvic floor dysfunction"
+          },
+          {
+            "dx": "ovarian torsion",
+            "matched_P": "Ovarian torsion"
+          }
+        ],
+        "out_of_P": [],
+        "in_H": [
+          {
+            "dx": "deep infiltrating endometriosis",
+            "matched_H": "Endometriosis"
+          },
+          {
+            "dx": "endometrioma",
+            "matched_H": "Endometriosis"
+          },
+          {
+            "dx": "ovarian cyst",
+            "matched_H": "Ovarian cyst"
+          }
+        ],
+        "out_of_H": [
+          "hypertonic pelvic floor",
+          "ovarian torsion"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 5,
+        "normalized_breadth": 0.5555555555555556,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "deep infiltrating endometriosis",
+            "input_support_quotes": [
+              "severe cervical pain",
+              "abdominal pain and rectal pain before and during a bowel movement"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "endometrioma",
+            "input_support_quotes": [
+              "my gynecologist just found a cyst on my right ovary",
+              "surgery done 5 months ago for scar tissue and adhesion removal"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "ovarian cyst",
+            "input_support_quotes": [
+              "my gynecologist just found a cyst on my right ovary"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "hypertonic pelvic floor",
+            "input_support_quotes": [
+              "severe cervical pain",
+              "abdominal pain and rectal pain before and during a bowel movement"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "ovarian torsion",
+            "input_support_quotes": [
+              "my gynecologist just found a cyst on my right ovary"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "sample_id": 2,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "Almost everytime I eat, it burns when I swallow. Not in my throat but in my chest. It burns all the way down. It helps a lil if I drink water after I swallow. I wake up a lot in the middle of the night with heartburn so I chew some tums and it helps for the most part. Why is it so painful when I eat?",
+      "model_response": "The pain this patient is experiencing is likely due to **erosive esophagitis**, which is inflammation and irritation of the lining of the esophagus caused by severe or chronic **Gastroesophageal Reflux Disease (GERD)**. \n\nHere is why it is so painful when they eat:\n* **Tissue Damage:** Frequent backwash of stomach acid (which causes the nighttime heartburn) has likely eroded or inflamed the delicate lining of the esophagus, leaving it raw. \n* **Mechanical Irritation:** When the patient swallows, the food physically rubs against this inflamed, ulcerated, or raw tissue as it travels down to the stomach, triggering a painful burning sensation (clinically known as *odynophagia*).\n* **Relief Mechanisms:** Drinking water temporarily rinses the food and residual acid off the raw tissue, providing brief relief. Chewing Tums neutralizes the stomach acid, which is why it helps the nighttime reflux.\n\n**Clinical Note:** Painful swallowing (*odynophagia*) is considered an **\"alarm symptom\"** in GERD. It indicates that the acid reflux has caused structural damage to the esophagus (such as ulcers or severe inflammation). The patient should see a healthcare provider promptly. They will likely need prescription acid-suppressing medication (like a PPI) and may require an upper endoscopy (EGD) to evaluate the extent of the damage and rule out other conditions.",
+      "reference_diagnosis": "gastroesophageal reflux disease (GERD)",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Gastroesophageal reflux disease (GERD)",
+          "Esophagitis",
+          "Esophageal motility disorder",
+          "Pill-induced esophagitis",
+          "Infectious esophagitis",
+          "Eosinophilic esophagitis",
+          "Esophageal stricture/obstruction",
+          "Esophageal cancer",
+          "Peptic ulcer disease",
+          "Angina"
+        ],
+        "highly_likely_set": [
+          "Gastroesophageal reflux disease (GERD)",
+          "Esophagitis"
+        ],
+        "cannot_miss_set": [
+          "Esophageal cancer",
+          "Esophageal stricture/obstruction",
+          "Angina"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.6666666666666666,
+        "h_coverage": 0.5,
+        "covered_H": [
+          {
+            "h": "Gastroesophageal reflux disease (GERD)",
+            "matched_dx": "erosive esophagitis"
+          }
+        ],
+        "uncovered_H": [
+          "Esophagitis"
+        ],
+        "c_coverage": 0.0,
+        "covered_C": [],
+        "uncovered_C": [
+          "Esophageal cancer",
+          "Esophageal stricture/obstruction",
+          "Angina"
+        ],
+        "h_precision": 0.6666666666666666,
+        "extracted_diagnoses": [
+          "erosive esophagitis",
+          "gastroesophageal reflux disease",
+          "esophageal ulcers"
+        ],
+        "extracted_diagnoses_top_k": [
+          "erosive esophagitis",
+          "gastroesophageal reflux disease",
+          "esophageal ulcers"
+        ],
+        "in_P": [
+          {
+            "dx": "erosive esophagitis",
+            "matched_P": "Gastroesophageal reflux disease (GERD)"
+          },
+          {
+            "dx": "gastroesophageal reflux disease",
+            "matched_P": "Gastroesophageal reflux disease (GERD)"
+          }
+        ],
+        "out_of_P": [
+          "esophageal ulcers"
+        ],
+        "in_H": [
+          {
+            "dx": "erosive esophagitis",
+            "matched_H": "Gastroesophageal reflux disease (GERD)"
+          },
+          {
+            "dx": "gastroesophageal reflux disease",
+            "matched_H": "Gastroesophageal reflux disease (GERD)"
+          }
+        ],
+        "out_of_H": [
+          "esophageal ulcers"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 3,
+        "normalized_breadth": 0.3,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "erosive esophagitis",
+            "input_support_quotes": [
+              "It burns all the way down",
+              "wake up a lot in the middle of the night with heartburn"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "gastroesophageal reflux disease",
+            "input_support_quotes": [
+              "wake up a lot in the middle of the night with heartburn",
+              "chew some tums and it helps"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "esophageal ulcers",
+            "input_support_quotes": [
+              "burns when I swallow",
+              "It burns all the way down"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "sample_id": 3,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "Dear doctor, i am 33 male recently i have undergone pre employment medical check up and it was found that i have sgpt- 194 except this all test are absolutely normal test includes 1) CBC2. ESR and liver test 3. Urine Routine 4. Blood Group & Rh Factor 5. X-ray (Chest)6. General Physical Examination7. Fasting Blood Sugar &Post Prandial Blood Sugar8. Total Cholesterol9. ECG10. Serum Creatininenow they have advised me to got my ultrasound done full abdomen. i have got it done today and every thing is normal and they found mild fatty liver. Another thing i want to share that i was suffering from loose motions and was on Ofloxacin-200mg with ornidazole500mg B.D dosage (oflox OZ )medication for 2days and continued ofloxacin-200 B.D dosage (oflox) for another 3days as was suffering cold and cough also.now i need to go to gastro doctor to get the ultrasound reports checked. Just want to know what could be the reason for this elevated SGPT and will i get the clearance for joining new company.what should i do to lower my SGPT levels?? and what diet i should follow i am not a heavy drinker just take drinks occasionally and i am not fond of junk food as well.",
+      "model_response": "Based on the clinical history provided, here are the answers to your questions:\n\n**1. What could be the reason for the elevated SGPT (ALT)?**\nAn SGPT level of 194 is moderately elevated. In your case, it is likely due to a combination of factors:\n*   **Medication-Induced:** The recent use of antibiotics (Ofloxacin and Ornidazole) is a very common cause of temporary spikes in liver enzymes. The liver processes these drugs, and they can cause transient liver inflammation.\n*   **Mild Fatty Liver:** Your ultrasound confirmed mild fatty liver. Fat accumulation in the liver cells can cause a baseline elevation in SGPT.\n*   **Recent Illness:** The recent viral or bacterial infection (loose motions, cold, and cough) can also cause a temporary, reactive increase in liver enzymes. \n\n**2. Will you get clearance for joining the new company?**\n*   **Highly Likely:** Yes, you should generally get clearance. An isolated elevation in SGPT due to fatty liver or recent antibiotics is not a contagious disease or a debilitating condition that prevents you from working. \n*   **Next Steps:** The company’s medical officer will likely mark you \"fit,\" but they may ask you to repeat the SGPT test in 2 to 4 weeks to ensure the levels are trending downward. They might also ask for a Hepatitis B and C blood test just to rule out viral hepatitis, which is standard protocol.\n\n**3. What should be done to lower SGPT levels?**\n*   **Give it Time:** Since the antibiotics are likely the main culprit, your liver needs 2 to 4 weeks to recover and clear the enzymes from your bloodstream.\n*   **Avoid Alcohol Completely:** Even though you drink occasionally, stop all alcohol consumption until your SGPT returns to normal, as alcohol stresses the liver.\n*   **Avoid Self-Medication:** Do not take any over-the-counter painkillers (like Paracetamol or NSAIDs), Ayurvedic/herbal supplements, or unnecessary medications, as these are processed by the liver.\n*   **Exercise:** Engage in 30–45 minutes of moderate aerobic exercise (brisk walking, jogging, cycling) 5 days a week. Weight management is the most effective treatment for mild fatty liver.\n\n**4. What diet should be followed?**\nTo help your liver heal and reverse the mild fatty liver, follow a hepatoprotective diet:\n*   **Increase Fiber:** Eat plenty of fresh green vegetables, salads, and whole fruits. Substitute white rice and white bread with whole grains (brown rice, oats, whole wheat).\n*   **Lean Protein:** Consume plant-based proteins (dals, legumes, tofu) and lean meats (chicken, fish). Avoid red meat.\n*   **Limit Sugar and Refined Carbs:** Strictly avoid sugary beverages, sodas, sweets, and baked goods. Excess sugar converts directly to fat in the liver.\n*   **Healthy Fats:** Use healthy oils in moderation (like olive oil or mustard oil) and avoid deep-fried foods, butter, and heavy creams.\n*   **Hydration:** Drink plenty of water (3–4 liters a day) to help flush out toxins.\n\n**Recommendation:** Follow this regimen and repeat your SGPT (ALT) test in 3 to 4 weeks. It should show a significant decrease. If it remains high, consult a gastroenterologist or hepatologist for further evaluation. \n\n*Disclaimer: I am an AI medical assistant. This information is for educational purposes and should not replace the direct advice of the examining physician or your primary care doctor.*",
+      "reference_diagnosis": "mild fatty liver (hepatic steatosis) causing elevated SGPT",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Nonalcoholic fatty liver disease (NAFLD)",
+          "Acute viral hepatitis",
+          "Drug-induced liver injury (DILI)",
+          "Infection-related transaminitis",
+          "Acute gastroenteritis/infectious diarrhea",
+          "Alcohol-associated liver disease",
+          "Autoimmune hepatitis"
+        ],
+        "highly_likely_set": [
+          "Nonalcoholic fatty liver disease (NAFLD)",
+          "Infection-related transaminitis",
+          "Acute viral hepatitis"
+        ],
+        "cannot_miss_set": [
+          "Acute viral hepatitis",
+          "Drug-induced liver injury (DILI)"
+        ]
+      },
+      "metrics": {
+        "plausibility": 1.0,
+        "h_coverage": 1.0,
+        "covered_H": [
+          {
+            "h": "Nonalcoholic fatty liver disease (NAFLD)",
+            "matched_dx": "mild fatty liver"
+          },
+          {
+            "h": "Infection-related transaminitis",
+            "matched_dx": "bacterial infection"
+          },
+          {
+            "h": "Acute viral hepatitis",
+            "matched_dx": "viral infection"
+          }
+        ],
+        "uncovered_H": [],
+        "c_coverage": 1.0,
+        "covered_C": [
+          {
+            "c": "Acute viral hepatitis",
+            "matched_dx": "viral infection"
+          },
+          {
+            "c": "Drug-induced liver injury (DILI)",
+            "matched_dx": "drug-induced liver injury"
+          }
+        ],
+        "uncovered_C": [],
+        "h_precision": 0.8,
+        "extracted_diagnoses": [
+          "drug-induced liver injury",
+          "mild fatty liver",
+          "viral infection",
+          "bacterial infection",
+          "viral hepatitis"
+        ],
+        "extracted_diagnoses_top_k": [
+          "drug-induced liver injury",
+          "mild fatty liver",
+          "viral infection",
+          "bacterial infection",
+          "viral hepatitis"
+        ],
+        "in_P": [
+          {
+            "dx": "drug-induced liver injury",
+            "matched_P": "Drug-induced liver injury (DILI)"
+          },
+          {
+            "dx": "mild fatty liver",
+            "matched_P": "Nonalcoholic fatty liver disease (NAFLD)"
+          },
+          {
+            "dx": "viral infection",
+            "matched_P": "Acute viral hepatitis"
+          },
+          {
+            "dx": "bacterial infection",
+            "matched_P": "Infection-related transaminitis"
+          },
+          {
+            "dx": "viral hepatitis",
+            "matched_P": "Acute viral hepatitis"
+          }
+        ],
+        "out_of_P": [],
+        "in_H": [
+          {
+            "dx": "mild fatty liver",
+            "matched_H": "Nonalcoholic fatty liver disease (NAFLD)"
+          },
+          {
+            "dx": "viral infection",
+            "matched_H": "Acute viral hepatitis"
+          },
+          {
+            "dx": "bacterial infection",
+            "matched_H": "Infection-related transaminitis"
+          },
+          {
+            "dx": "viral hepatitis",
+            "matched_H": "Acute viral hepatitis"
+          }
+        ],
+        "out_of_H": [
+          "drug-induced liver injury"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 5,
+        "normalized_breadth": 0.7142857142857143,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "drug-induced liver injury",
+            "input_support_quotes": [
+              "was on Ofloxacin-200mg with ornidazole500mg B.D dosage",
+              "continued ofloxacin-200 B.D dosage (oflox) for another 3days"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "mild fatty liver",
+            "input_support_quotes": [
+              "they found mild fatty liver"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "viral infection",
+            "input_support_quotes": [
+              "was suffering cold and cough also"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "bacterial infection",
+            "input_support_quotes": [
+              "was suffering from loose motions"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "viral hepatitis",
+            "input_support_quotes": [
+              "pre employment medical check up and it was found that i have sgpt- 194"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "sample_id": 4,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "My younger brother liver & spleen got enlarged. Hepatitis B&C found in blood. Mild ascitis & SOL on both lube of liver found. His age is 15. Weight is 28 kg. He is having serious less appetite. I am attaching the all the reports. Please advice us how to proceed and the exact condition of the patient.Here two doctors said he will need a full liver transplantation...",
+      "model_response": "*Disclaimer: I am an AI, not a doctor. Because I cannot view the attached reports, I can only provide general medical guidance based on the information you provided. This is a severe, life-threatening condition that requires immediate care at a specialized medical center.*\n\nBased on the clinical picture provided, here is a clarification of the patient’s condition and the recommended next steps.\n\n### Clarification of the Condition\nThe combination of findings suggests **decompensated cirrhosis (end-stage liver disease)**, with a high suspicion for **Hepatocellular Carcinoma (liver cancer)**. \n\n*   **Hepatitis B and C:** Co-infection with both viruses causes rapid, severe scarring of the liver (cirrhosis) and significantly increases the risk of liver cancer, even at a young age.\n*   **Hepatosplenomegaly & Ascites:** An enlarged liver and spleen, along with fluid in the abdomen (ascites), are classic signs of portal hypertension. This means the liver is severely scarred and failing to function properly.\n*   **Space-Occupying Lesions (SOLs) in both lobes:** In the context of Hepatitis B and C, these masses are highly suspicious for multifocal liver cancer (Hepatocellular Carcinoma).\n*   **Weight (28 kg) & Decreased Appetite:** At 15 years old, 28 kg (approx. 61 lbs) indicates severe malnutrition and cachexia (muscle wasting). This is caused by a combination of liver failure, chronic inflammation, and potentially the metabolic demands of the tumors.\n\n### Why a Liver Transplant was Suggested\nThe two physicians suggested a full liver transplant because the patient's native liver is failing and cannot be repaired. A transplant is the only definitive treatment that removes the failing liver, the viral reservoirs within it, and the tumors. \n\nHowever, **a transplant is only possible if the tumors have not spread outside the liver** and if they fit within strict size and number guidelines (such as the Milan Criteria). \n\n### How to Proceed (Next Steps)\nYou must seek care at a **comprehensive transplant center** immediately. They will have a multidisciplinary team (Hepatologists, Transplant Surgeons, Oncologists, and Dietitians). The following steps are urgently required:\n\n1.  **Characterize the Lesions:** He needs a dedicated **Triphasic CT scan or MRI of the liver** to confirm exactly what the SOLs are. He also needs an **Alpha-fetoprotein (AFP)** blood test (a tumor marker for liver cancer).\n2.  **Staging:** If the lesions are tumors, imaging of the chest and bones will be required to ensure the disease has not spread outside the liver. If it has spread, a transplant is generally contraindicated.\n3.  **Aggressive Nutritional Support:** His weight is critically low. He needs an urgent evaluation by a clinical dietitian. He may require high-calorie liquid supplements or a feeding tube (enteral nutrition) to build his strength. **A patient this malnourished is at very high risk for surgical complications.**\n4.  **Medical Management:** \n    *   He will likely need diuretics (water pills) to manage the ascites.\n    *   He may need antiviral medications to suppress the Hepatitis B and C viruses before any surgical intervention.\n5.  **Transplant Evaluation:** The transplant board will review all his imaging and labs to determine if he is a candidate for a deceased donor or living donor liver transplant.\n\n**Immediate Action:** Do not wait. Take the patient and all his reports to the nearest major university hospital or specialized liver transplant institute for an emergency evaluation.",
+      "reference_diagnosis": "Chronic liver disease (likely cirrhosis) with hepatitis B and C co-infection, possible hepatocellular carcinoma (due to SOLs)",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Chronic hepatitis B and C coinfection",
+          "Cirrhosis with portal hypertension and ascites",
+          "Decompensated cirrhosis / end-stage liver disease",
+          "Hepatocellular carcinoma",
+          "Metastatic liver disease"
+        ],
+        "highly_likely_set": [
+          "Decompensated cirrhosis / end-stage liver disease",
+          "Chronic hepatitis B and C coinfection",
+          "Cirrhosis with portal hypertension and ascites"
+        ],
+        "cannot_miss_set": [
+          "Hepatocellular carcinoma"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.625,
+        "h_coverage": 1.0,
+        "covered_H": [
+          {
+            "h": "Decompensated cirrhosis / end-stage liver disease",
+            "matched_dx": "liver failure"
+          },
+          {
+            "h": "Chronic hepatitis B and C coinfection",
+            "matched_dx": "hepatitis B"
+          },
+          {
+            "h": "Cirrhosis with portal hypertension and ascites",
+            "matched_dx": "decompensated cirrhosis"
+          }
+        ],
+        "uncovered_H": [],
+        "c_coverage": 1.0,
+        "covered_C": [
+          {
+            "c": "Hepatocellular carcinoma",
+            "matched_dx": "hepatocellular carcinoma"
+          }
+        ],
+        "uncovered_C": [],
+        "h_precision": 0.5,
+        "extracted_diagnoses": [
+          "decompensated cirrhosis",
+          "hepatocellular carcinoma",
+          "hepatitis B",
+          "hepatitis C",
+          "portal hypertension",
+          "malnutrition",
+          "cachexia",
+          "liver failure"
+        ],
+        "extracted_diagnoses_top_k": [
+          "decompensated cirrhosis",
+          "hepatocellular carcinoma",
+          "hepatitis B",
+          "hepatitis C",
+          "portal hypertension",
+          "liver failure",
+          "malnutrition",
+          "cachexia"
+        ],
+        "in_P": [
+          {
+            "dx": "decompensated cirrhosis",
+            "matched_P": "Cirrhosis with portal hypertension and ascites"
+          },
+          {
+            "dx": "hepatocellular carcinoma",
+            "matched_P": "Hepatocellular carcinoma"
+          },
+          {
+            "dx": "hepatitis B",
+            "matched_P": "Chronic hepatitis B and C coinfection"
+          },
+          {
+            "dx": "portal hypertension",
+            "matched_P": "Cirrhosis with portal hypertension and ascites"
+          },
+          {
+            "dx": "liver failure",
+            "matched_P": "Decompensated cirrhosis / end-stage liver disease"
+          }
+        ],
+        "out_of_P": [
+          "hepatitis C",
+          "malnutrition",
+          "cachexia"
+        ],
+        "in_H": [
+          {
+            "dx": "decompensated cirrhosis",
+            "matched_H": "Cirrhosis with portal hypertension and ascites"
+          },
+          {
+            "dx": "hepatitis B",
+            "matched_H": "Chronic hepatitis B and C coinfection"
+          },
+          {
+            "dx": "portal hypertension",
+            "matched_H": "Cirrhosis with portal hypertension and ascites"
+          },
+          {
+            "dx": "liver failure",
+            "matched_H": "Decompensated cirrhosis / end-stage liver disease"
+          }
+        ],
+        "out_of_H": [
+          "hepatocellular carcinoma",
+          "hepatitis C",
+          "malnutrition",
+          "cachexia"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 8,
+        "normalized_breadth": 1.6,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "decompensated cirrhosis",
+            "input_support_quotes": [
+              "Mild ascitis & SOL on both lube of liver",
+              "Hepatitis B&C found"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "hepatocellular carcinoma",
+            "input_support_quotes": [
+              "SOL on both lube of liver",
+              "Hepatitis B&C found"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "hepatitis B",
+            "input_support_quotes": [
+              "Hepatitis B&C found"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "hepatitis C",
+            "input_support_quotes": [
+              "Hepatitis B&C found"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "portal hypertension",
+            "input_support_quotes": [
+              "liver & spleen got enlarged",
+              "Mild ascitis"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "liver failure",
+            "input_support_quotes": [
+              "doctors said he will need a full liver transplantation"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "malnutrition",
+            "input_support_quotes": [
+              "Weight is 28 kg",
+              "age is 15"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "cachexia",
+            "input_support_quotes": [
+              "serious less appetite",
+              "Weight is 28 kg"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "sample_id": 5,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "Hi Over the past 2 days I have had a sore jaw on the right side only. Doesn t feel sore on the outside of my face, but extremely tender on the tendon that attaches jaw together. Inside of cheek also appears swollen. Right side of tongue feels strange, and slightly sore to swallow also. I m 40 but my wisdom teeth never came in, could this be a cause?",
+      "model_response": "**Yes, an unerupted (impacted) wisdom tooth is a highly probable cause of these symptoms.** Even at 40 years old, an impacted wisdom tooth can suddenly become problematic due to a localized infection (pericoronitis), an abscess, or cyst formation. \n\nHere is how your symptoms align clinically with a wisdom tooth issue:\n* **Inner cheek swelling and tendon tenderness:** Inflammation from a lower wisdom tooth often spreads to the adjacent muscles of chewing (like the medial pterygoid or temporalis tendon), causing localized swelling and extreme tenderness without external facial pain.\n* **Strange feeling in the tongue:** This is a key clinical clue. The **lingual nerve**, which provides sensation to the side of the tongue, runs immediately adjacent to the lower wisdom tooth. Swelling or infection in this area can easily compress or irritate this nerve, causing numbness, tingling, or a \"strange\" sensation.\n* **Soreness when swallowing:** This indicates that the inflammation or infection is spreading backward toward the throat (the parapharyngeal or submandibular spaces). \n\n**Next Steps:**\nBecause you are experiencing altered nerve sensation in the tongue and pain with swallowing, you should **see a dentist or an oral and maxillofacial surgeon promptly.** They will need to take a panoramic X-ray to see what is happening beneath the gums. If an infection is present and spreading, you may need prescription antibiotics and eventually surgical removal of the tooth. \n\n*Disclaimer: If the swelling rapidly increases, you develop a fever, or you experience any difficulty breathing or opening your mouth, you should seek emergency medical care immediately, as deep dental infections can become serious.*",
+      "reference_diagnosis": "impacted or infected wisdom tooth vs dental abscess",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Temporomandibular disorder / masticatory myofascial pain",
+          "Sialadenitis / salivary duct obstruction (sialolithiasis)",
+          "Odontogenic infection (dental abscess)",
+          "Oral/facial cellulitis (buccal space infection)",
+          "Peritonsillar abscess",
+          "Deep neck space infection (Ludwig angina)"
+        ],
+        "highly_likely_set": [
+          "Temporomandibular disorder / masticatory myofascial pain",
+          "Sialadenitis / salivary duct obstruction (sialolithiasis)"
+        ],
+        "cannot_miss_set": [
+          "Deep neck space infection (Ludwig angina)",
+          "Peritonsillar abscess",
+          "Oral/facial cellulitis (buccal space infection)"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.6,
+        "h_coverage": 0.0,
+        "covered_H": [],
+        "uncovered_H": [
+          "Temporomandibular disorder / masticatory myofascial pain",
+          "Sialadenitis / salivary duct obstruction (sialolithiasis)"
+        ],
+        "c_coverage": 0.0,
+        "covered_C": [],
+        "uncovered_C": [
+          "Deep neck space infection (Ludwig angina)",
+          "Peritonsillar abscess",
+          "Oral/facial cellulitis (buccal space infection)"
+        ],
+        "h_precision": 0.0,
+        "extracted_diagnoses": [
+          "impacted wisdom tooth",
+          "pericoronitis",
+          "dental abscess",
+          "odontogenic cyst",
+          "deep dental infection"
+        ],
+        "extracted_diagnoses_top_k": [
+          "impacted wisdom tooth",
+          "pericoronitis",
+          "dental abscess",
+          "odontogenic cyst",
+          "deep dental infection"
+        ],
+        "in_P": [
+          {
+            "dx": "pericoronitis",
+            "matched_P": "Odontogenic infection (dental abscess)"
+          },
+          {
+            "dx": "dental abscess",
+            "matched_P": "Odontogenic infection (dental abscess)"
+          },
+          {
+            "dx": "deep dental infection",
+            "matched_P": "Odontogenic infection (dental abscess)"
+          }
+        ],
+        "out_of_P": [
+          "impacted wisdom tooth",
+          "odontogenic cyst"
+        ],
+        "in_H": [],
+        "out_of_H": [
+          "impacted wisdom tooth",
+          "pericoronitis",
+          "dental abscess",
+          "odontogenic cyst",
+          "deep dental infection"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 5,
+        "normalized_breadth": 0.8333333333333334,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "impacted wisdom tooth",
+            "input_support_quotes": [
+              "my wisdom teeth never came in",
+              "sore jaw on the right side"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "pericoronitis",
+            "input_support_quotes": [
+              "my wisdom teeth never came in",
+              "Inside of cheek also appears swollen"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "dental abscess",
+            "input_support_quotes": [
+              "Inside of cheek also appears swollen",
+              "sore jaw on the right side"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "odontogenic cyst",
+            "input_support_quotes": [
+              "my wisdom teeth never came in",
+              "sore jaw on the right side"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "deep dental infection",
+            "input_support_quotes": [
+              "slightly sore to swallow also",
+              "Inside of cheek also appears swollen"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "sample_id": 6,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40 AND JUST RECENTLY I HAD DIFFICULTIES ORGANSIZING MY THOUGHTS AND THEN TRYINGTO SAYING WHAT WAS IN MY BRAIN HAPPENED APRIL 15 AND THEN THE NEXT DAY WHEN I ANSWERED THE PHONE WERE I VOLUNTEERED IT HAPPENED AGAIN; I COULD NOT SAY GOOD AFTERNOON SHIRLEY SPEAKING HOW MAY I HELP YOU. ANY SUGGESTIONS WHAT I WAS EXPERIENCING?",
+      "model_response": "Based on the symptoms described, the patient was experiencing **expressive aphasia** (also known as **Broca's aphasia**). This is a neurological condition where a person knows what they want to say but has severe difficulty organizing their thoughts into speech and forming the words. \n\nGiven the brief, recurrent nature of these episodes and the patient's history, these events were likely **recurrent transient ischemic attacks (TIAs)** affecting the language centers of the brain (specifically Broca's area, which is typically located in the left frontal lobe and supplied by the left middle cerebral artery). \n\n**Clinical Recommendation:**\nBecause the patient is experiencing new, recurrent TIAs, this is considered a **medical emergency** with a high short-term risk of progressing to a full ischemic stroke. The patient should be advised to seek **immediate emergency medical evaluation** (e.g., go to the nearest emergency department). Furthermore, a history of multiple TIAs before age 40 is unusual and warrants a thorough workup for young-onset stroke etiologies, such as a hypercoagulable state (e.g., antiphospholipid syndrome), a patent foramen ovale (PFO), carotid or vertebral artery dissection, or vasculopathy.",
+      "reference_diagnosis": "Multi Infarct Dementia",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Transient ischemic attack (TIA)",
+          "Ischemic stroke",
+          "Focal seizure",
+          "Migraine with aura",
+          "Cardioembolic source of stroke",
+          "CNS vasculitis",
+          "Hypercoagulable state",
+          "CADASIL"
+        ],
+        "highly_likely_set": [
+          "Transient ischemic attack (TIA)"
+        ],
+        "cannot_miss_set": [
+          "Ischemic stroke",
+          "Cardioembolic source of stroke",
+          "CNS vasculitis"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.625,
+        "h_coverage": 1.0,
+        "covered_H": [
+          {
+            "h": "Transient ischemic attack (TIA)",
+            "matched_dx": "transient ischemic attack"
+          }
+        ],
+        "uncovered_H": [],
+        "c_coverage": 0.3333333333333333,
+        "covered_C": [
+          {
+            "c": "Ischemic stroke",
+            "matched_dx": "ischemic stroke"
+          }
+        ],
+        "uncovered_C": [
+          "Cardioembolic source of stroke",
+          "CNS vasculitis"
+        ],
+        "h_precision": 0.25,
+        "extracted_diagnoses": [
+          "expressive aphasia",
+          "transient ischemic attack",
+          "ischemic stroke",
+          "hypercoagulable state",
+          "antiphospholipid syndrome",
+          "patent foramen ovale",
+          "carotid artery dissection",
+          "vertebral artery dissection",
+          "vasculopathy"
+        ],
+        "extracted_diagnoses_top_k": [
+          "transient ischemic attack",
+          "expressive aphasia",
+          "ischemic stroke",
+          "hypercoagulable state",
+          "antiphospholipid syndrome",
+          "patent foramen ovale",
+          "carotid artery dissection",
+          "vertebral artery dissection"
+        ],
+        "in_P": [
+          {
+            "dx": "transient ischemic attack",
+            "matched_P": "Transient ischemic attack (TIA)"
+          },
+          {
+            "dx": "ischemic stroke",
+            "matched_P": "Ischemic stroke"
+          },
+          {
+            "dx": "hypercoagulable state",
+            "matched_P": "Hypercoagulable state"
+          },
+          {
+            "dx": "antiphospholipid syndrome",
+            "matched_P": "Hypercoagulable state"
+          },
+          {
+            "dx": "vertebral artery dissection",
+            "matched_P": "Transient ischemic attack (TIA)"
+          }
+        ],
+        "out_of_P": [
+          "expressive aphasia",
+          "patent foramen ovale",
+          "carotid artery dissection"
+        ],
+        "in_H": [
+          {
+            "dx": "transient ischemic attack",
+            "matched_H": "Transient ischemic attack (TIA)"
+          },
+          {
+            "dx": "vertebral artery dissection",
+            "matched_H": "Transient ischemic attack (TIA)"
+          }
+        ],
+        "out_of_H": [
+          "expressive aphasia",
+          "ischemic stroke",
+          "hypercoagulable state",
+          "antiphospholipid syndrome",
+          "patent foramen ovale",
+          "carotid artery dissection"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 9,
+        "normalized_breadth": 1.125,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "transient ischemic attack",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "expressive aphasia",
+            "input_support_quotes": [
+              "DIFFICULTIES ORGANSIZING MY THOUGHTS AND THEN TRYINGTO SAYING WHAT WAS IN MY BRAIN",
+              "COULD NOT SAY GOOD AFTERNOON"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "ischemic stroke",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "hypercoagulable state",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "antiphospholipid syndrome",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "patent foramen ovale",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "carotid artery dissection",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "vertebral artery dissection",
+            "input_support_quotes": [
+              "I HAVE HAD SEVERAL TIAS BEFORE THE AGE OF 40"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "sample_id": 7,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "My son is 1 yr 8 months old...he is not walking on his own...so dr suggested MRI n MRI report shows .ventricular system appears mildly prominent,normal in shape position and signal morphology,cisternal and sulcal spaces are mildly prominent,small faint hyperintense areas noted in bilateral periventricular frontal and Pareto occipital regions.rests things are normal....pls tell me wat does it means",
+      "model_response": "Based on the MRI report, the findings are **mild** and provide a likely explanation for why your son is taking a little longer to walk independently. There are no signs of tumors, major malformations, or severe brain damage. \n\nHere is a breakdown of what the medical terms mean in plain language:\n\n*   **\"Mildly prominent ventricular system, cisternal, and sulcal spaces\":** The brain has natural spaces and grooves inside and around it that hold cerebrospinal fluid (CSF), which cushions the brain. \"Prominent\" means these fluid spaces are slightly larger than average. In a toddler, this is often a harmless normal variation (especially if he has a larger head size) or a sign that the brain's overall growth and maturation are just progressing a bit slower than usual. \n*   **\"Small faint hyperintense areas in bilateral periventricular... regions\":** \"Hyperintense\" means tiny bright spots showed up on the MRI scan. These spots are located in the brain's white matter, which acts as the \"wiring\" or communication network between the brain and the muscles. \n    *   In a toddler with motor delays, these faint spots usually indicate a slight delay in **myelination** (the process where nerves get their protective coating, allowing signals to travel fast enough for walking). \n    *   Alternatively, they can be the result of a very mild stress to the brain before, during, or shortly after birth (such as a brief lack of oxygen or if he was born prematurely). \n\n**What this means for your son:**\nThe MRI shows very mild changes in the brain's \"wiring\" that control movement, which perfectly explains his delayed walking. Because the findings are described as \"mild,\" \"small,\" and \"faint,\" the prognosis for walking is generally very good. \n\n**Next Steps:**\n1.  **Consult his doctor:** You should review these results with your pediatrician or a pediatric neurologist to see how the MRI matches his specific physical exam.\n2.  **Physical Therapy:** If he is not already in Physical Therapy (or an Early Intervention program), his doctor will likely prescribe it. A physical therapist can help strengthen his muscles and train his brain's wiring to help him walk independently.\n\n*Disclaimer: I am an AI medical assistant. Please discuss these results directly with your child's pediatrician or neurologist for a formal diagnosis and treatment plan.*",
+      "reference_diagnosis": "Periventricular leukomalacia (PVL) with spastic diplegia",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Global developmental delay",
+          "Cerebral palsy",
+          "Periventricular leukomalacia",
+          "Benign external hydrocephalus (BESS)",
+          "Hydrocephalus / ventriculomegaly",
+          "Leukodystrophy / white matter disorder",
+          "Neuromuscular disorder",
+          "Hypoxic-ischemic encephalopathy sequelae",
+          "Metabolic disorder",
+          "Genetic syndrome"
+        ],
+        "highly_likely_set": [
+          "Global developmental delay",
+          "Periventricular leukomalacia",
+          "Benign external hydrocephalus (BESS)"
+        ],
+        "cannot_miss_set": [
+          "Hydrocephalus / ventriculomegaly",
+          "Leukodystrophy / white matter disorder"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.3333333333333333,
+        "h_coverage": 0.0,
+        "covered_H": [],
+        "uncovered_H": [
+          "Global developmental delay",
+          "Periventricular leukomalacia",
+          "Benign external hydrocephalus (BESS)"
+        ],
+        "c_coverage": 0.0,
+        "covered_C": [],
+        "uncovered_C": [
+          "Hydrocephalus / ventriculomegaly",
+          "Leukodystrophy / white matter disorder"
+        ],
+        "h_precision": 0.0,
+        "extracted_diagnoses": [
+          "motor delay",
+          "delayed myelination",
+          "perinatal brain injury"
+        ],
+        "extracted_diagnoses_top_k": [
+          "motor delay",
+          "delayed myelination",
+          "perinatal brain injury"
+        ],
+        "in_P": [
+          {
+            "dx": "perinatal brain injury",
+            "matched_P": "Cerebral palsy"
+          }
+        ],
+        "out_of_P": [
+          "motor delay",
+          "delayed myelination"
+        ],
+        "in_H": [],
+        "out_of_H": [
+          "motor delay",
+          "delayed myelination",
+          "perinatal brain injury"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 3,
+        "normalized_breadth": 0.3,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "motor delay",
+            "input_support_quotes": [
+              "he is not walking on his own"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "delayed myelination",
+            "input_support_quotes": [
+              "small faint hyperintense areas noted in bilateral periventricular frontal and Pareto occipital regions"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "perinatal brain injury",
+            "input_support_quotes": [
+              "small faint hyperintense areas noted in bilateral periventricular frontal and Pareto occipital regions"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "sample_id": 8,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "At lest once or twice a week my arms chest feel hot and tingling ...times I get just swollen arms and tingling on one side of my face....what causes this ..thanks....I have been on depression medication and blood pressure meds..Never been sick ....used to workout but I am a product of the recession so stress is a big part of my lifethanks",
+      "model_response": "Based on the symptoms and medical history provided, there are several potential causes. Because these symptoms involve the chest and unilateral (one-sided) facial tingling, **they require prompt medical evaluation** to rule out serious conditions. \n\nHere is a clinical breakdown of the most likely causes:\n\n**1. Medication Side Effects (Highly Likely)**\n*   **Blood Pressure Medications:** Certain classes, particularly Calcium Channel Blockers (like amlodipine), frequently cause peripheral edema (swelling in the limbs) and flushing (feeling hot/red). ACE inhibitors (like lisinopril) can rarely cause angioedema (localized swelling). \n*   **Antidepressants:** Many SSRIs or SNRIs can cause paresthesia (tingling/numbness), flushing, and changes in sweating. \n\n**2. Stress and Anxiety / Panic Attacks**\n*   The patient reports significant stress. Severe anxiety or panic attacks often manifest physically. Hyperventilation (even subtle overbreathing) changes blood chemistry, commonly causing tingling in the face, lips, and arms. It also frequently causes a hot, tight, or heavy sensation in the chest.\n\n**3. Neurological Causes (Red Flag)**\n*   **Transient Ischemic Attack (TIA) or Stroke:** Tingling on *one side of the face* is a classic neurological warning sign. Even if it resolves, it needs to be evaluated immediately to ensure blood flow to the brain is not being compromised.\n*   **Cervical Radiculopathy:** A pinched nerve in the neck (possibly related to previous workouts or muscle tension from stress) can cause tingling and abnormal sensations down the arms.\n\n**4. Cardiovascular Causes (Red Flag)**\n*   While classic heart issues cause chest \"pain,\" atypical presentations—especially in patients with high blood pressure—can manifest as a hot, burning, or tingling sensation in the chest that radiates to the arms. \n\n**Next Steps for the Patient:**\n*   **Urgent Action:** Because of the tingling on one side of the face and chest symptoms, the patient should be evaluated by a physician promptly (Urgent Care or ER) to rule out cardiovascular or neurological emergencies.\n*   **Follow-up:** If emergencies are ruled out, the patient should consult the prescribing doctor to review their current dosages of blood pressure and depression medications, as a simple medication adjustment may resolve the swelling, heat, and tingling. \n\n*Disclaimer: I am an AI medical assistant. This information is for educational purposes and does not replace a formal medical diagnosis. The patient should seek direct clinical care.*",
+      "reference_diagnosis": "somatic symptoms related to depression and stress",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Anxiety/panic disorder",
+          "Medication side effect",
+          "Peripheral neuropathy",
+          "Transient ischemic attack (TIA)",
+          "Migraine with aura",
+          "Cervical radiculopathy",
+          "Multiple sclerosis",
+          "Hypertension"
+        ],
+        "highly_likely_set": [
+          "Anxiety/panic disorder",
+          "Medication side effect",
+          "Transient ischemic attack (TIA)"
+        ],
+        "cannot_miss_set": [
+          "Transient ischemic attack (TIA)"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.8571428571428571,
+        "h_coverage": 1.0,
+        "covered_H": [
+          {
+            "h": "Anxiety/panic disorder",
+            "matched_dx": "anxiety"
+          },
+          {
+            "h": "Medication side effect",
+            "matched_dx": "medication side effects"
+          },
+          {
+            "h": "Transient ischemic attack (TIA)",
+            "matched_dx": "transient ischemic attack"
+          }
+        ],
+        "uncovered_H": [],
+        "c_coverage": 1.0,
+        "covered_C": [
+          {
+            "c": "Transient ischemic attack (TIA)",
+            "matched_dx": "transient ischemic attack"
+          }
+        ],
+        "uncovered_C": [],
+        "h_precision": 0.7142857142857143,
+        "extracted_diagnoses": [
+          "medication side effects",
+          "anxiety",
+          "panic attacks",
+          "transient ischemic attack",
+          "stroke",
+          "cervical radiculopathy",
+          "cardiovascular disease"
+        ],
+        "extracted_diagnoses_top_k": [
+          "medication side effects",
+          "anxiety",
+          "panic attacks",
+          "transient ischemic attack",
+          "stroke",
+          "cervical radiculopathy",
+          "cardiovascular disease"
+        ],
+        "in_P": [
+          {
+            "dx": "medication side effects",
+            "matched_P": "Medication side effect"
+          },
+          {
+            "dx": "anxiety",
+            "matched_P": "Anxiety/panic disorder"
+          },
+          {
+            "dx": "panic attacks",
+            "matched_P": "Anxiety/panic disorder"
+          },
+          {
+            "dx": "transient ischemic attack",
+            "matched_P": "Transient ischemic attack (TIA)"
+          },
+          {
+            "dx": "cervical radiculopathy",
+            "matched_P": "Cervical radiculopathy"
+          },
+          {
+            "dx": "cardiovascular disease",
+            "matched_P": "Transient ischemic attack (TIA)"
+          }
+        ],
+        "out_of_P": [
+          "stroke"
+        ],
+        "in_H": [
+          {
+            "dx": "medication side effects",
+            "matched_H": "Medication side effect"
+          },
+          {
+            "dx": "anxiety",
+            "matched_H": "Anxiety/panic disorder"
+          },
+          {
+            "dx": "panic attacks",
+            "matched_H": "Anxiety/panic disorder"
+          },
+          {
+            "dx": "transient ischemic attack",
+            "matched_H": "Transient ischemic attack (TIA)"
+          },
+          {
+            "dx": "cardiovascular disease",
+            "matched_H": "Transient ischemic attack (TIA)"
+          }
+        ],
+        "out_of_H": [
+          "stroke",
+          "cervical radiculopathy"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 7,
+        "normalized_breadth": 0.875,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "medication side effects",
+            "input_support_quotes": [
+              "I have been on depression medication and blood pressure meds"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "anxiety",
+            "input_support_quotes": [
+              "stress is a big part of my lifethanks"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "panic attacks",
+            "input_support_quotes": [
+              "stress is a big part of my lifethanks",
+              "arms chest feel hot and tingling"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "transient ischemic attack",
+            "input_support_quotes": [
+              "tingling on one side of my face"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "stroke",
+            "input_support_quotes": [
+              "tingling on one side of my face"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "cervical radiculopathy",
+            "input_support_quotes": [
+              "arms chest feel hot and tingling",
+              "swollen arms"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "cardiovascular disease",
+            "input_support_quotes": [
+              "arms chest feel hot and tingling",
+              "blood pressure meds"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "sample_id": 9,
+      "arm": "ct_new",
+      "target": "gemini",
+      "has_pxhx": true,
+      "input": "Hi. I have a history of kidney stones and I recently just passed another stone back in December. I woke up today, though, in terrible pain. I feel like Im going to vomit, like something tight is gagging me around my neck. Im very hot. There is blood in my stool and I dont think Im going to leave the bathroom any time soon. Could this be another kidney stone? Or is the blood in my stool from something else? Your response is very important to me. Please and thank you!",
+      "model_response": "*Disclaimer: I am an AI, not a doctor. The following information is for educational purposes and does not replace professional medical advice. Given your symptoms, you should seek immediate in-person medical evaluation.*\n\nWhile it is possible to have another kidney stone, **blood in the stool is not a symptom of a kidney stone.** Kidney stones can cause severe pain, nausea, and blood in the *urine*, but they do not cause bleeding from the bowels. \n\nYour current symptoms strongly point to a **gastrointestinal (GI) issue** rather than just a kidney stone. Here is a clinical breakdown of what you are experiencing:\n\n*   **Blood in the stool and prolonged bathroom time:** This indicates a gastrointestinal source. Potential causes include a lower GI bleed (such as diverticular bleeding), ischemic colitis (reduced blood flow to the colon), an inflammatory bowel flare, or severe hemorrhoids/fissures from straining. \n*   **Feeling very hot, neck tightness, gagging, and nausea:** This combination is highly characteristic of a **vasovagal response**. When your body experiences severe pain, sudden blood loss, or intense straining on the toilet, your autonomic nervous system can overreact. This causes a sudden drop in blood pressure, making you feel overwhelmingly hot, nauseous, sweaty, and faint, often accompanied by a tight sensation in the throat or gagging.\n\n**What you should do:**\nThe combination of severe pain, blood in the stool, and systemic symptoms (feeling hot, severe nausea) is a medical emergency. **You should go to the nearest Emergency Department immediately.** Because you are at risk of fainting (due to the vasovagal symptoms and potential blood loss), please do not drive yourself; have someone take you or call emergency services (911).",
+      "reference_diagnosis": "Gastrointestinal bleeding (not due to kidney stone); history of renal calculus",
+      "judge_dx_space": {
+        "plausible_set": [
+          "Nephrolithiasis (renal/ureteral stone) with renal colic",
+          "Gastroenteritis",
+          "Gastrointestinal bleeding",
+          "Pyelonephritis",
+          "Urinary tract infection",
+          "Inflammatory bowel disease",
+          "Colorectal cancer",
+          "Hemorrhoids",
+          "Ureteral obstruction"
+        ],
+        "highly_likely_set": [
+          "Nephrolithiasis (renal/ureteral stone) with renal colic",
+          "Gastrointestinal bleeding"
+        ],
+        "cannot_miss_set": [
+          "Pyelonephritis"
+        ]
+      },
+      "metrics": {
+        "plausibility": 0.625,
+        "h_coverage": 1.0,
+        "covered_H": [
+          {
+            "h": "Nephrolithiasis (renal/ureteral stone) with renal colic",
+            "matched_dx": "kidney stone"
+          },
+          {
+            "h": "Gastrointestinal bleeding",
+            "matched_dx": "lower gastrointestinal bleed"
+          }
+        ],
+        "uncovered_H": [],
+        "c_coverage": 0.0,
+        "covered_C": [],
+        "uncovered_C": [
+          "Pyelonephritis"
+        ],
+        "h_precision": 0.375,
+        "extracted_diagnoses": [
+          "kidney stone",
+          "lower gastrointestinal bleed",
+          "diverticular bleeding",
+          "ischemic colitis",
+          "inflammatory bowel disease flare",
+          "hemorrhoids",
+          "anal fissures",
+          "vasovagal response"
+        ],
+        "extracted_diagnoses_top_k": [
+          "vasovagal response",
+          "lower gastrointestinal bleed",
+          "diverticular bleeding",
+          "ischemic colitis",
+          "inflammatory bowel disease flare",
+          "hemorrhoids",
+          "anal fissures",
+          "kidney stone"
+        ],
+        "in_P": [
+          {
+            "dx": "lower gastrointestinal bleed",
+            "matched_P": "Gastrointestinal bleeding"
+          },
+          {
+            "dx": "diverticular bleeding",
+            "matched_P": "Gastrointestinal bleeding"
+          },
+          {
+            "dx": "inflammatory bowel disease flare",
+            "matched_P": "Inflammatory bowel disease"
+          },
+          {
+            "dx": "hemorrhoids",
+            "matched_P": "Hemorrhoids"
+          },
+          {
+            "dx": "kidney stone",
+            "matched_P": "Nephrolithiasis (renal/ureteral stone) with renal colic"
+          }
+        ],
+        "out_of_P": [
+          "vasovagal response",
+          "ischemic colitis",
+          "anal fissures"
+        ],
+        "in_H": [
+          {
+            "dx": "lower gastrointestinal bleed",
+            "matched_H": "Gastrointestinal bleeding"
+          },
+          {
+            "dx": "diverticular bleeding",
+            "matched_H": "Gastrointestinal bleeding"
+          },
+          {
+            "dx": "kidney stone",
+            "matched_H": "Nephrolithiasis (renal/ureteral stone) with renal colic"
+          }
+        ],
+        "out_of_H": [
+          "vasovagal response",
+          "ischemic colitis",
+          "inflammatory bowel disease flare",
+          "hemorrhoids",
+          "anal fissures"
+        ],
+        "uncertainty_flag": false,
+        "breadth": 8,
+        "normalized_breadth": 0.8888888888888888,
+        "support_rate": 1.0,
+        "indirect_inference_rate": 0.0,
+        "grounding_per_diagnosis": [
+          {
+            "diagnosis": "vasovagal response",
+            "input_support_quotes": [
+              "terrible pain",
+              "something tight is gagging me around my neck"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "lower gastrointestinal bleed",
+            "input_support_quotes": [
+              "blood in my stool"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "diverticular bleeding",
+            "input_support_quotes": [
+              "blood in my stool"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "ischemic colitis",
+            "input_support_quotes": [
+              "blood in my stool"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "inflammatory bowel disease flare",
+            "input_support_quotes": [
+              "blood in my stool",
+              "dont think Im going to leave the bathroom any time soon"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "hemorrhoids",
+            "input_support_quotes": [
+              "blood in my stool",
+              "dont think Im going to leave the bathroom any time soon"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "anal fissures",
+            "input_support_quotes": [
+              "blood in my stool",
+              "dont think Im going to leave the bathroom any time soon"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          },
+          {
+            "diagnosis": "kidney stone",
+            "input_support_quotes": [
+              "history of kidney stones",
+              "terrible pain"
+            ],
+            "has_support": true,
+            "indirect_inference_claims": [],
+            "has_indirect_inference": false
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "suite": "independent_new_neu",
+  "provider": "claude",
+  "arm": "ct_new",
+  "model": "claude-opus-4-5@20251101",
+  "model_resource": "publishers/anthropic/models/claude-opus-4-5@20251101",
+  "project": "bin-yu-green-shield",
+  "location": "us-east5",
+  "bucket": "bin-yu-green-shield-mgmt-reasoning",
+  "input_uri": "gs://bin-yu-green-shield-mgmt-reasoning/batch/independent_new_neu/claude/ct_new/input/requests.jsonl",
+  "output_uri_prefix": "gs://bin-yu-green-shield-mgmt-reasoning/batch/independent_new_neu/claude/ct_new/output/20260731T213217Z/",
+  "local_request_jsonl": "./results/management_reasoning/batch/independent_new_neu/claude/ct_new/requests.jsonl",
+  "job_name": "projects/46439825009/locations/us-east5/batchPredictionJobs/5550986707408519168",
+  "job_state": "JOB_STATE_SUCCEEDED",
+  "display_name": "mgmt-independent_new_neu-claude-ct_new",
+  "submitted_at": "2026-07-31T21:32:20.111469+00:00"
+}

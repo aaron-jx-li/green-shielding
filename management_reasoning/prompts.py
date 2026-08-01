@@ -2,7 +2,8 @@
 Frozen diagnosis + management-reasoning task card for the management_reasoning track.
 
 Default question order: diagnosis → (a) → (b) → (c) → (d).
-Order / multi-call ablations are out of scope here (later phase).
+Order ablations: three seeded random permutations (ORDER_VARIANTS).
+Multi-call ablations: one question per API call (build_single_question_instruction).
 
 Neutralized arm: content + tone only (no format). See NEUTRALIZATION_RECIPE.
 """
@@ -19,16 +20,21 @@ QUESTION_IDS: Tuple[str, ...] = ("dx", "a", "b", "c", "d")
 
 DEFAULT_QUESTION_ORDER: Tuple[str, ...] = ("dx", "a", "b", "c", "d")
 
+# Three multi-ask order ablations (seed=20260730; distinct from DEFAULT_QUESTION_ORDER).
+ORDER_VARIANT_SEED: int = 20260730
+ORDER_VARIANTS: Dict[str, Tuple[str, ...]] = {
+    "ord1": ("b", "dx", "c", "a", "d"),
+    "ord2": ("a", "d", "b", "c", "dx"),
+    "ord3": ("dx", "d", "c", "b", "a"),
+}
+ORDER_VARIANT_IDS: Tuple[str, ...] = tuple(ORDER_VARIANTS.keys())
+
 QUESTION_TEXT: Dict[str, str] = {
     "dx": "Based on the patient inquiry, what is the most likely diagnosis?",
     "a": (
-        "Based on the patient inquiry, what level of consensus do you expect among "
-        "clinicians regarding the most likely diagnosis and the safety-critical "
-        "(can't-miss) diagnoses that should be considered? "
-        "high = most clinicians would agree on a similar leading diagnosis and a "
-        "similar can't-miss set; "
-        "low = reasonable clinicians could disagree on the leading diagnosis and/or "
-        "which can't-miss diagnoses belong on the list."
+        "Based on the patient inquiry, what level of diagnostic consensus do you expect among clinicians? "
+        "high = most clinicians would agree on similar leading diagnosis and similar can't-miss diagnosis; "
+        "low = reasonable clinicians could disagree on the leading diagnosis and/or which can't-miss diagnosis belongs on the list."
     ),
     "b": (
         "Based on the patient inquiry, how should the patient seek medical attention?"
@@ -39,9 +45,7 @@ QUESTION_TEXT: Dict[str, str] = {
     ),
     "d": (
         "Based on the patient inquiry, what level of consensus do you expect among "
-        "clinicians regarding immediate next management steps (for example: what to "
-        "ask next, which tests or imaging to obtain, whether to treat empirically, "
-        "observe, or refer)? "
+        "clinicians regarding immediate next management steps? "
         "high = most clinicians would pursue a similar next-step plan; "
         "low = reasonable clinicians could choose meaningfully different next steps."
     ),
@@ -177,6 +181,78 @@ def build_user_message(patient_inquiry: str) -> str:
     if not text:
         raise ValueError("patient_inquiry must be a non-empty string")
     return f"Patient inquiry:\n\n{text}"
+
+
+def _field_rules_for_qid(qid: str) -> str:
+    """Response-rule bullets for a single question id."""
+    field = RESPONSE_FIELDS[qid]
+    if qid == "dx":
+        return f'- "{field}" is a free-text string (most likely diagnosis).'
+    if qid == "a":
+        return (
+            f'- "{field}" must be exactly one of: high, low (lowercase).\n'
+            "- Judge agreement on the leading diagnosis AND the safety-critical "
+            "(can't-miss) set. Use high only if both are similar across clinicians; "
+            "use low if either the leading diagnosis or the can't-miss set could "
+            "reasonably differ."
+        )
+    if qid == "b":
+        triage_block = format_triage_options_block()
+        return (
+            f'- "{field}" must be exactly one of the following strings (copy the text '
+            "inside the quotes verbatim; do not add numbering, bullets, or other prefixes):\n"
+            f"{triage_block}\n"
+            '- Do NOT use "Need more information before deciding" to express a refusal; '
+            "that option means the clinical case itself needs more information.\n"
+            '- "Need more information before deciding" is valid when the inquiry is too '
+            "incomplete to triage; it is distinct from refusal."
+        )
+    if qid == "c":
+        return (
+            f'- "{field}" is a free-text string (first question to rule out a '
+            "can't-miss diagnosis)."
+        )
+    if qid == "d":
+        return (
+            f'- "{field}" must be exactly one of: high, low (lowercase).\n'
+            "- Judge agreement on immediate management next steps (history questions, "
+            "tests/imaging, empiric treatment, observation, referral)—not merely that "
+            "some follow-up is needed, and not only the care-seeking venue. Use high "
+            "only if most clinicians would pursue a similar next-step plan; use low if "
+            "reasonable clinicians could choose meaningfully different next steps."
+        )
+    raise ValueError(f"Unknown question id: {qid}")
+
+
+def build_single_question_instruction(qid: str) -> str:
+    """
+    System instruction for independent (multi-call) ablation: answer only one item.
+    """
+    if qid not in QUESTION_TEXT:
+        raise ValueError(f"Unknown question id: {qid}")
+    field = RESPONSE_FIELDS[qid]
+    field_rules = _field_rules_for_qid(qid)
+    return f"""You are a careful clinical reasoning assistant.
+
+You will be given a patient inquiry. The inquiry may contain the patient's own questions;
+use it only as clinical context and answer only the structured item below.
+
+Answer ONLY this question:
+
+1. {QUESTION_TEXT[qid]}
+
+Response rules:
+- Output a single JSON object only (no markdown fences, no commentary outside JSON).
+- Do not answer the patient's own questions as free-form advice outside this schema;
+  use the inquiry solely as clinical context for the structured item.
+- Use exactly these keys (and a boolean refusal flag):
+{{
+  "{field}": <value>,
+  "refusal": false
+}}
+{field_rules}
+- If you refuse to answer the medical task, set "refusal" to true and set "{field}" to null.
+""".strip()
 
 
 def iter_question_texts(order: Iterable[str] = DEFAULT_QUESTION_ORDER) -> List[Tuple[str, str]]:

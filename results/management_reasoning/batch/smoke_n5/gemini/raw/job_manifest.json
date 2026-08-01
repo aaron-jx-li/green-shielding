@@ -1,0 +1,17 @@
+{
+  "suite": "smoke_n5",
+  "provider": "gemini",
+  "arm": "raw",
+  "model": "gemini-3.1-pro-preview",
+  "model_resource": "gemini-3.1-pro-preview",
+  "project": "bin-yu-green-shield",
+  "location": "global",
+  "bucket": "bin-yu-green-shield-mgmt-reasoning",
+  "input_uri": "gs://bin-yu-green-shield-mgmt-reasoning/batch/smoke_n5/gemini/raw/input/requests.jsonl",
+  "output_uri_prefix": "gs://bin-yu-green-shield-mgmt-reasoning/batch/smoke_n5/gemini/raw/output/",
+  "local_request_jsonl": "./results/management_reasoning/batch/smoke_n5/gemini/raw/requests.jsonl",
+  "job_name": "projects/46439825009/locations/global/batchPredictionJobs/5666923336609824768",
+  "job_state": "JOB_STATE_SUCCEEDED",
+  "display_name": "mgmt-smoke_n5-gemini-raw",
+  "submitted_at": "2026-07-31T00:19:35.284102+00:00"
+}

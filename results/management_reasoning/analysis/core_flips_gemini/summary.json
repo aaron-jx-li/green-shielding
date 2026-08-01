@@ -1,0 +1,81 @@
+{
+  "model": "gemini",
+  "diag_cores": {
+    "ra_ft": 270,
+    "paper_ge2": 353,
+    "paper_ge3": 179,
+    "all_ge3": 300
+  },
+  "acuity_cores": {
+    "ra_ft": 121,
+    "paper_ge2": 172,
+    "paper_ge3": 58,
+    "all_ge3": 137
+  },
+  "shortlists": {
+    "diag_ra_ft": 270,
+    "diag_ra_ft_high_to_low": 226,
+    "diag_paper_ge3": 179,
+    "diag_paper_ge3_high_to_low": 158,
+    "acuity_ra_ft": 121,
+    "acuity_ra_ft_same_day_to_ed": 37,
+    "acuity_paper_ge3": 58,
+    "annotation_pool": 262
+  },
+  "ct_survival": [
+    {
+      "model": "gemini",
+      "track": "diagnostic_consensus",
+      "core": "ra_ft",
+      "ct_arm": "ct_old",
+      "n_core": 270,
+      "n_also_flip_under_ct": 148,
+      "pct_core_survives_ct": 54.81
+    },
+    {
+      "model": "gemini",
+      "track": "diagnostic_consensus",
+      "core": "ra_ft",
+      "ct_arm": "ct_new",
+      "n_core": 270,
+      "n_also_flip_under_ct": 153,
+      "pct_core_survives_ct": 56.67
+    },
+    {
+      "model": "gemini",
+      "track": "diagnostic_consensus",
+      "core": "ra_ft",
+      "ct_arm": "ct_old_and_ct_new",
+      "n_core": 270,
+      "n_also_flip_under_ct": 114,
+      "pct_core_survives_ct": 42.22
+    },
+    {
+      "model": "gemini",
+      "track": "acuity_gt1",
+      "core": "ra_ft",
+      "ct_arm": "ct_old",
+      "n_core": 121,
+      "n_also_flip_under_ct": 57,
+      "pct_core_survives_ct": 47.11
+    },
+    {
+      "model": "gemini",
+      "track": "acuity_gt1",
+      "core": "ra_ft",
+      "ct_arm": "ct_new",
+      "n_core": 121,
+      "n_also_flip_under_ct": 59,
+      "pct_core_survives_ct": 48.76
+    },
+    {
+      "model": "gemini",
+      "track": "acuity_gt1",
+      "core": "ra_ft",
+      "ct_arm": "ct_old_and_ct_new",
+      "n_core": 121,
+      "n_also_flip_under_ct": 42,
+      "pct_core_survives_ct": 34.71
+    }
+  ]
+}

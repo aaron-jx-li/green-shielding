@@ -1,0 +1,107 @@
+model,arm,from,to,from_short,to_short,delta,abs_delta,direction,n,n_ordinal_pairs,pct_of_ordinal
+claude,format_tone,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,135,2642,5.11
+claude,format_tone,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,31,2642,1.173
+claude,format_tone,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,20,2642,0.757
+claude,format_tone,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,7,2642,0.265
+claude,format_tone,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,2,2642,0.076
+claude,format_tone,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,1,2642,0.038
+claude,format_tone,Go to urgent care,Call 911 / Emergency Services,UC,911,-2,2,down,1,2642,0.038
+claude,format_tone,Call 911 / Emergency Services,Seek same-day in-person care,911,Same-day,3,3,up,1,2642,0.038
+claude,content_format,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,94,2661,3.533
+claude,content_format,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,19,2661,0.714
+claude,content_format,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,8,2661,0.301
+claude,content_format,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,2,2661,0.075
+claude,content_format,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,2,2661,0.075
+claude,content_format,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,2,2661,0.075
+claude,content_format,Self-care at home,Go to urgent care,Home,UC,-3,3,down,1,2661,0.038
+claude,remove_all,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,136,2644,5.144
+claude,remove_all,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,35,2644,1.324
+claude,remove_all,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,24,2644,0.908
+claude,remove_all,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,3,2644,0.113
+claude,remove_all,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,2,2644,0.076
+claude,remove_all,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,2,2644,0.076
+claude,remove_all,Seek same-day in-person care,Call 911 / Emergency Services,Same-day,911,-3,3,down,1,2644,0.038
+claude,remove_all,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,1,2644,0.038
+claude,remove_all,Seek same-day in-person care,Self-care at home,Same-day,Home,2,2,up,1,2644,0.038
+claude,ct_old,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,54,2664,2.027
+claude,ct_old,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,33,2664,1.239
+claude,ct_old,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,3,2664,0.113
+claude,ct_old,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,2,2664,0.075
+claude,ct_old,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,2,2664,0.075
+claude,ct_old,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,1,2664,0.038
+claude,ct_old,Seek same-day in-person care,Call 911 / Emergency Services,Same-day,911,-3,3,down,1,2664,0.038
+claude,ct_old,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,1,2664,0.038
+claude,ct_new,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,56,2656,2.108
+claude,ct_new,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,37,2656,1.393
+claude,ct_new,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,2,2656,0.075
+claude,ct_new,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,1,2656,0.038
+claude,ct_new,Seek same-day in-person care,Call 911 / Emergency Services,Same-day,911,-3,3,down,1,2656,0.038
+claude,ct_new,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,1,2656,0.038
+claude,ct_new,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,1,2656,0.038
+claude,ct_new,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,1,2656,0.038
+claude,ct_new,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,1,2656,0.038
+gemini,format_tone,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,57,2662,2.141
+gemini,format_tone,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,37,2662,1.39
+gemini,format_tone,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,31,2662,1.165
+gemini,format_tone,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,30,2662,1.127
+gemini,format_tone,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,7,2662,0.263
+gemini,format_tone,Call 911 / Emergency Services,Schedule non-urgent medical appointment,911,Non-urgent,4,4,up,6,2662,0.225
+gemini,format_tone,Self-care at home,Go to the emergency department now,Home,ED,-4,4,down,4,2662,0.15
+gemini,format_tone,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,4,2662,0.15
+gemini,format_tone,Seek same-day in-person care,Self-care at home,Same-day,Home,2,2,up,4,2662,0.15
+gemini,format_tone,Self-care at home,Call 911 / Emergency Services,Home,911,-5,5,down,3,2662,0.113
+gemini,format_tone,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,3,2662,0.113
+gemini,format_tone,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,3,2662,0.113
+gemini,format_tone,Call 911 / Emergency Services,Go to urgent care,911,UC,2,2,up,1,2662,0.038
+gemini,content_format,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,46,2671,1.722
+gemini,content_format,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,41,2671,1.535
+gemini,content_format,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,24,2671,0.899
+gemini,content_format,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,20,2671,0.749
+gemini,content_format,Seek same-day in-person care,Self-care at home,Same-day,Home,2,2,up,7,2671,0.262
+gemini,content_format,Call 911 / Emergency Services,Schedule non-urgent medical appointment,911,Non-urgent,4,4,up,4,2671,0.15
+gemini,content_format,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,3,2671,0.112
+gemini,content_format,Self-care at home,Call 911 / Emergency Services,Home,911,-5,5,down,2,2671,0.075
+gemini,content_format,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,2,2671,0.075
+gemini,content_format,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,2,2671,0.075
+gemini,content_format,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,2,2671,0.075
+gemini,content_format,Self-care at home,Go to the emergency department now,Home,ED,-4,4,down,1,2671,0.037
+gemini,remove_all,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,61,2656,2.297
+gemini,remove_all,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,46,2656,1.732
+gemini,remove_all,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,31,2656,1.167
+gemini,remove_all,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,29,2656,1.092
+gemini,remove_all,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,10,2656,0.377
+gemini,remove_all,Seek same-day in-person care,Self-care at home,Same-day,Home,2,2,up,9,2656,0.339
+gemini,remove_all,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,5,2656,0.188
+gemini,remove_all,Self-care at home,Call 911 / Emergency Services,Home,911,-5,5,down,4,2656,0.151
+gemini,remove_all,Self-care at home,Go to the emergency department now,Home,ED,-4,4,down,4,2656,0.151
+gemini,remove_all,Call 911 / Emergency Services,Schedule non-urgent medical appointment,911,Non-urgent,4,4,up,4,2656,0.151
+gemini,remove_all,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,3,2656,0.113
+gemini,remove_all,Call 911 / Emergency Services,Seek same-day in-person care,911,Same-day,3,3,up,2,2656,0.075
+gemini,remove_all,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,1,2656,0.038
+gemini,remove_all,Go to the emergency department now,Self-care at home,ED,Home,4,4,up,1,2656,0.038
+gemini,ct_old,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,58,2671,2.171
+gemini,ct_old,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,31,2671,1.161
+gemini,ct_old,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,22,2671,0.824
+gemini,ct_old,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,17,2671,0.636
+gemini,ct_old,Seek same-day in-person care,Self-care at home,Same-day,Home,2,2,up,6,2671,0.225
+gemini,ct_old,Call 911 / Emergency Services,Schedule non-urgent medical appointment,911,Non-urgent,4,4,up,5,2671,0.187
+gemini,ct_old,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,4,2671,0.15
+gemini,ct_old,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,3,2671,0.112
+gemini,ct_old,Self-care at home,Go to the emergency department now,Home,ED,-4,4,down,1,2671,0.037
+gemini,ct_old,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,1,2671,0.037
+gemini,ct_old,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,1,2671,0.037
+gemini,ct_old,Call 911 / Emergency Services,Seek same-day in-person care,911,Same-day,3,3,up,1,2671,0.037
+gemini,ct_old,Go to urgent care,Self-care at home,UC,Home,3,3,up,1,2671,0.037
+gemini,ct_old,Call 911 / Emergency Services,Self-care at home,911,Home,5,5,up,1,2671,0.037
+gemini,ct_new,Seek same-day in-person care,Go to the emergency department now,Same-day,ED,-2,2,down,44,2660,1.654
+gemini,ct_new,Go to the emergency department now,Seek same-day in-person care,ED,Same-day,2,2,up,31,2660,1.165
+gemini,ct_new,Go to the emergency department now,Schedule non-urgent medical appointment,ED,Non-urgent,3,3,up,27,2660,1.015
+gemini,ct_new,Schedule non-urgent medical appointment,Go to the emergency department now,Non-urgent,ED,-3,3,down,15,2660,0.564
+gemini,ct_new,Call 911 / Emergency Services,Schedule non-urgent medical appointment,911,Non-urgent,4,4,up,5,2660,0.188
+gemini,ct_new,Schedule non-urgent medical appointment,Call 911 / Emergency Services,Non-urgent,911,-4,4,down,3,2660,0.113
+gemini,ct_new,Seek same-day in-person care,Self-care at home,Same-day,Home,2,2,up,3,2660,0.113
+gemini,ct_new,Self-care at home,Call 911 / Emergency Services,Home,911,-5,5,down,2,2660,0.075
+gemini,ct_new,Self-care at home,Seek same-day in-person care,Home,Same-day,-2,2,down,2,2660,0.075
+gemini,ct_new,Self-care at home,Go to the emergency department now,Home,ED,-4,4,down,1,2660,0.038
+gemini,ct_new,Schedule non-urgent medical appointment,Go to urgent care,Non-urgent,UC,-2,2,down,1,2660,0.038
+gemini,ct_new,Go to urgent care,Schedule non-urgent medical appointment,UC,Non-urgent,2,2,up,1,2660,0.038

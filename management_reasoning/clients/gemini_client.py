@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from management_reasoning.clients.vertex import make_vertex_client
 from management_reasoning.schema import RESPONSE_JSON_SCHEMA
+
+GenerateResult = Tuple[str, Dict[str, Any]]
 
 
 def _extract_text(resp: Any) -> str:
@@ -20,6 +22,30 @@ def _extract_text(resp: Any) -> str:
     return (text or "").strip()
 
 
+def _extract_usage(resp: Any) -> Dict[str, Any]:
+    um = getattr(resp, "usage_metadata", None)
+    if um is None:
+        return {}
+    keys = (
+        "prompt_token_count",
+        "candidates_token_count",
+        "thoughts_token_count",
+        "total_token_count",
+        "cached_content_token_count",
+        "tool_use_prompt_token_count",
+    )
+    usage: Dict[str, Any] = {}
+    for k in keys:
+        v = getattr(um, k, None)
+        if v is not None:
+            usage[k] = int(v)
+    # Billed output ≈ candidates + thoughts (Google prices thinking as output).
+    cand = usage.get("candidates_token_count") or 0
+    thoughts = usage.get("thoughts_token_count") or 0
+    usage["billed_output_token_count"] = cand + thoughts
+    return usage
+
+
 def _generate_once(
     client: Any,
     model: str,
@@ -27,7 +53,7 @@ def _generate_once(
     user: str,
     *,
     use_json_schema: bool,
-) -> str:
+) -> GenerateResult:
     from google.genai import types
 
     contents = [
@@ -64,7 +90,7 @@ def _generate_once(
                 f"Vertex Gemini generate failed for model={model}: {first_err}"
             ) from first_err
 
-    return _extract_text(resp)
+    return _extract_text(resp), _extract_usage(resp)
 
 
 def generate(
@@ -76,8 +102,8 @@ def generate(
     project: Optional[str] = None,
     location: Optional[str] = None,
     use_json_schema: bool = True,
-) -> str:
-    """Call Vertex Gemini with system + user turns (sync)."""
+) -> GenerateResult:
+    """Call Vertex Gemini with system + user turns (sync). Returns (text, usage)."""
     client = client or make_vertex_client(project=project, location=location)
     return _generate_once(
         client, model, system, user, use_json_schema=use_json_schema
@@ -93,10 +119,10 @@ async def generate_async(
     project: Optional[str] = None,
     location: Optional[str] = None,
     use_json_schema: bool = True,
-) -> str:
+) -> GenerateResult:
     """
     Async wrapper: runs sync Vertex generate in a worker thread so many
-    calls can overlap under an asyncio semaphore.
+    calls can overlap under an asyncio semaphore. Returns (text, usage).
     """
     client = client or make_vertex_client(project=project, location=location)
     return await asyncio.to_thread(

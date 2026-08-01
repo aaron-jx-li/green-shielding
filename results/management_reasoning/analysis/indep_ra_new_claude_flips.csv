@@ -1,0 +1,11 @@
+ablation,field,n_paired,n_flip,pct_flip,n_high_to_low,pct_high_to_low,n_low_to_high,pct_low_to_high,n_ordinal,n_changed,pct_changed,mean_delta,mean_abs_delta,n_nmi,pct_nmi
+ra_new,diagnostic_consensus,2516,548,21.7806,256,10.1749,292,11.6057,0,0,,,,0,0.0
+ra_new,next_steps_consensus,2437,697,28.6007,400,16.4136,297,12.1871,0,0,,,,0,0.0
+ra_new,diagnosis,2676,2501,93.4604,0,0.0,0,0.0,0,0,,,,0,0.0
+ra_new,cant_miss_ruling_out_question,2578,2571,99.7285,0,0.0,0,0.0,0,0,,,,0,0.0
+ra_new,care_seeking,2660,645,24.2481,0,0.0,0,0.0,2638,624,23.6543,-0.1027,0.3165,22,0.8271
+ord_mean,diagnostic_consensus,,,nan,,,,,,,,,,,
+ord_mean,next_steps_consensus,,,nan,,,,,,,,,,,
+ord_mean,diagnosis,,,nan,,,,,,,,,,,
+ord_mean,cant_miss_ruling_out_question,,,nan,,,,,,,,,,,
+ord_mean,care_seeking,,,nan,,,,,,,,,,,

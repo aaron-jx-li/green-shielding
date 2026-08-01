@@ -1,0 +1,11 @@
+model,field,arm,n_flipped
+gemini,diagnostic_consensus,format_tone,408
+gemini,diagnostic_consensus,content_format,375
+gemini,diagnostic_consensus,remove_all,423
+gemini,diagnostic_consensus,ct_old,290
+gemini,diagnostic_consensus,ct_new,318
+gemini,structured_any,format_tone,1256
+gemini,structured_any,content_format,1141
+gemini,structured_any,remove_all,1277
+gemini,structured_any,ct_old,1004
+gemini,structured_any,ct_new,1060
